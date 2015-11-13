@@ -1,0 +1,16 @@
+PODS:
+  - Bolts/Tasks (1.4.0)
+  - JTCalendar (2.1.4)
+  - Parse (1.9.1):
+    - Bolts/Tasks (>= 1.4.0)
+
+DEPENDENCIES:
+  - JTCalendar (~> 2.0)
+  - Parse
+
+SPEC CHECKSUMS:
+  Bolts: 0e9bce58b9b9f5e8a7a4d47b16d2fabec289072b
+  JTCalendar: 9b1352c7ec41cc26b19c189d6608ba48060a53d9
+  Parse: 54a965c8c19a6dde90284ab654dbcc77ef8c001b
+
+COCOAPODS: 0.39.0
