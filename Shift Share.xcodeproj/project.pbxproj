@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B792748E1BF55E4400FFE21C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B792748D1BF55E4400FFE21C /* AppDelegate.swift */; };
-		B79274901BF55E4400FFE21C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B792748F1BF55E4400FFE21C /* ViewController.swift */; };
+		B79274901BF55E4400FFE21C /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B792748F1BF55E4400FFE21C /* CalendarViewController.swift */; };
 		B79274931BF55E4400FFE21C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B79274911BF55E4400FFE21C /* Main.storyboard */; };
 		B79274951BF55E4400FFE21C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B79274941BF55E4400FFE21C /* Assets.xcassets */; };
 		B79274981BF55E4400FFE21C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B79274961BF55E4400FFE21C /* LaunchScreen.storyboard */; };
@@ -40,7 +40,7 @@
 		964610BB11D66B011FC0E2C5 /* Pods-Shift Share.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shift Share.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Shift Share/Pods-Shift Share.debug.xcconfig"; sourceTree = "<group>"; };
 		B792748A1BF55E4400FFE21C /* Shift Share.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Shift Share.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B792748D1BF55E4400FFE21C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B792748F1BF55E4400FFE21C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		B792748F1BF55E4400FFE21C /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
 		B79274921BF55E4400FFE21C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B79274941BF55E4400FFE21C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B79274971BF55E4400FFE21C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -113,11 +113,9 @@
 			isa = PBXGroup;
 			children = (
 				B792748D1BF55E4400FFE21C /* AppDelegate.swift */,
-				B792748F1BF55E4400FFE21C /* ViewController.swift */,
-				B79274911BF55E4400FFE21C /* Main.storyboard */,
+				B79274BB1BF5600800FFE21C /* Controller */,
 				B79274941BF55E4400FFE21C /* Assets.xcassets */,
-				B79274961BF55E4400FFE21C /* LaunchScreen.storyboard */,
-				B79274991BF55E4400FFE21C /* Info.plist */,
+				B79274BC1BF5602700FFE21C /* Supporting Files */,
 			);
 			path = "Shift Share";
 			sourceTree = "<group>";
@@ -138,6 +136,24 @@
 				B79274AF1BF55E4400FFE21C /* Info.plist */,
 			);
 			path = "Shift ShareUITests";
+			sourceTree = "<group>";
+		};
+		B79274BB1BF5600800FFE21C /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				B792748F1BF55E4400FFE21C /* CalendarViewController.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		B79274BC1BF5602700FFE21C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B79274991BF55E4400FFE21C /* Info.plist */,
+				B79274911BF55E4400FFE21C /* Main.storyboard */,
+				B79274961BF55E4400FFE21C /* LaunchScreen.storyboard */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		E1BFC6D477F7051E1CD91882 /* Pods */ = {
@@ -334,7 +350,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B79274901BF55E4400FFE21C /* ViewController.swift in Sources */,
+				B79274901BF55E4400FFE21C /* CalendarViewController.swift in Sources */,
 				B792748E1BF55E4400FFE21C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

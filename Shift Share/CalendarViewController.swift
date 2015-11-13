@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  CalendarViewController.swift
 //  Shift Share
 //
 //  Created by Brian Josel on 11/12/15.
@@ -10,7 +10,7 @@ import UIKit
 import JTCalendar
 import Parse
 
-class ViewController: UIViewController {
+class CalendarViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
