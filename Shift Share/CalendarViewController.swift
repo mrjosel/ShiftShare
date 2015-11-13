@@ -9,6 +9,7 @@
 import UIKit
 import JTCalendar
 import Parse
+import Foundation
 
 //main calendarView
 class CalendarViewController: UIViewController, JTCalendarDelegate {
@@ -19,7 +20,8 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
     var todayDate = NSDate()    //making variable only for readibility's sake
     var minDate : NSDate!
     var maxDate : NSDate!
-    var dateSelected : NSDate!
+    //TODO: REMOVE selectedDate AND REFACTOR WITH dayView.date
+    var selectedDate : NSDate!
 
     //outlets
     @IBOutlet weak var monthSelectorView: JTCalendarMenuView!
@@ -43,9 +45,6 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
         self.calendarManager = JTCalendarManager()
         self.calendarManager.delegate = self
         
-//        self.calendarManager.settings.pageViewHaveWeekDaysView = true
-//        self.calendarManager.settings.pageViewNumberOfWeeks = 0 // Automatic
-        
         //create random events for testability
         //TODO: DELETE THIS
         self.createRandomEvents()
@@ -64,7 +63,11 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
     func calendar(calendar: JTCalendarManager!, prepareDayView dayView: UIView!) {
         
         //cast dayView to JTCalendarDayView
-        let dayView = dayView as! JTCalendarDayView
+        guard let dayView = dayView as? JTCalendarDayView else {
+            //failed to cast, abort
+            //TODO: REMOVE IN PRODUCTION
+            abort()
+        }
         
         //format for today's date
         if calendar.dateHelper.date(self.todayDate, isTheSameDayThan: dayView.date) {
@@ -76,7 +79,7 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
             dayView.textLabel.textColor = UIColor.whiteColor()
         
         //selected date
-        } else if calendar.dateHelper.date(self.dateSelected, isTheSameDayThan: dayView.date) {
+        } else if calendar.dateHelper.date(self.selectedDate, isTheSameDayThan: dayView.date) {
             
             //set UI accordingly
             dayView.circleView.hidden = false
@@ -103,6 +106,43 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
         
         //check if there is an event set for that day
         dayView.dotView.hidden = self.haveEventForThatDay(dayView.date)
+    }
+    
+    //code for handling touching the dayView of the calendar
+    func calendar(calendar: JTCalendarManager!, didTouchDayView dayView: UIView!) {
+        
+        //cast dayView as JTCalendarDayView
+        guard let dayView = dayView as? JTCalendarDayView else {
+            //failed to cast, abort
+            //TODO: REMOVE IN PRODUCTION
+            abort()
+        }
+        
+        //get selected date
+        self.selectedDate = dayView.date
+        
+        //animation for the circle view
+        dayView.circleView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.1, 0.1)
+        UIView.transitionWithView(dayView, duration: 0.3, options: UIViewAnimationOptions(), animations: {
+            dayView.circleView.transform = CGAffineTransformIdentity
+            calendar.reload()
+            }, completion: nil)
+        
+        //load the previous or next page if a day from another month is selected
+        if !calendar.dateHelper.date(self.calendarView.date, isTheSameMonthThan: dayView.date) {
+            
+            //check if date is in the future
+            if self.calendarView.date.compare(dayView.date) == NSComparisonResult.OrderedAscending {
+                
+                //date is next month, advance to next month
+                self.calendarView.loadNextPageWithAnimation()
+                
+            } else {
+                
+                //date is last month, backtrack to prior month
+                self.calendarView.loadPreviousPageWithAnimation()
+            }
+        }
         
     }
     
