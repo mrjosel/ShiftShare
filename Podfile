@@ -5,7 +5,7 @@ use_frameworks!
 
 target 'Shift Share' do
 pod 'Parse'
-pod 'JTCalendar', '~> 2.0'
+pod 'JTCalendar'
 end
 
 target 'Shift ShareTests' do

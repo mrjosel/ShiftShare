@@ -5,7 +5,7 @@ PODS:
     - Bolts/Tasks (>= 1.4.0)
 
 DEPENDENCIES:
-  - JTCalendar (~> 2.0)
+  - JTCalendar
   - Parse
 
 SPEC CHECKSUMS:
