@@ -152,6 +152,8 @@
 
 - (BOOL)date:(NSDate *)dateA isTheSameDayThan:(NSDate *)dateB
 {
+    NSLog(@"dateA = %@", dateA);
+    NSLog(@"dateB = %@", dateB);
     NSDateComponents *componentsA = [self.calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate:dateA];
     NSDateComponents *componentsB = [self.calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate:dateB];
     

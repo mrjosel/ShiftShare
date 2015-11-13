@@ -14,8 +14,7 @@ import Foundation
 //main calendarView
 class CalendarViewController: UIViewController, JTCalendarDelegate {
     
-    //DEBUG
-    //TODO: DELETE THIS
+    //vars for logging events in calendar
     var eventsByDate : NSMutableDictionary!
     var todayDate = NSDate()    //making variable only for readibility's sake
     var minDate : NSDate!
@@ -31,15 +30,14 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
     var calendarManager : JTCalendarManager!
     
     //date formatter
-    let dateFormatter : NSDateFormatter = {
-        var dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "dd-MM-yyyy"
-        return dateFormatter
-    }()
+    let dateFormatter = NSDateFormatter()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        //set up date formatter
+        self.dateFormatter.dateFormat = "dd-MM-yyyy"
         
         //create calendar manager, set vc to calendar manager delegate
         self.calendarManager = JTCalendarManager()
@@ -70,7 +68,7 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
         }
         
         //format for today's date
-        if calendar.dateHelper.date(self.todayDate, isTheSameDayThan: dayView.date) {
+        if calendar.dateHelper.date(NSDate(), isTheSameDayThan: dayView.date) {
             
             //set UI accordingly
             dayView.circleView.hidden = false
