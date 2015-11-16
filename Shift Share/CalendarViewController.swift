@@ -105,7 +105,7 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
         }
         
         //check if there is an event set for that day
-        dayView.dotView.hidden = self.haveEventForThatDay(dayView.date)
+        dayView.dotView.hidden = !self.haveEventForThatDay(dayView.date)
     }
     
     //code for handling touching the dayView of the calendar
