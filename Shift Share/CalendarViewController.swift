@@ -15,7 +15,7 @@ import Foundation
 class CalendarViewController: UIViewController, JTCalendarDelegate {
     
     //vars for logging events in calendar
-    var eventsByDate : NSMutableDictionary!
+    var eventsByDate : NSMutableDictionary?
     var todayDate = NSDate()    //making variable only for readibility's sake
     var minDate : NSDate!
     var maxDate : NSDate!
@@ -151,7 +151,7 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
         let key = self.dateFormatter.stringFromDate(date)
         
         //check if there is an event for the key
-        guard let events = self.eventsByDate[key] else {
+        guard let events = self.eventsByDate?[key] else {
             
             //no key for that date
             return false
@@ -196,10 +196,10 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
             
             let key = self.dateFormatter.stringFromDate(randomDate)
             
-            if self.eventsByDate[key] == nil {
-                self.eventsByDate[key] = NSMutableArray()
+            if self.eventsByDate?[key] == nil {
+                self.eventsByDate![key] = NSMutableArray()
             }
-            self.eventsByDate[key]?.addObject(randomDate)
+            self.eventsByDate![key]?.addObject(randomDate)
         }
     }
 
