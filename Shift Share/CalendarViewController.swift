@@ -20,7 +20,7 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
     var minDate : NSDate!
     var maxDate : NSDate!
     //TODO: REMOVE selectedDate AND REFACTOR WITH dayView.date
-    var selectedDate : NSDate!
+    var selectedDate : NSDate?
 
     //outlets
     @IBOutlet weak var monthSelectorView: JTCalendarMenuView!
@@ -69,7 +69,7 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
         
         //format for today's date
         if calendar.dateHelper.date(NSDate(), isTheSameDayThan: dayView.date) {
-            
+
             //set UI accordingly
             dayView.circleView.hidden = false
             dayView.circleView.backgroundColor = UIColor.blueColor()
@@ -77,8 +77,8 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
             dayView.textLabel.textColor = UIColor.whiteColor()
         
         //selected date
-        } else if calendar.dateHelper.date(self.selectedDate, isTheSameDayThan: dayView.date) {
-            
+        } else if self.selectedDate != nil && calendar.dateHelper.date(self.selectedDate, isTheSameDayThan: dayView.date) {
+
             //set UI accordingly
             dayView.circleView.hidden = false
             dayView.circleView.backgroundColor = UIColor.redColor()
@@ -87,7 +87,7 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
         
         //other month
         } else if !calendar.dateHelper.date(self.calendarView.date, isTheSameMonthThan: dayView.date) {
-            
+
             //set UI accordingly
             dayView.circleView.hidden = true
             dayView.dotView.backgroundColor = UIColor.redColor()
@@ -95,8 +95,7 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
             
         //another day of the current month
         } else {
-            
-            //set UI accordingly
+
             dayView.circleView.hidden = true
             dayView.dotView.backgroundColor = UIColor.redColor()
             dayView.textLabel.textColor = UIColor.blackColor()
