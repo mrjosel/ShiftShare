@@ -16,9 +16,11 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
     
     //vars for logging events in calendar
     var eventsByDate : NSMutableDictionary?
-    var todayDate = NSDate()    //making variable only for readibility's sake
-    var minDate : NSDate!
-    var maxDate : NSDate!
+    
+    //TODO:  FOR DEBUG, REMOVE
+    var minDate : NSDate?
+    var maxDate : NSDate?
+    
     //TODO: REMOVE selectedDate AND REFACTOR WITH dayView.date
     var selectedDate : NSDate?
 
@@ -53,7 +55,7 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
         //setup views
         self.calendarManager.menuView = self.monthSelectorView
         self.calendarManager.contentView = self.calendarView
-        self.calendarManager.setDate(self.todayDate)
+        self.calendarManager.setDate(NSDate())
 
     }
     
@@ -179,13 +181,14 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
     }
     
     //get min and max dates for the calendar view based on today's date
+    //TODO: FOR DEBUG ONLY, REMOVE
     func createMinAndMaxDates() {
         
         //minDate is 2 months prior to today
-        self.minDate = self.calendarManager.dateHelper.addToDate(self.todayDate, months: -2)
+        self.minDate = self.calendarManager.dateHelper.addToDate(NSDate(), months: -2)
         
         //maxDate is 2 months after today
-        self.maxDate = self.calendarManager.dateHelper.addToDate(self.todayDate, months: 2)
+        self.maxDate = self.calendarManager.dateHelper.addToDate(NSDate(), months: 2)
     }
     
     //test function
@@ -195,7 +198,7 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
         
         for var i = 0; i < 30; i++ {
             
-            let today = self.todayDate
+            let today = NSDate()
             let mod = Int32(3600 * 24 * 60)
             let randomNum = rand()
             let intervalNum = randomNum % mod
