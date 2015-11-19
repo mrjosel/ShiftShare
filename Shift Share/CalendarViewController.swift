@@ -57,11 +57,11 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
 
     }
     
+    //delegate method that produces UIView conforming to JTCalendarDay protocol, returns custom ShiftShareDayView object
     func calendarBuildDayView(calendar: JTCalendarManager!) -> UIView! {
 
-        let dayView : ShiftShareDayView = ShiftShareDayView()
-        
-        return dayView
+        //return ShiftShareDayView       
+        return ShiftShareDayView()
     }
     
     //delegate method to prepare day view
