@@ -32,7 +32,7 @@ enum SSShiftImage : Int, CustomStringConvertible {
         get {
             //cast imageName to name and return, failed cast returns "DayViewImage"
             guard let name = SSShiftImage.imageNames[self] else {
-                return "DayViewImage"
+                return "SSShiftImage"
             }
             return name
         }

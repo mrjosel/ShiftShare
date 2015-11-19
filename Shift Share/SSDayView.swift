@@ -20,16 +20,20 @@ class SSDayView: JTCalendarDayView {
     var shiftImageView: UIImageView?
     
     //actual dayViewImage, use to fill image in above shiftImageView
-    var dayViewImage : SSShiftImage
+    var shiftImage : SSShiftImage
     
+    
+    //initializers
     override init(frame: CGRect) {
         //set image to "No Image)
-        self.dayViewImage = SSShiftImage.NOIMAGE
+        self.shiftImage = SSShiftImage.NOIMAGE
         
+        //super init
         super.init(frame: frame)
         
     }
-
+    
+    //required init from super
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -42,7 +46,19 @@ class SSDayView: JTCalendarDayView {
     //cycles DayViewImage enum case up by 1, wraps around at the end
     func cycleDayViewImage() {
         
-        //increment counter until 6, then rollover
-        self.dayViewImage = (self.dayViewImage.rawValue == 6) ? SSShiftImage(rawValue: 0)! : SSShiftImage(rawValue: self.dayViewImage.rawValue + 1)!
+        //get rawValue of current image
+        var rawVal = self.shiftImage.rawValue
+        
+        //if rawVal is less than 6, increment and set image, rollover after 6
+        rawVal = (rawVal < 6) ? rawVal + 1 : 0
+        
+        //get image at rawValue, if no image exists, set dayViewImage to NOIMAGE
+        guard let shiftImage = SSShiftImage(rawValue: rawVal) else {
+            self.shiftImage = SSShiftImage.NOIMAGE
+            return
+        }
+        
+        //image exists for rawVal, set
+        self.shiftImage = shiftImage
     }
 }

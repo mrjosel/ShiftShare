@@ -125,12 +125,15 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
         //get selected date
         self.selectedDate = dayView.date
         
-        //animation for the circle view
-        dayView.circleView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.1, 0.1)
-        UIView.transitionWithView(dayView, duration: 0.3, options: UIViewAnimationOptions(), animations: {
-            dayView.circleView.transform = CGAffineTransformIdentity
-            calendar.reload()
-            }, completion: nil)
+        dayView.cycleDayViewImage()
+        print(dayView.shiftImage)
+        
+//        //animation for the circle view
+//        dayView.circleView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.1, 0.1)
+//        UIView.transitionWithView(dayView, duration: 0.3, options: UIViewAnimationOptions(), animations: {
+//            dayView.circleView.transform = CGAffineTransformIdentity
+//            calendar.reload()
+//            }, completion: nil)
         
         //load the previous or next page if a day from another month is selected
         if !calendar.dateHelper.date(self.calendarView.date, isTheSameMonthThan: dayView.date) {
