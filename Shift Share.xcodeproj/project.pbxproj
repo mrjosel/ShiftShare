@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B75A940D1BFA67220075C2DA /* ShiftShareDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75A940C1BFA67220075C2DA /* ShiftShareDayView.swift */; };
+		B75A940D1BFA67220075C2DA /* SSDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75A940C1BFA67220075C2DA /* SSDayView.swift */; };
+		B75A94261BFE2F3E0075C2DA /* SSShiftImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75A94251BFE2F3E0075C2DA /* SSShiftImage.swift */; };
 		B792748E1BF55E4400FFE21C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B792748D1BF55E4400FFE21C /* AppDelegate.swift */; };
 		B79274901BF55E4400FFE21C /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B792748F1BF55E4400FFE21C /* CalendarViewController.swift */; };
 		B79274931BF55E4400FFE21C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B79274911BF55E4400FFE21C /* Main.storyboard */; };
@@ -39,7 +40,8 @@
 		118FB04471BA827DDB631C39 /* Pods_Shift_Share.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shift_Share.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DACC15CF003DFF0F2193ED2 /* Pods-Shift Share.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shift Share.release.xcconfig"; path = "Pods/Target Support Files/Pods-Shift Share/Pods-Shift Share.release.xcconfig"; sourceTree = "<group>"; };
 		964610BB11D66B011FC0E2C5 /* Pods-Shift Share.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shift Share.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Shift Share/Pods-Shift Share.debug.xcconfig"; sourceTree = "<group>"; };
-		B75A940C1BFA67220075C2DA /* ShiftShareDayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShiftShareDayView.swift; sourceTree = "<group>"; };
+		B75A940C1BFA67220075C2DA /* SSDayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDayView.swift; sourceTree = "<group>"; };
+		B75A94251BFE2F3E0075C2DA /* SSShiftImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSShiftImage.swift; sourceTree = "<group>"; };
 		B792748A1BF55E4400FFE21C /* Shift Share.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Shift Share.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B792748D1BF55E4400FFE21C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B792748F1BF55E4400FFE21C /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
@@ -92,7 +94,8 @@
 		B75A940B1BFA66EA0075C2DA /* View */ = {
 			isa = PBXGroup;
 			children = (
-				B75A940C1BFA67220075C2DA /* ShiftShareDayView.swift */,
+				B75A940C1BFA67220075C2DA /* SSDayView.swift */,
+				B75A94251BFE2F3E0075C2DA /* SSShiftImage.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -362,7 +365,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B79274901BF55E4400FFE21C /* CalendarViewController.swift in Sources */,
-				B75A940D1BFA67220075C2DA /* ShiftShareDayView.swift in Sources */,
+				B75A94261BFE2F3E0075C2DA /* SSShiftImage.swift in Sources */,
+				B75A940D1BFA67220075C2DA /* SSDayView.swift in Sources */,
 				B792748E1BF55E4400FFE21C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

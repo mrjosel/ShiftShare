@@ -61,14 +61,14 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
     func calendarBuildDayView(calendar: JTCalendarManager!) -> UIView! {
 
         //return ShiftShareDayView       
-        return ShiftShareDayView()
+        return SSDayView()
     }
     
     //delegate method to prepare day view
     func calendar(calendar: JTCalendarManager!, prepareDayView dayView: UIView!) {
         
         //cast dayView to ShiftShareDayView
-        guard let dayView = dayView as? ShiftShareDayView else {
+        guard let dayView = dayView as? SSDayView else {
             //failed to cast, abort
             //TODO: REMOVE IN PRODUCTION
             abort()
@@ -116,7 +116,7 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
     func calendar(calendar: JTCalendarManager!, didTouchDayView dayView: UIView!) {
         
         //cast dayView to ShiftShareDayView
-        guard let dayView = dayView as? ShiftShareDayView else {
+        guard let dayView = dayView as? SSDayView else {
             //failed to cast, abort
             //TODO: REMOVE IN PRODUCTION
             abort()
