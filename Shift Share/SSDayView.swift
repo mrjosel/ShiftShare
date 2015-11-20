@@ -20,13 +20,16 @@ class SSDayView: JTCalendarDayView {
     var shiftImageView: UIImageView?
     
     //actual dayViewImage, use to fill image in above shiftImageView
-    var shiftImage : SSShiftImage
+    var shift : SSShift
     
+    //notes
+    var notes : [SSNote]
     
     //initializers
     override init(frame: CGRect) {
-        //set image to "No Image)
-        self.shiftImage = SSShiftImage.NOIMAGE
+        //set image to "No Shift", and notes to []
+        self.shift = SSShift.NOSHIFT
+        self.notes = []
         
         //super init
         super.init(frame: frame)
@@ -46,19 +49,19 @@ class SSDayView: JTCalendarDayView {
     //cycles DayViewImage enum case up by 1, wraps around at the end
     func cycleDayViewImage() {
         
-        //get rawValue of current image
-        var rawVal = self.shiftImage.rawValue
+        //get rawValue of current shift
+        var rawVal = self.shift.rawValue
         
-        //if rawVal is less than 6, increment and set image, rollover after 6
+        //if rawVal is less than 6, increment and set shift, rollover after 6
         rawVal = (rawVal < 6) ? rawVal + 1 : 0
         
-        //get image at rawValue, if no image exists, set dayViewImage to NOIMAGE
-        guard let shiftImage = SSShiftImage(rawValue: rawVal) else {
-            self.shiftImage = SSShiftImage.NOIMAGE
+        //get shift at rawValue, if no image exists, set shit to NOSHIFT
+        guard let shift = SSShift(rawValue: rawVal) else {
+            self.shift = SSShift.NOSHIFT
             return
         }
         
-        //image exists for rawVal, set
-        self.shiftImage = shiftImage
+        //shift exists for rawVal, set
+        self.shift = shift
     }
 }

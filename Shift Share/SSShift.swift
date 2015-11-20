@@ -1,5 +1,5 @@
 //
-//  SSShiftImage.swift
+//  SSShift.swift
 //  Shift Share
 //
 //  Created by Brian Josel on 11/19/15.
@@ -11,16 +11,16 @@ import JTCalendar
 import UIKit
 
 //enumeration for images that are displayed in dayViews for sun, moon, and others
-enum SSShiftImage : Int, CustomStringConvertible {
+enum SSShift : Int, CustomStringConvertible {
     
     //image types, using ints
-    case NOIMAGE = 0, SUN, MOON, GREEN, YELLOW, RESERVED, VACATION
+    case NOSHIFT = 0, DAY, NIGHT, GREEN, YELLOW, RESERVED, VACATION
     
     //image names for use in printing and getting images
-    static let imageNames = [
-        NOIMAGE : "No Image",
-        SUN : "Sun",
-        MOON : "Moon",
+    static let shiftNames = [
+        NOSHIFT : "No Shift",
+        DAY : "Day",
+        NIGHT : "Night",
         GREEN: "Green",
         YELLOW: "Yellow",
         RESERVED: "Reserved",
@@ -31,8 +31,8 @@ enum SSShiftImage : Int, CustomStringConvertible {
     var description : String {
         get {
             //cast imageName to name and return, failed cast returns "DayViewImage"
-            guard let name = SSShiftImage.imageNames[self] else {
-                return "SSShiftImage"
+            guard let name = SSShift.shiftNames[self] else {
+                return "SSShift"
             }
             return name
         }

@@ -8,7 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		B75A940D1BFA67220075C2DA /* SSDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75A940C1BFA67220075C2DA /* SSDayView.swift */; };
-		B75A94261BFE2F3E0075C2DA /* SSShiftImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75A94251BFE2F3E0075C2DA /* SSShiftImage.swift */; };
+		B75A94261BFE2F3E0075C2DA /* SSShift.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75A94251BFE2F3E0075C2DA /* SSShift.swift */; };
+		B75A94281BFE8F640075C2DA /* SSTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75A94271BFE8F640075C2DA /* SSTableViewCell.swift */; };
+		B75A942E1BFEB0200075C2DA /* SSNote.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75A942D1BFEB0200075C2DA /* SSNote.swift */; };
 		B792748E1BF55E4400FFE21C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B792748D1BF55E4400FFE21C /* AppDelegate.swift */; };
 		B79274901BF55E4400FFE21C /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B792748F1BF55E4400FFE21C /* CalendarViewController.swift */; };
 		B79274931BF55E4400FFE21C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B79274911BF55E4400FFE21C /* Main.storyboard */; };
@@ -41,7 +43,9 @@
 		6DACC15CF003DFF0F2193ED2 /* Pods-Shift Share.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shift Share.release.xcconfig"; path = "Pods/Target Support Files/Pods-Shift Share/Pods-Shift Share.release.xcconfig"; sourceTree = "<group>"; };
 		964610BB11D66B011FC0E2C5 /* Pods-Shift Share.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shift Share.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Shift Share/Pods-Shift Share.debug.xcconfig"; sourceTree = "<group>"; };
 		B75A940C1BFA67220075C2DA /* SSDayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDayView.swift; sourceTree = "<group>"; };
-		B75A94251BFE2F3E0075C2DA /* SSShiftImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSShiftImage.swift; sourceTree = "<group>"; };
+		B75A94251BFE2F3E0075C2DA /* SSShift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSShift.swift; sourceTree = "<group>"; };
+		B75A94271BFE8F640075C2DA /* SSTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSTableViewCell.swift; sourceTree = "<group>"; };
+		B75A942D1BFEB0200075C2DA /* SSNote.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSNote.swift; sourceTree = "<group>"; };
 		B792748A1BF55E4400FFE21C /* Shift Share.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Shift Share.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B792748D1BF55E4400FFE21C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B792748F1BF55E4400FFE21C /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
@@ -95,9 +99,18 @@
 			isa = PBXGroup;
 			children = (
 				B75A940C1BFA67220075C2DA /* SSDayView.swift */,
-				B75A94251BFE2F3E0075C2DA /* SSShiftImage.swift */,
+				B75A94271BFE8F640075C2DA /* SSTableViewCell.swift */,
 			);
 			name = View;
+			sourceTree = "<group>";
+		};
+		B75A942F1BFEB1DC0075C2DA /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B75A942D1BFEB0200075C2DA /* SSNote.swift */,
+				B75A94251BFE2F3E0075C2DA /* SSShift.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 		B79274811BF55E4400FFE21C = {
@@ -126,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				B792748D1BF55E4400FFE21C /* AppDelegate.swift */,
+				B75A942F1BFEB1DC0075C2DA /* Model */,
 				B75A940B1BFA66EA0075C2DA /* View */,
 				B79274BB1BF5600800FFE21C /* Controller */,
 				B79274941BF55E4400FFE21C /* Assets.xcassets */,
@@ -365,8 +379,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				B79274901BF55E4400FFE21C /* CalendarViewController.swift in Sources */,
-				B75A94261BFE2F3E0075C2DA /* SSShiftImage.swift in Sources */,
+				B75A94261BFE2F3E0075C2DA /* SSShift.swift in Sources */,
+				B75A94281BFE8F640075C2DA /* SSTableViewCell.swift in Sources */,
 				B75A940D1BFA67220075C2DA /* SSDayView.swift in Sources */,
+				B75A942E1BFEB0200075C2DA /* SSNote.swift in Sources */,
 				B792748E1BF55E4400FFE21C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

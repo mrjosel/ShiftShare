@@ -12,10 +12,19 @@ import Parse
 import Foundation
 
 //main calendarView
-class CalendarViewController: UIViewController, JTCalendarDelegate {
+class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, JTCalendarDelegate {
     
     //vars for logging events in calendar
     var eventsByDate : NSMutableDictionary?
+    
+    //calendar manager
+    var calendarManager : JTCalendarManager!
+    
+    //date formatter
+    let dateFormatter = NSDateFormatter()
+    
+    //local dayView
+    var dayView : SSDayView?
     
     //TODO:  FOR DEBUG, REMOVE
     var minDate : NSDate?
@@ -27,16 +36,15 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
     //outlets
     @IBOutlet weak var monthSelectorView: JTCalendarMenuView!
     @IBOutlet weak var calendarView: JTHorizontalCalendarView!
-    
-    //calendar manager
-    var calendarManager : JTCalendarManager!
-    
-    //date formatter
-    let dateFormatter = NSDateFormatter()
+    @IBOutlet weak var dayViewTableView: UITableView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+                
+        //delegate and dataSource for tableView
+        self.dayViewTableView.delegate = self
+        self.dayViewTableView.dataSource = self
         
         //set up date formatter
         self.dateFormatter.dateFormat = "dd-MM-yyyy"
@@ -124,11 +132,14 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
             abort()
         }
         
+        //set local dayView for use in tableView population
+        self.dayView = dayView
+        
         //get selected date
         self.selectedDate = dayView.date
         
         dayView.cycleDayViewImage()
-        print(dayView.shiftImage)
+        print(dayView.shift)
         
 //        //animation for the circle view
 //        dayView.circleView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.1, 0.1)
@@ -154,6 +165,28 @@ class CalendarViewController: UIViewController, JTCalendarDelegate {
         }
         
     }
+    
+    //creates cells for tableView
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        //create cell
+        let cell = tableView.dequeueReusableCellWithIdentifier("SSTableViewCell") as! SSTableViewCell
+        
+        return cell
+    }
+    
+    //number of rows in tableView
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        //get dayView if it exists, return 0 otherwise
+        guard let dayView = self.dayView else {
+            return 0
+        }
+        
+        //number of rows equal to shift plus number of notes
+        return (dayView.shift == .NOSHIFT) ? dayView.notes.count : dayView.notes.count + 1
+    }
+    
     
     //returns bool if an event is scheduled for that day
     func haveEventForThatDay(date: NSDate) -> Bool {
