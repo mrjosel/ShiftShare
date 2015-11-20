@@ -12,5 +12,5 @@ import JTCalendar
 
 //cell used in tableView, inherits properties from SSDayView
 class SSTableViewCell: UITableViewCell {
-
+    
 }

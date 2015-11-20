@@ -32,6 +32,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     
     //TODO: REMOVE selectedDate AND REFACTOR WITH dayView.date
     var selectedDate : NSDate?
+    
+    //longPress gesture recognizer
+    var longPress : UILongPressGestureRecognizer?
 
     //outlets
     @IBOutlet weak var monthSelectorView: JTCalendarMenuView!
@@ -42,9 +45,11 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
                 
-        //delegate and dataSource for tableView
+        //delegate and dataSource for tableView, as well as longPressGestureRecognizer
+        self.longPress = UILongPressGestureRecognizer(target: self, action: "cellPressed:")
         self.dayViewTableView.delegate = self
         self.dayViewTableView.dataSource = self
+        self.dayViewTableView.addGestureRecognizer(longPress!)
         
         //set up date formatter
         self.dateFormatter.dateFormat = "dd-MM-yyyy"
@@ -70,7 +75,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //delegate method that produces UIView conforming to JTCalendarDay protocol, returns custom ShiftShareDayView object
     func calendarBuildDayView(calendar: JTCalendarManager!) -> UIView! {
 
-        //return ShiftShareDayView       
+        //return SSDayView
         return SSDayView()
     }
     
@@ -170,23 +175,41 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         //create cell
-        let cell = tableView.dequeueReusableCellWithIdentifier("SSTableViewCell") as! SSTableViewCell
+        guard let cell = tableView.dequeueReusableCellWithIdentifier("SSTableViewCell") as? SSTableViewCell else {
+            return UITableViewCell()
+        }
         
         return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        print("cell was pressed")
+        print(tableView.cellForRowAtIndexPath(indexPath))
+    }
+    
+    func cellPressed(sender: UILongPressGestureRecognizer) {
+        //TODO: HOW TO MAKE IT SO THAT A LONG PRESS HAS INFORMATION ABOUT WHICH CELL IT IS??
+        //deselect all selected cells
+        self.dayViewTableView.deselectAllCells()
+        
+        //only allow cell to be selected once
+        if sender.state == .Began {
+            print("cell was long pressed")
+        }
     }
     
     //number of rows in tableView
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        //get dayView if it exists, return 0 otherwise
-        guard let dayView = self.dayView else {
-            return 0
-        }
-        
-        //number of rows equal to shift plus number of notes
-        return (dayView.shift == .NOSHIFT) ? dayView.notes.count : dayView.notes.count + 1
+//        //get dayView if it exists, return 0 otherwise
+//        guard let dayView = self.dayView else {
+//            return 0
+//        }
+//        
+//        //number of rows equal to shift plus number of notes
+//        return (dayView.shift == .NOSHIFT) ? dayView.notes.count : dayView.notes.count + 1
+        return 100
     }
-    
     
     //returns bool if an event is scheduled for that day
     func haveEventForThatDay(date: NSDate) -> Bool {

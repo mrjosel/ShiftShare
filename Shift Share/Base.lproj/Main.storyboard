@@ -49,6 +49,10 @@
                                         <animations/>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="9wj-Bt-7C7"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="ChE-OR-SRF"/>
+                                </connections>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lfP-oG-BD6">
                                 <rect key="frame" x="0.0" y="369" width="600" height="35"/>

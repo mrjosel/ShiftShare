@@ -18,7 +18,7 @@ class SSDayView: JTCalendarDayView {
     //image displayed for sun, moon, other events
     //TODO: CONSIDER RENAMING
     var shiftImageView: UIImageView?
-    
+        
     //actual dayViewImage, use to fill image in above shiftImageView
     var shift : SSShift
     
