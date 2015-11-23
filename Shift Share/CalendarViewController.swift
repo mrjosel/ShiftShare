@@ -46,6 +46,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var menuView: UIView!
     @IBOutlet weak var calendarViewHeight: NSLayoutConstraint!
     @IBOutlet weak var dayLabel: UILabel!
+    @IBOutlet weak var scheduleEditButton: UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,7 +78,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.calendarManager.setDate(NSDate())
         self.locale = NSLocale.currentLocale().localeIdentifier
         self.dayLabel.text = self.getReadableDate(NSDate())
-
+        self.scheduleEditButton.hidden = true
     }
     
     //delegate method that produces UIView conforming to JTCalendarDay protocol, returns custom ShiftShareDayView object
@@ -221,10 +222,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             self.dayViewTableView.deselectAllCells()
             
             //present week view
-            self.calendarManager.settings.weekModeEnabled = true
-            self.calendarManager.reload()
-            self.calendarViewHeight.constant = 85
-            self.view.layoutIfNeeded()
+            self.weekMonthView()
+
         }
     }
     
@@ -245,7 +244,38 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
 //        
 //        //return cellCount
 //        return cellCount
+        
+        //TODO: DEBUG, REMOVE LATER, UNCOMMENT OUT ABOVE
         return 100
+    }
+    
+    //toggles between week and month view
+    func weekMonthView() {
+        
+        //toggle week/month mode and reload
+        self.calendarManager.settings.weekModeEnabled = !self.calendarManager.settings.weekModeEnabled
+        self.calendarManager.reload()
+        
+        //get height of calendarView based on whether or not your in week or month mode, set constraint to height
+        let newHeight : CGFloat = self.calendarManager.settings.weekModeEnabled ? 85 : 300
+        self.calendarViewHeight.constant = newHeight
+        
+        //show scheduleEditButton only if in week mode
+        self.scheduleEditButton.hidden = !self.calendarManager.settings.weekModeEnabled
+        
+        //layout if needed
+        self.view.layoutIfNeeded()
+    }
+    
+    //actions occur when scheduleEditButton is pressed
+    @IBAction func scheduleEditButtonPressed(sender: UIButton) {
+        
+        //commit schedule edits
+        //TODO : MAKE SCHEUDLE EDITS
+        
+        //toggle week/month view
+        self.weekMonthView()
+
     }
     
     //returns bool if an event is scheduled for that day

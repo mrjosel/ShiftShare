@@ -64,12 +64,23 @@
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dv3-wz-1tT">
+                                        <rect key="frame" x="546" y="3" width="46" height="30"/>
+                                        <animations/>
+                                        <state key="normal" title="Button"/>
+                                        <connections>
+                                            <action selector="scheduleEditButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="v7K-g7-qoW"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <animations/>
                                 <constraints>
+                                    <constraint firstItem="dv3-wz-1tT" firstAttribute="top" secondItem="lfP-oG-BD6" secondAttribute="top" constant="3" id="0tQ-yv-3rB"/>
                                     <constraint firstItem="Jjc-6X-4uq" firstAttribute="centerX" secondItem="lfP-oG-BD6" secondAttribute="centerX" id="CkB-Xa-ojm"/>
                                     <constraint firstAttribute="height" constant="35" id="Zuk-05-0C0"/>
+                                    <constraint firstAttribute="bottom" secondItem="dv3-wz-1tT" secondAttribute="bottom" constant="2" id="bvO-xT-RmY"/>
                                     <constraint firstItem="Jjc-6X-4uq" firstAttribute="centerY" secondItem="lfP-oG-BD6" secondAttribute="centerY" id="caW-5c-eC1"/>
+                                    <constraint firstAttribute="trailing" secondItem="dv3-wz-1tT" secondAttribute="trailing" constant="8" id="gPe-MW-Aim"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -101,6 +112,7 @@
                         <outlet property="dayViewTableView" destination="r2A-Pd-HyF" id="EuV-Gs-Cor"/>
                         <outlet property="menuView" destination="lfP-oG-BD6" id="CKi-ms-OdB"/>
                         <outlet property="monthSelectorView" destination="KkR-sd-dBO" id="N59-SU-o5h"/>
+                        <outlet property="scheduleEditButton" destination="dv3-wz-1tT" id="BKZ-n7-Ucg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
