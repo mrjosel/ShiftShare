@@ -33,6 +33,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //TODO: REMOVE selectedDate AND REFACTOR WITH dayView.date
     var selectedDate : NSDate?
     
+    //locale for use in displaying date formats
+    var locale : String?
+    
     //longPress gesture recognizer
     var longPress : UILongPressGestureRecognizer?
 
@@ -40,6 +43,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var monthSelectorView: JTCalendarMenuView!
     @IBOutlet weak var calendarView: JTHorizontalCalendarView!
     @IBOutlet weak var dayViewTableView: UITableView!
+    @IBOutlet weak var menuView: UIView!
+    @IBOutlet weak var calendarViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var dayLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,6 +75,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.calendarManager.menuView = self.monthSelectorView
         self.calendarManager.contentView = self.calendarView
         self.calendarManager.setDate(NSDate())
+        self.locale = NSLocale.currentLocale().localeIdentifier
+        self.dayLabel.text = self.getReadableDate(NSDate())
 
     }
     
@@ -137,6 +145,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             abort()
         }
         
+        //display date in label
+        self.dayLabel.text = self.getReadableDate(dayView.date)
+        
         //set local dayView for use in tableView population
         self.dayView = dayView
         
@@ -146,12 +157,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         dayView.cycleDayViewImage()
         print(dayView.shift)
         
-//        //animation for the circle view
-//        dayView.circleView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.1, 0.1)
-//        UIView.transitionWithView(dayView, duration: 0.3, options: UIViewAnimationOptions(), animations: {
-//            dayView.circleView.transform = CGAffineTransformIdentity
-//            calendar.reload()
-//            }, completion: nil)
+        //animation for the circle view
+        dayView.circleView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.1, 0.1)
+        UIView.transitionWithView(dayView, duration: 0.3, options: UIViewAnimationOptions(), animations: {
+            dayView.circleView.transform = CGAffineTransformIdentity
+            calendar.reload()
+            }, completion: nil)
         
         //load the previous or next page if a day from another month is selected
         if !calendar.dateHelper.date(self.calendarView.date, isTheSameMonthThan: dayView.date) {
@@ -193,42 +204,48 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     
     func longPress(sender: UILongPressGestureRecognizer) {
         
-        //get point where long press occurs
-        let point = sender.locationInView(self.dayViewTableView)
-        
-        //get indexPath at point
-        guard let indexPath = self.dayViewTableView.indexPathForRowAtPoint(point) else {
-            
-            //no indexPath found, return
-            return
-        }
-        
-        //deselect all selected cells
-        self.dayViewTableView.deselectAllCells()
-        
         //only allow cell to be selected once
         if sender.state == .Began {
-            print("cell was long pressed")
+            
+            //get point where long press occurs
+            let point = sender.locationInView(self.dayViewTableView)
+            
+            //get indexPath at point
+            guard let indexPath = self.dayViewTableView.indexPathForRowAtPoint(point) else {
+                
+                //no indexPath found, return
+                return
+            }
+            
+            //deselect all selected cells
+            self.dayViewTableView.deselectAllCells()
+            
+            //present week view
+            self.calendarManager.settings.weekModeEnabled = true
+            self.calendarManager.reload()
+            self.calendarViewHeight.constant = 85
+            self.view.layoutIfNeeded()
         }
     }
     
     //number of rows in tableView
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        //get dayView if it exists, return 0 otherwise
-        guard let dayView = self.dayView else {
-            tableView.hidden = true
-            return 0
-        }
-        
-        //number of rows equal to shift plus number of notes
-        let cellCount = (dayView.shift == .NOSHIFT) ? dayView.notes.count : dayView.notes.count + 1
-        
-        //show/hide tableView depending on number of cells
-        tableView.hidden = cellCount > 0
-        
-        //return cellCount
-        return cellCount
+//        //get dayView if it exists, return 0 otherwise
+//        guard let dayView = self.dayView else {
+//            tableView.hidden = true
+//            return 0
+//        }
+//        
+//        //number of rows equal to shift plus number of notes
+//        let cellCount = (dayView.shift == .NOSHIFT) ? dayView.notes.count : dayView.notes.count + 1
+//        
+//        //show/hide tableView depending on number of cells
+//        tableView.hidden = cellCount > 0
+//        
+//        //return cellCount
+//        return cellCount
+        return 100
     }
     
     //returns bool if an event is scheduled for that day
@@ -265,6 +282,13 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //maxDate is 2 months after today
         self.maxDate = self.calendarManager.dateHelper.addToDate(NSDate(), months: 2)
+    }
+    
+    //returns string of Month, Day, Year
+    //Should implement additional parameter for Day, Month, Year depending on user's location
+    func getReadableDate(date: NSDate) -> String {
+        
+        return date.month + ", " + date.day + " " + date.year
     }
     
     //test function

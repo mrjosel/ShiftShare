@@ -19,3 +19,24 @@ extension UITableView {
         }
     }
 }
+
+//allows easily getting date information in readable text
+extension NSDate {
+    var month: String {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "MMMM"
+        return dateFormatter.stringFromDate(self)
+    }
+    
+    var day: String {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "dd"
+        return dateFormatter.stringFromDate(self)
+    }
+    
+    var year: String {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy"
+        return dateFormatter.stringFromDate(self)
+    }
+}

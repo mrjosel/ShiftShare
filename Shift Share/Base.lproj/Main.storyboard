@@ -56,9 +56,20 @@
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lfP-oG-BD6">
                                 <rect key="frame" x="0.0" y="369" width="600" height="35"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jjc-6X-4uq">
+                                        <rect key="frame" x="279" y="8" width="42" height="21"/>
+                                        <animations/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
                                 <animations/>
                                 <constraints>
+                                    <constraint firstItem="Jjc-6X-4uq" firstAttribute="centerX" secondItem="lfP-oG-BD6" secondAttribute="centerX" id="CkB-Xa-ojm"/>
                                     <constraint firstAttribute="height" constant="35" id="Zuk-05-0C0"/>
+                                    <constraint firstItem="Jjc-6X-4uq" firstAttribute="centerY" secondItem="lfP-oG-BD6" secondAttribute="centerY" id="caW-5c-eC1"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -85,7 +96,10 @@
                     </view>
                     <connections>
                         <outlet property="calendarView" destination="Vd0-12-PKY" id="kIf-8S-nvr"/>
+                        <outlet property="calendarViewHeight" destination="t4z-xQ-tX3" id="UWO-r0-ZLm"/>
+                        <outlet property="dayLabel" destination="Jjc-6X-4uq" id="IYb-93-AwJ"/>
                         <outlet property="dayViewTableView" destination="r2A-Pd-HyF" id="EuV-Gs-Cor"/>
+                        <outlet property="menuView" destination="lfP-oG-BD6" id="CKi-ms-OdB"/>
                         <outlet property="monthSelectorView" destination="KkR-sd-dBO" id="N59-SU-o5h"/>
                     </connections>
                 </viewController>
