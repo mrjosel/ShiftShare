@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import JTCalendar
 
 //extending UITableView to allow for delecting all cells
 extension UITableView {

@@ -79,6 +79,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.locale = NSLocale.currentLocale().localeIdentifier
         self.dayLabel.text = self.getReadableDate(NSDate())
         self.scheduleEditButton.hidden = true
+        self.scheduleEditButton.setTitle("Done", forState: UIControlState.Normal)
     }
     
     //delegate method that produces UIView conforming to JTCalendarDay protocol, returns custom ShiftShareDayView object
@@ -254,6 +255,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //toggle week/month mode and reload
         self.calendarManager.settings.weekModeEnabled = !self.calendarManager.settings.weekModeEnabled
+        
+        //set calendarView date to selectedDate if not nil, leave the same otherwise
+        if let dayForWeekView = self.selectedDate {
+            self.calendarView.date = dayForWeekView
+        }
+        
         self.calendarManager.reload()
         
         //get height of calendarView based on whether or not your in week or month mode, set constraint to height

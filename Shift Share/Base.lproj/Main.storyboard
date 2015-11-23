@@ -75,12 +75,11 @@
                                 </subviews>
                                 <animations/>
                                 <constraints>
-                                    <constraint firstItem="dv3-wz-1tT" firstAttribute="top" secondItem="lfP-oG-BD6" secondAttribute="top" constant="3" id="0tQ-yv-3rB"/>
+                                    <constraint firstItem="dv3-wz-1tT" firstAttribute="centerY" secondItem="lfP-oG-BD6" secondAttribute="centerY" id="CCQ-UY-l6I"/>
                                     <constraint firstItem="Jjc-6X-4uq" firstAttribute="centerX" secondItem="lfP-oG-BD6" secondAttribute="centerX" id="CkB-Xa-ojm"/>
                                     <constraint firstAttribute="height" constant="35" id="Zuk-05-0C0"/>
-                                    <constraint firstAttribute="bottom" secondItem="dv3-wz-1tT" secondAttribute="bottom" constant="2" id="bvO-xT-RmY"/>
+                                    <constraint firstAttribute="trailing" secondItem="dv3-wz-1tT" secondAttribute="trailing" constant="8" id="aAu-2i-Xks"/>
                                     <constraint firstItem="Jjc-6X-4uq" firstAttribute="centerY" secondItem="lfP-oG-BD6" secondAttribute="centerY" id="caW-5c-eC1"/>
-                                    <constraint firstAttribute="trailing" secondItem="dv3-wz-1tT" secondAttribute="trailing" constant="8" id="gPe-MW-Aim"/>
                                 </constraints>
                             </view>
                         </subviews>
