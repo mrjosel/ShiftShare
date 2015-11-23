@@ -46,7 +46,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var menuView: UIView!
     @IBOutlet weak var calendarViewHeight: NSLayoutConstraint!
     @IBOutlet weak var dayLabel: UILabel!
-    @IBOutlet weak var scheduleEditButton: UIButton!
+    @IBOutlet weak var scheduleEditCancelButton: UIButton!
+    @IBOutlet weak var scheduleEditDoneButton: UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,8 +79,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.calendarManager.setDate(NSDate())
         self.locale = NSLocale.currentLocale().localeIdentifier
         self.dayLabel.text = self.getReadableDate(NSDate())
-        self.scheduleEditButton.hidden = true
-        self.scheduleEditButton.setTitle("Done", forState: UIControlState.Normal)
+        self.scheduleEditDoneButton.hidden = true
+        self.scheduleEditDoneButton.setTitle("Done", forState: UIControlState.Normal)
+        self.scheduleEditCancelButton.hidden = true
+        self.scheduleEditCancelButton.setTitle("Cancel", forState: UIControlState.Normal)
     }
     
     //delegate method that produces UIView conforming to JTCalendarDay protocol, returns custom ShiftShareDayView object
@@ -267,15 +270,16 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         let newHeight : CGFloat = self.calendarManager.settings.weekModeEnabled ? 85 : 300
         self.calendarViewHeight.constant = newHeight
         
-        //show scheduleEditButton only if in week mode
-        self.scheduleEditButton.hidden = !self.calendarManager.settings.weekModeEnabled
+        //show schedule edit done and cancel buttons only if in week mode
+        self.scheduleEditDoneButton.hidden = !self.calendarManager.settings.weekModeEnabled
+        self.scheduleEditCancelButton.hidden = !self.calendarManager.settings.weekModeEnabled
         
         //layout if needed
         self.view.layoutIfNeeded()
     }
     
-    //actions occur when scheduleEditButton is pressed
-    @IBAction func scheduleEditButtonPressed(sender: UIButton) {
+    //actions occur when scheduleEditDoneButton is pressed
+    @IBAction func scheduleEditDoneButtonPressed(sender: UIButton) {
         
         //commit schedule edits
         //TODO : MAKE SCHEUDLE EDITS
@@ -285,6 +289,16 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
 
     }
     
+    //actions occur when scheduleEditCancelButton is pressed
+    @IBAction func scheduleEditCancelButtonPressed(sender: UIButton) {
+        
+        //discard all edits
+        //TODO: CREATE METHOD OF DISCARDING EDITS
+        
+        //toggle week/month view
+        self.weekMonthView()
+        
+    }
     //returns bool if an event is scheduled for that day
     func haveEventForThatDay(date: NSDate) -> Bool {
         

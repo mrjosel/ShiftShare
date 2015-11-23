@@ -69,7 +69,15 @@
                                         <animations/>
                                         <state key="normal" title="Button"/>
                                         <connections>
-                                            <action selector="scheduleEditButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="v7K-g7-qoW"/>
+                                            <action selector="scheduleEditDoneButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qZF-or-q4R"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3lz-yx-ED6">
+                                        <rect key="frame" x="8" y="3" width="46" height="30"/>
+                                        <animations/>
+                                        <state key="normal" title="Button"/>
+                                        <connections>
+                                            <action selector="scheduleEditCancelButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="alT-P3-O8H"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -80,6 +88,8 @@
                                     <constraint firstAttribute="height" constant="35" id="Zuk-05-0C0"/>
                                     <constraint firstAttribute="trailing" secondItem="dv3-wz-1tT" secondAttribute="trailing" constant="8" id="aAu-2i-Xks"/>
                                     <constraint firstItem="Jjc-6X-4uq" firstAttribute="centerY" secondItem="lfP-oG-BD6" secondAttribute="centerY" id="caW-5c-eC1"/>
+                                    <constraint firstItem="3lz-yx-ED6" firstAttribute="centerY" secondItem="lfP-oG-BD6" secondAttribute="centerY" id="f63-WM-dPh"/>
+                                    <constraint firstItem="3lz-yx-ED6" firstAttribute="leading" secondItem="lfP-oG-BD6" secondAttribute="leading" constant="8" id="zuZ-R2-UdA"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -111,7 +121,8 @@
                         <outlet property="dayViewTableView" destination="r2A-Pd-HyF" id="EuV-Gs-Cor"/>
                         <outlet property="menuView" destination="lfP-oG-BD6" id="CKi-ms-OdB"/>
                         <outlet property="monthSelectorView" destination="KkR-sd-dBO" id="N59-SU-o5h"/>
-                        <outlet property="scheduleEditButton" destination="dv3-wz-1tT" id="BKZ-n7-Ucg"/>
+                        <outlet property="scheduleEditCancelButton" destination="3lz-yx-ED6" id="5qO-V4-uHf"/>
+                        <outlet property="scheduleEditDoneButton" destination="dv3-wz-1tT" id="fEb-wJ-VTa"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
