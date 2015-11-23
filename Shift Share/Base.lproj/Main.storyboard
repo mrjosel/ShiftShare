@@ -64,21 +64,15 @@
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dv3-wz-1tT">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dv3-wz-1tT" customClass="SSButton" customModule="Shift_Share" customModuleProvider="target">
                                         <rect key="frame" x="546" y="3" width="46" height="30"/>
                                         <animations/>
                                         <state key="normal" title="Button"/>
-                                        <connections>
-                                            <action selector="scheduleEditDoneButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qZF-or-q4R"/>
-                                        </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3lz-yx-ED6">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3lz-yx-ED6" customClass="SSButton" customModule="Shift_Share" customModuleProvider="target">
                                         <rect key="frame" x="8" y="3" width="46" height="30"/>
                                         <animations/>
                                         <state key="normal" title="Button"/>
-                                        <connections>
-                                            <action selector="scheduleEditCancelButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="alT-P3-O8H"/>
-                                        </connections>
                                     </button>
                                 </subviews>
                                 <animations/>
@@ -121,8 +115,8 @@
                         <outlet property="dayViewTableView" destination="r2A-Pd-HyF" id="EuV-Gs-Cor"/>
                         <outlet property="menuView" destination="lfP-oG-BD6" id="CKi-ms-OdB"/>
                         <outlet property="monthSelectorView" destination="KkR-sd-dBO" id="N59-SU-o5h"/>
-                        <outlet property="scheduleEditCancelButton" destination="3lz-yx-ED6" id="5qO-V4-uHf"/>
-                        <outlet property="scheduleEditDoneButton" destination="dv3-wz-1tT" id="fEb-wJ-VTa"/>
+                        <outlet property="scheduleEditCancelTodayButton" destination="3lz-yx-ED6" id="HyO-qi-vMa"/>
+                        <outlet property="scheduleEditDoneButton" destination="dv3-wz-1tT" id="tf1-sG-jmY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

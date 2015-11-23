@@ -46,8 +46,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var menuView: UIView!
     @IBOutlet weak var calendarViewHeight: NSLayoutConstraint!
     @IBOutlet weak var dayLabel: UILabel!
-    @IBOutlet weak var scheduleEditCancelButton: UIButton!
-    @IBOutlet weak var scheduleEditDoneButton: UIButton!
+    @IBOutlet weak var scheduleEditCancelTodayButton: SSButton!
+    @IBOutlet weak var scheduleEditDoneButton: SSButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,10 +79,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.calendarManager.setDate(NSDate())
         self.locale = NSLocale.currentLocale().localeIdentifier
         self.dayLabel.text = self.getReadableDate(NSDate())
-        self.scheduleEditDoneButton.hidden = true
-        self.scheduleEditDoneButton.setTitle("Done", forState: UIControlState.Normal)
-        self.scheduleEditCancelButton.hidden = true
-        self.scheduleEditCancelButton.setTitle("Cancel", forState: UIControlState.Normal)
+//        self.scheduleEditDoneButton.hidden = true
+//        self.scheduleEditDoneButton.setTitle("Done", forState: UIControlState.Normal)
+//        self.scheduleEditCancelTodayButton.hidden = true
+//        self.scheduleEditCancelTodayButton.setTitle("Cancel", forState: UIControlState.Normal)
+        self.scheduleEditDoneButton.configure(SSButtonType.DONE)
+        self.scheduleEditCancelTodayButton.configure(SSButtonType.TODAY)
     }
     
     //delegate method that produces UIView conforming to JTCalendarDay protocol, returns custom ShiftShareDayView object
@@ -272,7 +274,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //show schedule edit done and cancel buttons only if in week mode
         self.scheduleEditDoneButton.hidden = !self.calendarManager.settings.weekModeEnabled
-        self.scheduleEditCancelButton.hidden = !self.calendarManager.settings.weekModeEnabled
+        self.scheduleEditCancelTodayButton.hidden = !self.calendarManager.settings.weekModeEnabled
         
         //layout if needed
         self.view.layoutIfNeeded()
