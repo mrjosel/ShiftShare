@@ -46,7 +46,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         // Do any additional setup after loading the view, typically from a nib.
                 
         //delegate and dataSource for tableView, as well as longPressGestureRecognizer
-        self.longPress = UILongPressGestureRecognizer(target: self, action: "cellPressed:")
+        self.longPress = UILongPressGestureRecognizer(target: self, action: "longPress:")
         self.dayViewTableView.delegate = self
         self.dayViewTableView.dataSource = self
         self.dayViewTableView.addGestureRecognizer(longPress!)
@@ -179,16 +179,30 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             return UITableViewCell()
         }
         
+        //no selection style
+        cell.selectionStyle = UITableViewCellSelectionStyle.None
+        
         return cell
     }
     
+    //what to do when cell is tapped
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         print("cell was pressed")
-        print(tableView.cellForRowAtIndexPath(indexPath))
     }
     
-    func cellPressed(sender: UILongPressGestureRecognizer) {
-        //TODO: HOW TO MAKE IT SO THAT A LONG PRESS HAS INFORMATION ABOUT WHICH CELL IT IS??
+    
+    func longPress(sender: UILongPressGestureRecognizer) {
+        
+        //get point where long press occurs
+        let point = sender.locationInView(self.dayViewTableView)
+        
+        //get indexPath at point
+        guard let indexPath = self.dayViewTableView.indexPathForRowAtPoint(point) else {
+            
+            //no indexPath found, return
+            return
+        }
+        
         //deselect all selected cells
         self.dayViewTableView.deselectAllCells()
         
@@ -201,14 +215,20 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //number of rows in tableView
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-//        //get dayView if it exists, return 0 otherwise
-//        guard let dayView = self.dayView else {
-//            return 0
-//        }
-//        
-//        //number of rows equal to shift plus number of notes
-//        return (dayView.shift == .NOSHIFT) ? dayView.notes.count : dayView.notes.count + 1
-        return 100
+        //get dayView if it exists, return 0 otherwise
+        guard let dayView = self.dayView else {
+            tableView.hidden = true
+            return 0
+        }
+        
+        //number of rows equal to shift plus number of notes
+        let cellCount = (dayView.shift == .NOSHIFT) ? dayView.notes.count : dayView.notes.count + 1
+        
+        //show/hide tableView depending on number of cells
+        tableView.hidden = cellCount > 0
+        
+        //return cellCount
+        return cellCount
     }
     
     //returns bool if an event is scheduled for that day
