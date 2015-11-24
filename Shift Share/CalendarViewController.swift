@@ -83,8 +83,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
 //        self.scheduleEditDoneButton.setTitle("Done", forState: UIControlState.Normal)
 //        self.scheduleEditCancelTodayButton.hidden = true
 //        self.scheduleEditCancelTodayButton.setTitle("Cancel", forState: UIControlState.Normal)
-        self.scheduleEditDoneButton.configure(SSButtonType.DONE)
-        self.scheduleEditCancelTodayButton.configure(SSButtonType.TODAY)
+        self.scheduleEditDoneButton.ssButtonType = SSButtonType.DONE
+        self.scheduleEditCancelTodayButton.ssButtonType = SSButtonType.TODAY
+        self.scheduleEditCancelTodayButton.addTarget(self, action: "editCancelTodayButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
     }
     
     //delegate method that produces UIView conforming to JTCalendarDay protocol, returns custom ShiftShareDayView object
@@ -208,6 +209,34 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         print("cell was pressed")
     }
     
+    //functions to carry out when Today/Cancel button is pressed based on which Type the button is
+    func editCancelTodayButtonPressed(sender: SSButton) {
+        
+        //check which type button is
+        switch sender.ssButtonType {
+            //Today Button
+        case .TODAY :
+            //set calendarManager date to today
+            self.calendarManager.setDate(NSDate())
+            self.selectedDate = NSDate()
+            //TODO: SOLVE ISSUE WITH SELECTED DATE, ADD ANIMATION IF POSSIBLE
+        case .CANCEL :
+            //discard changes in scheduleEdit mode
+            //TODO: DISCARD ALL CHANGES
+            
+            //go back to month view
+            self.weekMonthView()
+        case .DONE :
+            //commit changes
+            //TODO: MAKE METHOD TO SAVE CHANGES
+            
+            //go back to month view
+            self.weekMonthView()
+        default :
+            //unknown sender
+            break
+        }
+    }
     
     func longPress(sender: UILongPressGestureRecognizer) {
         
@@ -272,35 +301,37 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         let newHeight : CGFloat = self.calendarManager.settings.weekModeEnabled ? 85 : 300
         self.calendarViewHeight.constant = newHeight
         
-        //show schedule edit done and cancel buttons only if in week mode
+        //show schedule edit done button only if in week mode
         self.scheduleEditDoneButton.hidden = !self.calendarManager.settings.weekModeEnabled
-        self.scheduleEditCancelTodayButton.hidden = !self.calendarManager.settings.weekModeEnabled
+        
+        //if in week mode, make button cancel, else make it today
+        self.scheduleEditCancelTodayButton.ssButtonType = (self.calendarManager.settings.weekModeEnabled) ? SSButtonType.CANCEL : SSButtonType.TODAY
         
         //layout if needed
         self.view.layoutIfNeeded()
     }
     
     //actions occur when scheduleEditDoneButton is pressed
-    @IBAction func scheduleEditDoneButtonPressed(sender: UIButton) {
-        
-        //commit schedule edits
-        //TODO : MAKE SCHEUDLE EDITS
-        
-        //toggle week/month view
-        self.weekMonthView()
-
-    }
-    
-    //actions occur when scheduleEditCancelButton is pressed
-    @IBAction func scheduleEditCancelButtonPressed(sender: UIButton) {
-        
-        //discard all edits
-        //TODO: CREATE METHOD OF DISCARDING EDITS
-        
-        //toggle week/month view
-        self.weekMonthView()
-        
-    }
+//    @IBAction func scheduleEditDoneButtonPressed(sender: UIButton) {
+//        
+//        //commit schedule edits
+//        //TODO : MAKE SCHEUDLE EDITS
+//        
+//        //toggle week/month view
+//        self.weekMonthView()
+//
+//    }
+//    
+//    //actions occur when scheduleEditCancelButton is pressed
+//    @IBAction func scheduleEditCancelButtonPressed(sender: UIButton) {
+//        
+//        //discard all edits
+//        //TODO: CREATE METHOD OF DISCARDING EDITS
+//        
+//        //toggle week/month view
+//        self.weekMonthView()
+//        
+//    }
     //returns bool if an event is scheduled for that day
     func haveEventForThatDay(date: NSDate) -> Bool {
         

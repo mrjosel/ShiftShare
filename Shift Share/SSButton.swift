@@ -19,64 +19,51 @@ enum SSButtonType : Int, CustomStringConvertible {
         EDIT : "Edit"
     ]
     
-    //allows conformance to CustomStringConvertible
     var description : String {
         get {
+            //cast imageName to name and return, failed cast returns "DayViewImage"
             guard let name = SSButtonType.SSButtonTypes[self] else {
-                return "SSButtonType?"
+                return "SSButtonType???"
             }
             return name
         }
     }
 }
 
+
 //custom button that changes states and executes different functions depending on the state
 class SSButton: UIButton {
-    
-    //custom type for button, used during init method
-    var ssButtonType : SSButtonType {
-        get {
-            return self.ssButtonType
-        }
-        set {
-            self.ssButtonType = newValue
-        }
-    }
 
-    /*
-    // Only override drawRect: if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func drawRect(rect: CGRect) {
-        // Drawing code
-    }
-    */
     
-    func configure(type: SSButtonType) {
-
-        //setup button based on type
-        switch type {
-        case .CANCEL :
-            //configure for cancel button
-            self.setTitle(SSButtonType.CANCEL.description, forState: UIControlState.Normal)
-            //default state is hidden
-            self.hidden = true
-        case .TODAY :
-            self.setTitle(SSButtonType.TODAY.description, forState: UIControlState.Normal)
-            //default state is not hidden
-            self.hidden = false
-        case .DONE :
-            //configure for done button
-            self.setTitle(SSButtonType.DONE.description, forState: UIControlState.Normal)
-            //default state is hidden
-            self.hidden = true
-        case .EDIT :
-            //configure for edit button
-            self.setTitle(SSButtonType.EDIT.description, forState: UIControlState.Normal)
-            //default state is hidden
-            self.hidden = true
-        default :
-            //unrecognized state
-            break
+    //custom type for button
+    var ssButtonType : SSButtonType  = .TODAY {
+        
+        //configure button based on which type is set
+        didSet {
+            switch self.ssButtonType {
+            case .CANCEL :
+                //configure for cancel button
+                self.setTitle(SSButtonType.CANCEL.description, forState: UIControlState.Normal)
+                //cancel and today button is never hidden
+                self.hidden = false
+            case .TODAY :
+                self.setTitle(SSButtonType.TODAY.description, forState: UIControlState.Normal)
+                //cancel and today button is never hidden
+                self.hidden = false
+            case .DONE :
+                //configure for done button
+                self.setTitle(SSButtonType.DONE.description, forState: UIControlState.Normal)
+                //default state is hidden
+                self.hidden = true
+            case .EDIT :
+                //configure for edit button
+                self.setTitle(SSButtonType.EDIT.description, forState: UIControlState.Normal)
+                //default state is hidden
+                self.hidden = true
+            default :
+                //unrecognized state
+                break
+            }
         }
     }
 }
