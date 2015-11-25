@@ -12,7 +12,7 @@ import Parse
 import Foundation
 
 //main calendarView
-class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, JTCalendarDelegate {
+class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, JTCalendarDelegate, UIScrollViewDelegate {
     
     //vars for logging events in calendar
     var eventsByDate : NSMutableDictionary?
@@ -24,7 +24,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     let dateFormatter = NSDateFormatter()
     
     //local dayView
-    var dayView : SSDayView?
+    var selectedDayView : SSDayView?
     
     //TODO:  FOR DEBUG, REMOVE
     var minDate : NSDate?
@@ -79,13 +79,18 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.calendarManager.setDate(NSDate())
         self.locale = NSLocale.currentLocale().localeIdentifier
         self.dayLabel.text = self.getReadableDate(NSDate())
-//        self.scheduleEditDoneButton.hidden = true
-//        self.scheduleEditDoneButton.setTitle("Done", forState: UIControlState.Normal)
-//        self.scheduleEditCancelTodayButton.hidden = true
-//        self.scheduleEditCancelTodayButton.setTitle("Cancel", forState: UIControlState.Normal)
         self.scheduleEditDoneButton.ssButtonType = SSButtonType.DONE
+        self.scheduleEditDoneButton.addTarget(self, action: "editCancelTodayButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
         self.scheduleEditCancelTodayButton.ssButtonType = SSButtonType.TODAY
         self.scheduleEditCancelTodayButton.addTarget(self, action: "editCancelTodayButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
+    }
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        guard let contentView = scrollView as? JTHorizontalCalendarView else {
+            print("failed to cast")
+            return
+        }
+        
     }
     
     //delegate method that produces UIView conforming to JTCalendarDay protocol, returns custom ShiftShareDayView object
@@ -107,7 +112,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //format for today's date
         if calendar.dateHelper.date(NSDate(), isTheSameDayThan: dayView.date) {
-
+            
             //set UI accordingly
             dayView.circleView.hidden = false
             dayView.circleView.backgroundColor = UIColor.blueColor()
@@ -152,12 +157,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //TODO: REMOVE IN PRODUCTION
             abort()
         }
-        
+        print(dayView)
         //display date in label
         self.dayLabel.text = self.getReadableDate(dayView.date)
         
         //set local dayView for use in tableView population
-        self.dayView = dayView
+        self.selectedDayView = dayView
         
         //get selected date
         self.selectedDate = dayView.date
@@ -182,12 +187,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 self.calendarView.loadNextPageWithAnimation()
                 
             } else {
-                
                 //date is last month, backtrack to prior month
                 self.calendarView.loadPreviousPageWithAnimation()
             }
         }
-        
     }
     
     //creates cells for tableView
@@ -216,10 +219,11 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         switch sender.ssButtonType {
             //Today Button
         case .TODAY :
-            //set calendarManager date to today
+            //clear out selected date, set calendarManager date to today
+            self.selectedDate = nil
             self.calendarManager.setDate(NSDate())
-            self.selectedDate = NSDate()
-            //TODO: SOLVE ISSUE WITH SELECTED DATE, ADD ANIMATION IF POSSIBLE
+            self.dayLabel.text = self.getReadableDate(NSDate())
+            
         case .CANCEL :
             //discard changes in scheduleEdit mode
             //TODO: DISCARD ALL CHANGES
@@ -311,27 +315,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.view.layoutIfNeeded()
     }
     
-    //actions occur when scheduleEditDoneButton is pressed
-//    @IBAction func scheduleEditDoneButtonPressed(sender: UIButton) {
-//        
-//        //commit schedule edits
-//        //TODO : MAKE SCHEUDLE EDITS
-//        
-//        //toggle week/month view
-//        self.weekMonthView()
-//
-//    }
-//    
-//    //actions occur when scheduleEditCancelButton is pressed
-//    @IBAction func scheduleEditCancelButtonPressed(sender: UIButton) {
-//        
-//        //discard all edits
-//        //TODO: CREATE METHOD OF DISCARDING EDITS
-//        
-//        //toggle week/month view
-//        self.weekMonthView()
-//        
-//    }
     //returns bool if an event is scheduled for that day
     func haveEventForThatDay(date: NSDate) -> Bool {
         
