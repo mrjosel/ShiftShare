@@ -50,6 +50,7 @@ enum SSShift : Int, CustomStringConvertible {
     }
     
     //cycles DayViewImage enum case up by 1, wraps around at the end
+    //TODO: DEBUG, REMOVE LATER
     mutating func cycleShift() {
         
         //get rawValue of current shift

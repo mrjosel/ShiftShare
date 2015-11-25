@@ -102,6 +102,11 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             abort()
         }
         
+        //get schedule for date
+        if let events = self.eventsByDate, schedule = events[self.dateFormatter.stringFromDate(dayView.date)] as? SSScheduleForDay {
+            dayView.schedule = schedule
+        }
+        
         //format for today's date
         if calendar.dateHelper.date(NSDate(), isTheSameDayThan: dayView.date) {
             
@@ -159,8 +164,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //get selected date
         self.selectedDate = dayView.date
         
-        dayView.shift.cycleShift()
-        print(dayView.shift)
+        if let schedule = dayView.schedule {
+            schedule.shift.cycleShift()
+            print(schedule.shift)
+        }
         
         //animation for the circle view
         dayView.circleView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.1, 0.1)
@@ -314,16 +321,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         let key = self.dateFormatter.stringFromDate(date)
         
         //check if there is an event for the key
-        guard let events = self.eventsByDate?[key] else {
+        guard let events = self.eventsByDate, _ = events[key] as? SSScheduleForDay else {
             
             //no key for that date
-            return false
-        }
-        
-        //key exists, check if events for key has a count greater than 0
-        if !(events.count > 0) {
-            
-            //no events on that date
             return false
         }
         
@@ -350,20 +350,36 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         for var i = 0; i < 30; i++ {
             
+            //create random date from today
             let today = NSDate()
             let mod = Int32(3600 * 24 * 60)
-            let randomNum = rand()
-            let intervalNum = randomNum % mod
+            let randomNum = arc4random()
+            let intervalNum = randomNum % UInt32(mod)
             let intervalNumDouble = Double(intervalNum)
             let interval = NSTimeInterval.abs(intervalNumDouble)
             let randomDate = NSDate(timeInterval: interval, sinceDate: today)
             
+            //create random shift
+            let rawVal = randomNum % 7
+            guard let shift = SSShift(rawValue: Int(rawVal)) else {
+                abort()
+            }
+            
+            //create notes for the day
+            let count = Int(randomNum % 3)
+            var notes : [SSNote] = []
+            for var j = 0; j < count; j++ {
+                let note = SSNote(title: "Note\(count)", body: nil)
+                notes.append(note)
+            }
+            
+            //make schedule from shift and notes
+            let schedule = SSScheduleForDay(forDate: randomDate, withShift: shift, withNotes: notes, forUser: "Brian")
             let key = self.dateFormatter.stringFromDate(randomDate)
             
-            if self.eventsByDate?[key] == nil {
-                self.eventsByDate![key] = NSMutableArray()
+            if self.eventsByDate![key] == nil {
+                self.eventsByDate![key] = schedule
             }
-            self.eventsByDate![key]?.addObject(randomDate)
         }
     }
 

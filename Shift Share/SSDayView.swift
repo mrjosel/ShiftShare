@@ -19,27 +19,8 @@ class SSDayView: JTCalendarDayView {
     //TODO: CONSIDER RENAMING
     var shiftImageView: UIImageView?
         
-    //actual dayViewImage, use to fill image in above shiftImageView
-    var shift : SSShift
-    
-    //notes
-    var notes : [SSNote]
-    
-    //initializers
-    override init(frame: CGRect) {
-        //set image to "No Shift", and notes to []
-        self.shift = SSShift.NOSHIFT
-        self.notes = []
-        
-        //super init
-        super.init(frame: frame)
-        
-    }
-    
-    //required init from super
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    //schedule for the day
+    var schedule : SSScheduleForDay?
     
     //super method for UI initialization, add SSDV specific UI calls here
     override func commonInit() {
