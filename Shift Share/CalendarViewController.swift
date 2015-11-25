@@ -13,7 +13,7 @@ import Foundation
 
 //main calendarView
 class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, JTCalendarDelegate {
-    
+        
     //vars for logging events in calendar
     var eventsByDate : NSMutableDictionary?
     
@@ -80,11 +80,11 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.locale = NSLocale.currentLocale().localeIdentifier
         self.dayLabel.text = self.getReadableDate(NSDate())
         self.scheduleEditDoneButton.ssButtonType = SSButtonType.DONE
-        self.scheduleEditDoneButton.addTarget(self, action: "editCancelTodayButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.scheduleEditDoneButton.hostViewController = self
         self.scheduleEditCancelTodayButton.ssButtonType = SSButtonType.TODAY
-        self.scheduleEditCancelTodayButton.addTarget(self, action: "editCancelTodayButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.scheduleEditCancelTodayButton.hostViewController = self
     }
-    
+        
     //delegate method that produces UIView conforming to JTCalendarDay protocol, returns custom ShiftShareDayView object
     func calendarBuildDayView(calendar: JTCalendarManager!) -> UIView! {
 
@@ -149,7 +149,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //TODO: REMOVE IN PRODUCTION
             abort()
         }
-        print(dayView)
+
         //display date in label
         self.dayLabel.text = self.getReadableDate(dayView.date)
         

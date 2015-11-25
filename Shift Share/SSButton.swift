@@ -33,8 +33,16 @@ enum SSButtonType : Int, CustomStringConvertible {
 
 //custom button that changes states and executes different functions depending on the state
 class SSButton: UIButton {
-
     
+    //hostViewController for UIButton
+    var hostViewController = UIViewController() {
+        
+        //add function when VC is set
+        didSet {
+            self.addTarget(self.hostViewController, action: "editCancelTodayButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
+        }
+    }
+
     //custom type for button
     var ssButtonType : SSButtonType  = .TODAY {
         
