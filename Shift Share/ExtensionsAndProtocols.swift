@@ -40,4 +40,10 @@ extension NSDate {
         dateFormatter.dateFormat = "yyyy"
         return dateFormatter.stringFromDate(self)
     }
+    
+    //outputs readable date
+    //TODO: MAKE PRINTOUT DIFFERENT BY COUNTRY?
+    func readableDate() -> String {
+        return self.month + ", " + self.day + " " + self.year
+    }
 }

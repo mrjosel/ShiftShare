@@ -78,7 +78,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.calendarManager.contentView = self.calendarView
         self.calendarManager.setDate(NSDate())
         self.locale = NSLocale.currentLocale().localeIdentifier
-        self.dayLabel.text = self.getReadableDate(NSDate())
+        self.dayLabel.text = NSDate().readableDate()
         self.scheduleEditDoneButton.ssButtonType = SSButtonType.DONE
         self.scheduleEditDoneButton.hostViewController = self
         self.scheduleEditCancelTodayButton.ssButtonType = SSButtonType.TODAY
@@ -151,7 +151,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
 
         //display date in label
-        self.dayLabel.text = self.getReadableDate(dayView.date)
+        self.dayLabel.text = dayView.date.readableDate()
         
         //set local dayView for use in tableView population
         self.selectedDayView = dayView
@@ -214,7 +214,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //clear out selected date, set calendarManager date to today
             self.selectedDate = nil
             self.calendarManager.setDate(NSDate())
-            self.dayLabel.text = self.getReadableDate(NSDate())
+            self.dayLabel.text = NSDate().readableDate()
             
         case .CANCEL :
             //discard changes in scheduleEdit mode
@@ -341,13 +341,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //maxDate is 2 months after today
         self.maxDate = self.calendarManager.dateHelper.addToDate(NSDate(), months: 2)
-    }
-    
-    //returns string of Month, Day, Year
-    //Should implement additional parameter for Day, Month, Year depending on user's location
-    func getReadableDate(date: NSDate) -> String {
-        
-        return date.month + ", " + date.day + " " + date.year
     }
     
     //test function
