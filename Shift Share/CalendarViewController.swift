@@ -159,7 +159,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //get selected date
         self.selectedDate = dayView.date
         
-        dayView.cycleDayViewImage()
+        dayView.shift.cycleShift()
         print(dayView.shift)
         
         //animation for the circle view

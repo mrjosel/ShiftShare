@@ -45,23 +45,4 @@ class SSDayView: JTCalendarDayView {
     override func commonInit() {
         super.commonInit()
     }
-    
-    //cycles DayViewImage enum case up by 1, wraps around at the end
-    func cycleDayViewImage() {
-        
-        //get rawValue of current shift
-        var rawVal = self.shift.rawValue
-        
-        //if rawVal is less than 6, increment and set shift, rollover after 6
-        rawVal = (rawVal < 6) ? rawVal + 1 : 0
-        
-        //get shift at rawValue, if no image exists, set shit to NOSHIFT
-        guard let shift = SSShift(rawValue: rawVal) else {
-            self.shift = SSShift.NOSHIFT
-            return
-        }
-        
-        //shift exists for rawVal, set
-        self.shift = shift
-    }
 }
