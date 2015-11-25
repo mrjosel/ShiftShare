@@ -12,7 +12,7 @@ import Parse
 import Foundation
 
 //main calendarView
-class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, JTCalendarDelegate, UIScrollViewDelegate {
+class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, JTCalendarDelegate {
     
     //vars for logging events in calendar
     var eventsByDate : NSMutableDictionary?
@@ -83,14 +83,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.scheduleEditDoneButton.addTarget(self, action: "editCancelTodayButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
         self.scheduleEditCancelTodayButton.ssButtonType = SSButtonType.TODAY
         self.scheduleEditCancelTodayButton.addTarget(self, action: "editCancelTodayButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
-    }
-    
-    func scrollViewDidScroll(scrollView: UIScrollView) {
-        guard let contentView = scrollView as? JTHorizontalCalendarView else {
-            print("failed to cast")
-            return
-        }
-        
     }
     
     //delegate method that produces UIView conforming to JTCalendarDay protocol, returns custom ShiftShareDayView object
