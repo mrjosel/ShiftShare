@@ -24,6 +24,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     let dateFormatter = NSDateFormatter()
     
     //local dayView
+    //TODO: DO I NEED THIS???
     var selectedDayView : SSDayView?
     
     //TODO:  FOR DEBUG, REMOVE
@@ -159,11 +160,14 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.dayLabel.text = dayView.date.readableDate()
         
         //set local dayView for use in tableView population
+        //TODO: DO I NEED THIS???
         self.selectedDayView = dayView
         
         //get selected date
         self.selectedDate = dayView.date
         
+        
+        //TODO: REMOVE LATER
         if let schedule = dayView.schedule {
             schedule.shift.cycleShift()
             print(schedule.shift)
@@ -220,8 +224,14 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         case .TODAY :
             //clear out selected date, set calendarManager date to today
             self.selectedDate = nil
+            self.selectedDayView = nil
             self.calendarManager.setDate(NSDate())
             self.dayLabel.text = NSDate().readableDate()
+            
+            //TODO: DEBUG, REMOVE LATER
+            for (key, schedule) in self.eventsByDate! {
+                print("\(key) = \((schedule as! SSScheduleForDay).shift)")
+            }
             
         case .CANCEL :
             //discard changes in scheduleEdit mode
@@ -337,10 +347,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func createMinAndMaxDates() {
         
         //minDate is 2 months prior to today
-        self.minDate = self.calendarManager.dateHelper.addToDate(NSDate(), months: -2)
+        self.minDate = self.calendarManager.dateHelper.addToDate(NSDate(), months: -1)
         
         //maxDate is 2 months after today
-        self.maxDate = self.calendarManager.dateHelper.addToDate(NSDate(), months: 2)
+        self.maxDate = self.calendarManager.dateHelper.addToDate(NSDate(), months: 1)
     }
     
     //test function
@@ -348,7 +358,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func createRandomEvents() {
         self.eventsByDate = NSMutableDictionary()
         
-        for var i = 0; i < 30; i++ {
+        for var i = 0; i < 10; i++ {
             
             //create random date from today
             let today = NSDate()
