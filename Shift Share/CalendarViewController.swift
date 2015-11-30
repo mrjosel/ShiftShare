@@ -200,25 +200,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
 
     }
     
-    //creates cells for tableView
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
-        //create cell
-        guard let cell = tableView.dequeueReusableCellWithIdentifier("SSTableViewCell") as? SSTableViewCell else {
-            return UITableViewCell()
-        }
-        
-        //no selection style
-        cell.selectionStyle = UITableViewCellSelectionStyle.None
-        
-        return cell
-    }
-    
-    //what to do when cell is tapped
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        print("cell was pressed")
-    }
-    
     //functions to carry out when Today/Cancel button is pressed based on which Type the button is
     func editCancelTodayButtonPressed(sender: SSButton) {
         
@@ -302,6 +283,25 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //return cellCount
         return cellCount
 
+    }
+    
+    //creates cells for tableView
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        //create cell
+        guard let cell = tableView.dequeueReusableCellWithIdentifier("SSTableViewCell") as? SSTableViewCell else {
+            return UITableViewCell()
+        }
+        
+        //no selection style
+        cell.selectionStyle = UITableViewCellSelectionStyle.None
+        
+        return cell
+    }
+    
+    //what to do when cell is tapped
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        print("cell was pressed")
     }
     
     //toggles between week and month view
