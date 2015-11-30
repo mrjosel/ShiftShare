@@ -194,6 +194,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 self.calendarView.loadPreviousPageWithAnimation()
             }
         }
+        
+        //reload tableViews
+        self.dayViewTableView.reloadData()
+
     }
     
     //creates cells for tableView
@@ -278,23 +282,26 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //number of rows in tableView
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-//        //get dayView if it exists, return 0 otherwise
-//        guard let dayView = self.dayView else {
-//            tableView.hidden = true
-//            return 0
-//        }
-//        
-//        //number of rows equal to shift plus number of notes
-//        let cellCount = (dayView.shift == .NOSHIFT) ? dayView.notes.count : dayView.notes.count + 1
-//        
-//        //show/hide tableView depending on number of cells
-//        tableView.hidden = cellCount > 0
-//        
-//        //return cellCount
-//        return cellCount
+        //get dayView if it exists, return 0 otherwise
+        guard let dayView = self.selectedDayView else {
+            tableView.hidden = true
+            return 0
+        }
         
-        //TODO: DEBUG, REMOVE LATER, UNCOMMENT OUT ABOVE
-        return 100
+        //if schedule exists, get cellCount from schedule
+        guard let schedule = dayView.schedule else {
+            return 0
+        }
+        
+        //number of rows equal to shift plus number of notes
+        let cellCount = (schedule.shift == .NOSHIFT) ? schedule.notes.count : schedule.notes.count + 1
+        
+        //show/hide tableView depending on number of cells (should never return anything less than 0)
+        tableView.hidden = cellCount <= 0
+        
+        //return cellCount
+        return cellCount
+
     }
     
     //toggles between week and month view
