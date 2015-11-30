@@ -207,11 +207,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         switch sender.ssButtonType {
             //Today Button
         case .TODAY :
-            //clear out selected date, set calendarManager date to today
+            //clear out selected date, dayView set calendarManager date to today, reload table
             self.selectedDate = nil
             self.selectedDayView = nil
             self.calendarManager.setDate(NSDate())
             self.dayLabel.text = NSDate().readableDate()
+            self.dayViewTableView.reloadData()
             
             //TODO: DEBUG, REMOVE LATER
             for (key, schedule) in self.eventsByDate! {
@@ -263,14 +264,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //number of rows in tableView
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        //get dayView if it exists, return 0 otherwise
-        guard let dayView = self.selectedDayView else {
+        //get dayView and schedule if they exist, return 0 otherwise
+        guard let dayView = self.selectedDayView, schedule = dayView.schedule else {
             tableView.hidden = true
-            return 0
-        }
-        
-        //if schedule exists, get cellCount from schedule
-        guard let schedule = dayView.schedule else {
             return 0
         }
         
