@@ -151,7 +151,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //TODO: REMOVE IN PRODUCTION
             abort()
         }
-
+        
+        print(dayView.textLabel.font)
+        
         //display date in label
         self.dayLabel.text = dayView.date.readableDate()
         
@@ -189,6 +191,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //reload tableViews
         self.dayViewTableView.reloadData()
+        
+        print(dayView.ssDVImageView?.image)
 
     }
     
