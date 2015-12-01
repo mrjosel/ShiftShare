@@ -23,10 +23,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //date formatter
     let dateFormatter = NSDateFormatter()
     
-    //local dayView
-    //TODO: DO I NEED THIS???
-    var selectedDayView : SSDayView?
-    
     //TODO:  FOR DEBUG, REMOVE
     var minDate : NSDate?
     var maxDate : NSDate?
@@ -159,10 +155,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //display date in label
         self.dayLabel.text = dayView.date.readableDate()
         
-        //set local dayView for use in tableView population
-        //TODO: DO I NEED THIS???
-        self.selectedDayView = dayView
-        
         //get selected date
         self.selectedDate = dayView.date
         
@@ -209,7 +201,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         case .TODAY :
             //clear out selected date, dayView set calendarManager date to today, reload table
             self.selectedDate = nil
-            self.selectedDayView = nil
             self.calendarManager.setDate(NSDate())
             self.dayLabel.text = NSDate().readableDate()
             self.dayViewTableView.reloadData()
@@ -265,7 +256,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         //get dayView and schedule if they exist, return 0 otherwise
-        guard let dayView = self.selectedDayView, schedule = dayView.schedule else {
+        guard let schedule = self.getScheduleForDate(self.selectedDate) else {
             tableView.hidden = true
             return 0
         }
@@ -343,6 +334,30 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //events exist on this date
         return true
         
+    }
+    
+    //retrieves schedule for date, if one exists
+    func getScheduleForDate(date: NSDate?) -> SSScheduleForDay? {
+        
+        //unwrap optional date
+        guard let date = date else {
+            
+            //no date selected
+            return nil
+        }
+        
+        //get key for date
+        let key = self.dateFormatter.stringFromDate(date)
+        
+        //check if events exist and if so for schedules on that date using the aboive key
+        guard let events = self.eventsByDate, schedule = events[key] as? SSScheduleForDay else {
+            
+            //no events, or schedules on that date
+            return nil
+        }
+        
+        //return schedule
+        return schedule
     }
     
     //get min and max dates for the calendar view based on today's date

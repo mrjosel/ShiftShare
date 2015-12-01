@@ -39,11 +39,11 @@ enum SSShift : Int, CustomStringConvertible {
     }
     
     //returns image from bundle
-    var image : UIImage {
+    var image : UIImage? {
         get {
-            //return image with description, if no image exists for description, return empty image
+            //return image with description, if no image exists for description, return nil
             guard let image = UIImage(named: self.description) else {
-                return UIImage()
+                return nil
             }
             return image
         }
