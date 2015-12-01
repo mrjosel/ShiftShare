@@ -151,9 +151,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //TODO: REMOVE IN PRODUCTION
             abort()
         }
-        
-        print(dayView.textLabel.font)
-        
+
         //display date in label
         self.dayLabel.text = dayView.date.readableDate()
         
@@ -163,16 +161,16 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //TODO: REMOVE LATER
         if let schedule = dayView.schedule {
-            schedule.shift.cycleShift()
+//            schedule.shift.cycleShift()
             print(schedule.shift)
         }
         
         //animation for the circle view
-        dayView.circleView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.1, 0.1)
-        UIView.transitionWithView(dayView, duration: 0.3, options: UIViewAnimationOptions(), animations: {
-            dayView.circleView.transform = CGAffineTransformIdentity
-            calendar.reload()
-            }, completion: nil)
+//        dayView.circleView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.1, 0.1)
+//        UIView.transitionWithView(dayView, duration: 0.3, options: UIViewAnimationOptions(), animations: {
+//            dayView.circleView.transform = CGAffineTransformIdentity
+//            calendar.reload()
+//            }, completion: nil)
         
         //load the previous or next page if a day from another month is selected
         if !calendar.dateHelper.date(self.calendarView.date, isTheSameMonthThan: dayView.date) {
@@ -192,7 +190,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //reload tableViews
         self.dayViewTableView.reloadData()
         
-        print(dayView.ssDVImageView?.image)
+        //TODO: UIIMAGEVIEW NOT BEING ADDED - FIX IT
+        print(dayView.subviews.count)
 
     }
     
