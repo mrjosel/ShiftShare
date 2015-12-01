@@ -17,6 +17,7 @@ class SSDayView: JTCalendarDayView {
     // An empty implementation adversely affects performance during animation.
     
     //image displayed for sun, moon, other events
+    //TODO: WHY IS IMAGE NIL??? WHY DOESNT IMAGE SHOW???
     var ssDVImageView: UIImageView?
         
     //schedule for the day
