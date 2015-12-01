@@ -22,18 +22,15 @@ class SSDayView: JTCalendarDayView {
     var schedule : SSScheduleForDay? {
         didSet {
             
-            //reconfigure if schedule is set
-            self.commonInit()
+            //get image if it exists
+            if let image = self.schedule?.shift.image {
+                self.ssDVImageView?.image = image
+            }
         }
     }
     
     //super method for UI initialization, add SSDV specific calls here
     override func commonInit() {
-        
-        //get image if it exists
-        if let image = self.schedule?.shift.image {
-            self.ssDVImageView?.image = image
-        }
         
         super.commonInit()
     }
