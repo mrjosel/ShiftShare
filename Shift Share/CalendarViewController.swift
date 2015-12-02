@@ -23,11 +23,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //date formatter
     let dateFormatter = NSDateFormatter()
     
-    //TODO:  FOR DEBUG, REMOVE
-    var minDate : NSDate?
-    var maxDate : NSDate?
-    
-    //TODO: REMOVE selectedDate AND REFACTOR WITH dayView.date
+    //date is selected when a user touches that dayView
     var selectedDate : NSDate?
     
     //locale for use in displaying date formats
@@ -65,10 +61,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //create random events for testability
         //TODO: DELETE THIS
-        self.createRandomEvents()
-        
-        //get min and max dates
-        self.createMinAndMaxDates()
+//        self.createRandomEvents()
+        self.createSetEvents()
         
         //setup views
         self.calendarManager.menuView = self.monthSelectorView
@@ -91,7 +85,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     
     //delegate method to prepare day view
     func calendar(calendar: JTCalendarManager!, prepareDayView dayView: UIView!) {
-        
+
         //cast dayView to ShiftShareDayView
         guard let dayView = dayView as? SSDayView else {
             //failed to cast, abort
@@ -151,7 +145,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //TODO: REMOVE IN PRODUCTION
             abort()
         }
-
+        
         //display date in label
         self.dayLabel.text = dayView.date.readableDate()
         
@@ -165,7 +159,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             print(schedule.shift)
         }
         
-        //animation for the circle view
+//        //animation for the circle view
 //        dayView.circleView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.1, 0.1)
 //        UIView.transitionWithView(dayView, duration: 0.3, options: UIViewAnimationOptions(), animations: {
 //            dayView.circleView.transform = CGAffineTransformIdentity
@@ -190,8 +184,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //reload tableViews
         self.dayViewTableView.reloadData()
         
-        //TODO: UIIMAGEVIEW NOT BEING ADDED - FIX IT
-        print(dayView.subviews.count)
+        print(dayView)
 
     }
     
@@ -363,15 +356,37 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         return schedule
     }
     
-    //get min and max dates for the calendar view based on today's date
-    //TODO: FOR DEBUG ONLY, REMOVE
-    func createMinAndMaxDates() {
+    //test function
+    //TODO: DELETE THIS
+    func createSetEvents() {
         
-        //minDate is 2 months prior to today
-        self.minDate = self.calendarManager.dateHelper.addToDate(NSDate(), months: -1)
+        let key1 = "06-12-2015"
+        let key2 = "13-12-2015"
+        let key3 = "20-12-2015"
+        let key4 = "27-12-2015"
+        let key5 = "14-12-2015" //WHAT THE FUCK
+        let key6 = "03-01-2016"
         
-        //maxDate is 2 months after today
-        self.maxDate = self.calendarManager.dateHelper.addToDate(NSDate(), months: 1)
+        guard let date1 = self.dateFormatter.dateFromString(key1),
+            date2 = self.dateFormatter.dateFromString(key2),
+            date3 = self.dateFormatter.dateFromString(key3),
+            date4 = self.dateFormatter.dateFromString(key4),
+            date5 = self.dateFormatter.dateFromString(key5),
+            date6 = self.dateFormatter.dateFromString(key6)
+        else {
+            print("no events set")
+            return
+        }
+        
+        self.eventsByDate = [
+            key1 : SSScheduleForDay(forDate: date1, withShift: SSShift.DAY, withNotes: [SSNote()], forUser: "Brian"),
+            key2 : SSScheduleForDay(forDate: date2, withShift: SSShift.NIGHT, withNotes: [SSNote()], forUser: "Brian"),
+            key3 : SSScheduleForDay(forDate: date3, withShift: SSShift.NIGHT, withNotes: [SSNote()], forUser: "Brian"),
+            key4 : SSScheduleForDay(forDate: date4, withShift: SSShift.DAY, withNotes: [SSNote()], forUser: "Brian"),
+            key5 : SSScheduleForDay(forDate: date5, withShift: SSShift.DAY, withNotes: [SSNote()], forUser: "Brian"),
+            key6 : SSScheduleForDay(forDate: date6, withShift: SSShift.NIGHT, withNotes: [SSNote()], forUser: "Brian")
+        ]
+        
     }
     
     //test function

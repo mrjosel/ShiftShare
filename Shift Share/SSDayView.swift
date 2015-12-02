@@ -17,39 +17,38 @@ class SSDayView: JTCalendarDayView {
     // An empty implementation adversely affects performance during animation.
     
     //image displayed for sun, moon, other events
-    //TODO: WHY IS IMAGE NIL??? WHY DOESNT IMAGE SHOW???
-    var ssDVImageView: UIImageView!
+    var ssDVImageView: UIImageView?
         
     //schedule for the day
     var schedule : SSScheduleForDay? {
         didSet {
-            
+
             //get image if it exists
             if let image = self.schedule?.shift.image {
-                print("image is not nil, setting to \(image) for \(date.readableDate())")
-                self.ssDVImageView = UIImageView(image: image)
-                self.ssDVImageView.backgroundColor = UIColor.blackColor()
+                //layout the imageView
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.ssDVImageView = UIImageView(frame: self.frame)
+                    self.ssDVImageView!.contentMode = UIViewContentMode.ScaleAspectFit
+                    self.ssDVImageView!.image = image
+                    self.addSubview(self.ssDVImageView!)
+                    self.sendSubviewToBack(self.ssDVImageView!)
+                })
+                
             }
         }
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
+
         //override placement and font-size of textLabel
         self.textLabel.frame = CGRect(x: 5, y: 5, width: self.frame.width / 4, height: self.frame.height / 4)
         self.textLabel.font = UIFont(name: ".SFUIText-Regular", size: 10.0)
-        
-        //layout the imageView
-        self.ssDVImageView = UIImageView(frame: self.frame)
-        self.ssDVImageView.contentMode = UIViewContentMode.ScaleAspectFit
-        self.sendSubviewToBack(self.ssDVImageView!)
         
     }
     
     //super method for UI initialization, add SSDV specific calls here
     override func commonInit() {
-        
         super.commonInit()
         
         //add border around dayViews
@@ -59,5 +58,8 @@ class SSDayView: JTCalendarDayView {
         //remove circleView
         self.circleView.removeFromSuperview()
         self.dotView.removeFromSuperview()
+        
+        //set background color to clear
+//        self.backgroundColor = UIColor.clearColor()
     }
 }
