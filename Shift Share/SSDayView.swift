@@ -22,7 +22,7 @@ class SSDayView: JTCalendarDayView {
     //schedule for the day
     var schedule : SSScheduleForDay? {
         didSet {
-
+            
             //get image if it exists
             if let image = self.schedule?.shift.image {
                 //layout the imageView

@@ -62,7 +62,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //create random events for testability
         //TODO: DELETE THIS
 //        self.createRandomEvents()
-        self.createSetEvents()
+        self.createAllMonthEvents()
+//        self.createSetEvents()
         
         //setup views
         self.calendarManager.menuView = self.monthSelectorView
@@ -133,7 +134,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         //check if there is an event set for that day
-        dayView.dotView.hidden = !self.haveEventForThatDay(dayView.date)
+//        dayView.dotView.hidden = !self.haveEventForThatDay(dayView.date)
     }
     
     //code for handling touching the dayView of the calendar
@@ -354,6 +355,28 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //return schedule
         return schedule
+    }
+    
+    //test function
+    //TODO: DELETE THIS
+    func createAllMonthEvents() {
+        self.eventsByDate = NSMutableDictionary()
+        let today = self.dateFormatter.dateFromString("01-12-2015")!
+        
+        for var i = 0; i < 80; i++ {
+            
+            let day = NSDate(timeInterval: Double(3600 * 24 * i), sinceDate: today)
+            print(self.dateFormatter.stringFromDate(day))
+            //create random shift
+            let randomNum = arc4random()
+            let rawVal = randomNum % 2 + 1
+            guard let shift = SSShift(rawValue: Int(rawVal)) else {
+                abort()
+            }
+            let schedule = SSScheduleForDay(forDate: day, withShift: shift, withNotes: [SSNote()], forUser: "Brian")
+            self.eventsByDate![self.dateFormatter.stringFromDate(day)] = schedule
+            
+        }
     }
     
     //test function
