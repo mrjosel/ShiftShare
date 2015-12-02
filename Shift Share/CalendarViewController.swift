@@ -62,8 +62,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //create random events for testability
         //TODO: DELETE THIS
 //        self.createRandomEvents()
-        self.createAllMonthEvents()
-//        self.createSetEvents()
+//        self.createAllMonthEvents()
+        self.createSetEvents()
         
         //setup views
         self.calendarManager.menuView = self.monthSelectorView
@@ -101,17 +101,17 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //TODO: MOVE THIS DAYVIEW CLASS?
             //TODO: PICS OVERLAP, RACE CONDITION?
             //get image if it exists
-//            if let image = schedule.shift.image {
-//                //layout the imageView
-//                dispatch_async(dispatch_get_main_queue(), {
-//                    print("setting image for \(dayView.date.readableDate())")
-//                    dayView.ssDVImageView = UIImageView(frame: dayView.frame)
-//                    dayView.ssDVImageView!.contentMode = UIViewContentMode.ScaleAspectFit
-//                    dayView.ssDVImageView!.image = image
-//                    dayView.addSubview(dayView.ssDVImageView!)
-//                    dayView.sendSubviewToBack(dayView.ssDVImageView!)
-//                })
-//            }
+            if let image = schedule.shift.image {
+                //layout the imageView
+                dispatch_async(dispatch_get_main_queue(), {
+                    print("setting image for \(dayView.date.readableDate())")
+                    dayView.ssDVImageView = UIImageView(frame: dayView.frame)
+                    dayView.ssDVImageView!.contentMode = UIViewContentMode.ScaleAspectFit
+                    dayView.ssDVImageView!.image = image
+                    dayView.addSubview(dayView.ssDVImageView!)
+                    dayView.sendSubviewToBack(dayView.ssDVImageView!)
+                })
+            }
         }
         
         //format for today's date

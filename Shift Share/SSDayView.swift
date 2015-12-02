@@ -40,8 +40,8 @@ class SSDayView: JTCalendarDayView {
         self.layer.borderWidth = 0.25
         
         //remove circleView
-//        self.circleView.removeFromSuperview()
-//        self.dotView.removeFromSuperview()
+        self.circleView.removeFromSuperview()
+        self.dotView.removeFromSuperview()
         
         //set background color to clear
 //        self.backgroundColor = UIColor.clearColor()
