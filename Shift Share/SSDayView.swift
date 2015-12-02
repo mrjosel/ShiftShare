@@ -20,23 +20,7 @@ class SSDayView: JTCalendarDayView {
     var ssDVImageView: UIImageView?
         
     //schedule for the day
-    var schedule : SSScheduleForDay? {
-        didSet {
-            
-            //get image if it exists
-            if let image = self.schedule?.shift.image {
-                //layout the imageView
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.ssDVImageView = UIImageView(frame: self.frame)
-                    self.ssDVImageView!.contentMode = UIViewContentMode.ScaleAspectFit
-                    self.ssDVImageView!.image = image
-                    self.addSubview(self.ssDVImageView!)
-                    self.sendSubviewToBack(self.ssDVImageView!)
-                })
-                
-            }
-        }
-    }
+    var schedule : SSScheduleForDay?
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -56,8 +40,8 @@ class SSDayView: JTCalendarDayView {
         self.layer.borderWidth = 0.25
         
         //remove circleView
-        self.circleView.removeFromSuperview()
-        self.dotView.removeFromSuperview()
+//        self.circleView.removeFromSuperview()
+//        self.dotView.removeFromSuperview()
         
         //set background color to clear
 //        self.backgroundColor = UIColor.clearColor()

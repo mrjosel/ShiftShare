@@ -97,6 +97,21 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //get schedule for date
         if let events = self.eventsByDate, schedule = events[self.dateFormatter.stringFromDate(dayView.date)] as? SSScheduleForDay {
             dayView.schedule = schedule
+            
+            //TODO: MOVE THIS DAYVIEW CLASS?
+            //TODO: PICS OVERLAP, RACE CONDITION?
+            //get image if it exists
+//            if let image = schedule.shift.image {
+//                //layout the imageView
+//                dispatch_async(dispatch_get_main_queue(), {
+//                    print("setting image for \(dayView.date.readableDate())")
+//                    dayView.ssDVImageView = UIImageView(frame: dayView.frame)
+//                    dayView.ssDVImageView!.contentMode = UIViewContentMode.ScaleAspectFit
+//                    dayView.ssDVImageView!.image = image
+//                    dayView.addSubview(dayView.ssDVImageView!)
+//                    dayView.sendSubviewToBack(dayView.ssDVImageView!)
+//                })
+//            }
         }
         
         //format for today's date
@@ -134,7 +149,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         //check if there is an event set for that day
-//        dayView.dotView.hidden = !self.haveEventForThatDay(dayView.date)
+        dayView.dotView.hidden = !self.haveEventForThatDay(dayView.date)
+        //TODO: METHOD IS CALLED FOR DATES MULTIPLE TIMES
     }
     
     //code for handling touching the dayView of the calendar
@@ -327,7 +343,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //no key for that date
             return false
         }
-        
+        print("event exists on \(date.readableDate())")
         //events exist on this date
         return true
         
@@ -366,7 +382,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         for var i = 0; i < 80; i++ {
             
             let day = NSDate(timeInterval: Double(3600 * 24 * i), sinceDate: today)
-            print(self.dateFormatter.stringFromDate(day))
             //create random shift
             let randomNum = arc4random()
             let rawVal = randomNum % 2 + 1
