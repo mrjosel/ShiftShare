@@ -67,7 +67,9 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dv3-wz-1tT" customClass="SSButton" customModule="Shift_Share" customModuleProvider="target">
                                         <rect key="frame" x="546" y="3" width="46" height="30"/>
                                         <animations/>
-                                        <state key="normal" title="Button"/>
+                                        <state key="normal" title="Button">
+                                            <color key="titleColor" red="0.054901960784313725" green="1" blue="0.90980392156862744" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3lz-yx-ED6" customClass="SSButton" customModule="Shift_Share" customModuleProvider="target">
                                         <rect key="frame" x="8" y="3" width="46" height="30"/>

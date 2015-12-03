@@ -44,14 +44,12 @@ class SSDayView: JTCalendarDayView {
         
         //remove circleView
 //        self.circleView.removeFromSuperview()
-        self.dotView.removeFromSuperview()
+//        self.dotView.removeFromSuperview()
         
         //layout ssDVImageView
         self.ssDVImageView = UIImageView()
-        self.addSubview(self.ssDVImageView)
-        self.sendSubviewToBack(self.ssDVImageView)
+        self.insertSubview(self.ssDVImageView, aboveSubview: self.circleView)
         self.ssDVImageView.contentMode = UIViewContentMode.ScaleAspectFit
-        self.ssDVImageView.backgroundColor = UIColor.redColor() //TODO: DEBUG REMOVE LATER
         self.ssDVImageView.hidden = true
         self.ssDVImageView.layer.rasterizationScale = UIScreen.mainScreen().scale
         self.ssDVImageView.layer.shouldRasterize = true

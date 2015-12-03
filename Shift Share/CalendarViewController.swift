@@ -96,32 +96,33 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //if event for thatdate exists, set image in view
         //schedule exists, get schedule and image if applicable
-//        if let schedule = self.eventsByDate![self.dateFormatter.stringFromDate(dayView.date)] as? SSScheduleForDay,
-//            image = schedule.shift.image {
-//                dispatch_async(dispatch_get_main_queue(), {
-//                    dayView.schedule = schedule
-//                    dayView.ssDVImageView.image = image
-//                })
-//        }
+        if let schedule = self.eventsByDate![self.dateFormatter.stringFromDate(dayView.date)] as? SSScheduleForDay,
+            image = schedule.shift.image {
+                dispatch_async(dispatch_get_main_queue(), {
+                    dayView.schedule = schedule
+                    dayView.ssDVImageView.image = image
+                })
+        }
         
         //format for today's date
         if calendar.dateHelper.date(NSDate(), isTheSameDayThan: dayView.date) {
-            
+
             //set UI accordingly
+//            dayView.backgroundColor = UIColor(red: 53/255.0, green: 255/255.0, blue: 232/255.0, alpha: 1.0)
             dayView.circleView.hidden = false
             dayView.circleView.backgroundColor = UIColor.blueColor()
-//            dayView.dotView.backgroundColor = UIColor.whiteColor()
-            dayView.ssDVImageView.backgroundColor = UIColor.greenColor()
+            dayView.dotView.backgroundColor = UIColor.whiteColor()
 //            dayView.textLabel.textColor = UIColor.whiteColor()
         
         //selected date
         } else if self.selectedDate != nil && calendar.dateHelper.date(self.selectedDate, isTheSameDayThan: dayView.date) {
 
             //set UI accordingly
+//            dayView.alpha = 0.5
+//            dayView.backgroundColor = UIColor.lightGrayColor()
             dayView.circleView.hidden = false
             dayView.circleView.backgroundColor = UIColor.redColor()
-//            dayView.dotView.backgroundColor = UIColor.whiteColor()
-            dayView.ssDVImageView.backgroundColor = UIColor.greenColor()
+            dayView.dotView.backgroundColor = UIColor.whiteColor()
 //            dayView.textLabel.textColor = UIColor.whiteColor()
         
         //other month
@@ -129,23 +130,20 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
 
             //set UI accordingly
             dayView.circleView.hidden = true
-//            dayView.dotView.backgroundColor = UIColor.redColor()
-            dayView.ssDVImageView.backgroundColor = UIColor.redColor()
+            dayView.dotView.backgroundColor = UIColor.redColor()
             dayView.textLabel.textColor = UIColor.lightGrayColor()
             
         //another day of the current month
         } else {
 
             dayView.circleView.hidden = true
-//            dayView.dotView.backgroundColor = UIColor.redColor()
-            dayView.ssDVImageView.backgroundColor = UIColor.redColor()
+            dayView.dotView.backgroundColor = UIColor.redColor()
             dayView.textLabel.textColor = UIColor.blackColor()
         }
         
         //check if there is an event set for that day
-//        dayView.dotView.hidden = !self.haveEventForThatDay(dayView.date)
+        dayView.dotView.hidden = !self.haveEventForThatDay(dayView.date)
         dayView.ssDVImageView.hidden = !self.haveEventForThatDay(dayView.date)
-        //TODO: METHOD IS CALLED FOR DATES MULTIPLE TIMES
     }
     
     //code for handling touching the dayView of the calendar
@@ -157,19 +155,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //TODO: REMOVE IN PRODUCTION
             abort()
         }
-        
+
         //display date in label
         self.dayLabel.text = dayView.date.readableDate()
         
-        //get selected date
+        //set selected date
         self.selectedDate = dayView.date
-        
-        
-//        //TODO: REMOVE LATER
-//        if let schedule = dayView.schedule {
-////            schedule.shift.cycleShift()
-//            print(dayView.date.readableDate(), schedule.shift, "should be", self.haveEventForThatDay(dayView.date))
-//        }
         
         //animation for the circle view
         dayView.circleView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.1, 0.1)
