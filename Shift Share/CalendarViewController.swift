@@ -195,8 +195,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //reload tableViews
         self.dayViewTableView.reloadData()
-        print(dayView.frame)
-        print(dayView.subviews)
     }
     
     //functions to carry out when Today/Cancel button is pressed based on which Type the button is
@@ -396,7 +394,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         let key2 = "13-12-2015"
         let key3 = "20-12-2015"
         let key4 = "27-12-2015"
-        let key5 = "14-12-2015" //WHAT THE FUCK
+        let key5 = "14-12-2015"
         let key6 = "03-01-2016"
         
         guard let date1 = self.dateFormatter.dateFromString(key1),
