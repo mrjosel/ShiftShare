@@ -17,7 +17,7 @@ class SSDayView: JTCalendarDayView {
     // An empty implementation adversely affects performance during animation.
     
     //image displayed for sun, moon, other events
-    var ssDVImageView: UIImageView?
+    var ssDVImageView: UIImageView!
         
     //schedule for the day
     var schedule : SSScheduleForDay?
@@ -28,6 +28,9 @@ class SSDayView: JTCalendarDayView {
         //override placement and font-size of textLabel
         self.textLabel.frame = CGRect(x: 5, y: 5, width: self.frame.width / 4, height: self.frame.height / 4)
         self.textLabel.font = UIFont(name: ".SFUIText-Regular", size: 10.0)
+        
+        //layout the imageView
+        self.ssDVImageView.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height)
         
     }
     
@@ -40,10 +43,19 @@ class SSDayView: JTCalendarDayView {
         self.layer.borderWidth = 0.25
         
         //remove circleView
-        self.circleView.removeFromSuperview()
+//        self.circleView.removeFromSuperview()
         self.dotView.removeFromSuperview()
         
-        //set background color to clear
-//        self.backgroundColor = UIColor.clearColor()
+        //layout ssDVImageView
+        self.ssDVImageView = UIImageView()
+        self.addSubview(self.ssDVImageView)
+        self.sendSubviewToBack(self.ssDVImageView)
+        self.ssDVImageView.contentMode = UIViewContentMode.ScaleAspectFit
+        self.ssDVImageView.backgroundColor = UIColor.redColor() //TODO: DEBUG REMOVE LATER
+        self.ssDVImageView.hidden = true
+        self.ssDVImageView.layer.rasterizationScale = UIScreen.mainScreen().scale
+        self.ssDVImageView.layer.shouldRasterize = true
+
+        
     }
 }

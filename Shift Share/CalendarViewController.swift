@@ -94,25 +94,15 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             abort()
         }
         
-        //get schedule for date
-        if let events = self.eventsByDate, schedule = events[self.dateFormatter.stringFromDate(dayView.date)] as? SSScheduleForDay {
-            dayView.schedule = schedule
-            
-            //TODO: MOVE THIS DAYVIEW CLASS?
-            //TODO: PICS OVERLAP, RACE CONDITION?
-            //get image if it exists
-            if let image = schedule.shift.image {
-                //layout the imageView
-                dispatch_async(dispatch_get_main_queue(), {
-                    print("setting image for \(dayView.date.readableDate())")
-                    dayView.ssDVImageView = UIImageView(frame: dayView.frame)
-                    dayView.ssDVImageView!.contentMode = UIViewContentMode.ScaleAspectFit
-                    dayView.ssDVImageView!.image = image
-                    dayView.addSubview(dayView.ssDVImageView!)
-                    dayView.sendSubviewToBack(dayView.ssDVImageView!)
-                })
-            }
-        }
+        //if event for thatdate exists, set image in view
+        //schedule exists, get schedule and image if applicable
+//        if let schedule = self.eventsByDate![self.dateFormatter.stringFromDate(dayView.date)] as? SSScheduleForDay,
+//            image = schedule.shift.image {
+//                dispatch_async(dispatch_get_main_queue(), {
+//                    dayView.schedule = schedule
+//                    dayView.ssDVImageView.image = image
+//                })
+//        }
         
         //format for today's date
         if calendar.dateHelper.date(NSDate(), isTheSameDayThan: dayView.date) {
@@ -120,8 +110,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //set UI accordingly
             dayView.circleView.hidden = false
             dayView.circleView.backgroundColor = UIColor.blueColor()
-            dayView.dotView.backgroundColor = UIColor.whiteColor()
-            dayView.textLabel.textColor = UIColor.whiteColor()
+//            dayView.dotView.backgroundColor = UIColor.whiteColor()
+            dayView.ssDVImageView.backgroundColor = UIColor.greenColor()
+//            dayView.textLabel.textColor = UIColor.whiteColor()
         
         //selected date
         } else if self.selectedDate != nil && calendar.dateHelper.date(self.selectedDate, isTheSameDayThan: dayView.date) {
@@ -129,27 +120,31 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //set UI accordingly
             dayView.circleView.hidden = false
             dayView.circleView.backgroundColor = UIColor.redColor()
-            dayView.dotView.backgroundColor = UIColor.whiteColor()
-            dayView.textLabel.textColor = UIColor.whiteColor()
+//            dayView.dotView.backgroundColor = UIColor.whiteColor()
+            dayView.ssDVImageView.backgroundColor = UIColor.greenColor()
+//            dayView.textLabel.textColor = UIColor.whiteColor()
         
         //other month
         } else if !calendar.dateHelper.date(self.calendarView.date, isTheSameMonthThan: dayView.date) {
 
             //set UI accordingly
             dayView.circleView.hidden = true
-            dayView.dotView.backgroundColor = UIColor.redColor()
+//            dayView.dotView.backgroundColor = UIColor.redColor()
+            dayView.ssDVImageView.backgroundColor = UIColor.redColor()
             dayView.textLabel.textColor = UIColor.lightGrayColor()
             
         //another day of the current month
         } else {
 
             dayView.circleView.hidden = true
-            dayView.dotView.backgroundColor = UIColor.redColor()
+//            dayView.dotView.backgroundColor = UIColor.redColor()
+            dayView.ssDVImageView.backgroundColor = UIColor.redColor()
             dayView.textLabel.textColor = UIColor.blackColor()
         }
         
         //check if there is an event set for that day
-        dayView.dotView.hidden = !self.haveEventForThatDay(dayView.date)
+//        dayView.dotView.hidden = !self.haveEventForThatDay(dayView.date)
+        dayView.ssDVImageView.hidden = !self.haveEventForThatDay(dayView.date)
         //TODO: METHOD IS CALLED FOR DATES MULTIPLE TIMES
     }
     
@@ -170,18 +165,18 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.selectedDate = dayView.date
         
         
-        //TODO: REMOVE LATER
-        if let schedule = dayView.schedule {
-//            schedule.shift.cycleShift()
-            print(schedule.shift)
-        }
+//        //TODO: REMOVE LATER
+//        if let schedule = dayView.schedule {
+////            schedule.shift.cycleShift()
+//            print(dayView.date.readableDate(), schedule.shift, "should be", self.haveEventForThatDay(dayView.date))
+//        }
         
-//        //animation for the circle view
-//        dayView.circleView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.1, 0.1)
-//        UIView.transitionWithView(dayView, duration: 0.3, options: UIViewAnimationOptions(), animations: {
-//            dayView.circleView.transform = CGAffineTransformIdentity
-//            calendar.reload()
-//            }, completion: nil)
+        //animation for the circle view
+        dayView.circleView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.1, 0.1)
+        UIView.transitionWithView(dayView, duration: 0.3, options: UIViewAnimationOptions(), animations: {
+            dayView.circleView.transform = CGAffineTransformIdentity
+            calendar.reload()
+            }, completion: nil)
         
         //load the previous or next page if a day from another month is selected
         if !calendar.dateHelper.date(self.calendarView.date, isTheSameMonthThan: dayView.date) {
@@ -200,9 +195,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //reload tableViews
         self.dayViewTableView.reloadData()
-        
-        print(dayView)
-
+        print(dayView.frame)
+        print(dayView.subviews)
     }
     
     //functions to carry out when Today/Cancel button is pressed based on which Type the button is
@@ -343,7 +337,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //no key for that date
             return false
         }
-        print("event exists on \(date.readableDate())")
+
         //events exist on this date
         return true
         
