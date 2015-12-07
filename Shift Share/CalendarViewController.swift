@@ -93,13 +93,13 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //TODO: REMOVE IN PRODUCTION
             abort()
         }
-        
+
         //if event for thatdate exists, set image in view
-        //schedule exists, get schedule and image if applicable
+        //schedule exists, get image if applicable
         if let schedule = self.eventsByDate![self.dateFormatter.stringFromDate(dayView.date)] as? SSScheduleForDay,
             image = schedule.shift.image {
                 dispatch_async(dispatch_get_main_queue(), {
-                    dayView.schedule = schedule
+//                    dayView.schedule = schedule
                     dayView.ssDVImageView.image = image
                 })
         }

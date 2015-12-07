@@ -20,14 +20,14 @@ class SSDayView: JTCalendarDayView {
     var ssDVImageView: UIImageView!
         
     //schedule for the day
-    var schedule : SSScheduleForDay?
+//    var schedule : SSScheduleForDay?
     
     override func layoutSubviews() {
         super.layoutSubviews()
 
         //override placement and font-size of textLabel
         self.textLabel.frame = CGRect(x: 5, y: 5, width: self.frame.width / 4, height: self.frame.height / 4)
-        self.textLabel.font = UIFont(name: ".SFUIText-Regular", size: 10.0)
+        self.textLabel.font = UIFont(name: ".SFUIText-Regular", size: 9.0)
         
         //layout the imageView
         self.ssDVImageView.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height)
@@ -51,8 +51,8 @@ class SSDayView: JTCalendarDayView {
         self.insertSubview(self.ssDVImageView, aboveSubview: self.circleView)
         self.ssDVImageView.contentMode = UIViewContentMode.ScaleAspectFit
         self.ssDVImageView.hidden = true
-        self.ssDVImageView.layer.rasterizationScale = UIScreen.mainScreen().scale
-        self.ssDVImageView.layer.shouldRasterize = true
+//        self.ssDVImageView.layer.rasterizationScale = UIScreen.mainScreen().scale
+//        self.ssDVImageView.layer.shouldRasterize = true
 
         
     }
