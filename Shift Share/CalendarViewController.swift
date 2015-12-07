@@ -31,6 +31,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     
     //longPress gesture recognizer
     var longPress : UILongPressGestureRecognizer?
+    
+    //tableView Data
+    //TODO: REPLACE WITH CORE DATA
+    var tableData : [SSTBCellData]?
 
     //outlets
     @IBOutlet weak var monthSelectorView: JTCalendarMenuView!
@@ -272,9 +276,13 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         //create cell
-        guard let cell = tableView.dequeueReusableCellWithIdentifier("SSTableViewCell") as? SSTableViewCell else {
+        guard let cell = tableView.dequeueReusableCellWithIdentifier("SSTableViewCell") as? SSTableViewCell,
+        date = self.selectedDate,
+        schedule = self.getScheduleForDate(date) else {
             return UITableViewCell()
         }
+        
+        cell.date = date
         
         //no selection style
         cell.selectionStyle = UITableViewCellSelectionStyle.None
