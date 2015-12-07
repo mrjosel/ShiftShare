@@ -17,14 +17,17 @@ class SSTableViewCell: UITableViewCell {
     var date : NSDate?
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        //super init, force style to be of .Subtitle
+        super.init(style: UITableViewCellStyle.Subtitle, reuseIdentifier: reuseIdentifier)
         
         //create imageViewframe, square size equivalent to height x height
         self.imageView?.frame = CGRect(x: 0, y: 0, width: self.frame.height, height: self.frame.height)
+//        self.textLabel?.frame.origin = CGPoint(x: 0, y: 0)
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        fatalError("init(coder:) has not been implemented")
+
     }
 }

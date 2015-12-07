@@ -282,7 +282,18 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             return UITableViewCell()
         }
         
+        //set cell date for bookkeeping if neccesary
         cell.date = date
+        
+        //get tableData to use for cell creation
+        let tableData = schedule.tableData
+        let tableDataSource = tableData[indexPath.row]
+        
+        
+        //populate cell
+        cell.imageView?.image = tableDataSource.image
+        cell.textLabel?.text = tableDataSource.title
+        cell.detailTextLabel?.text = tableDataSource.body
         
         //no selection style
         cell.selectionStyle = UITableViewCellSelectionStyle.None
@@ -293,6 +304,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //what to do when cell is tapped
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         print("cell was pressed")
+        let cell = tableView.cellForRowAtIndexPath(indexPath)
+        print(cell?.textLabel?.frame)
+        print(cell?.detailTextLabel?.frame)
     }
     
     //toggles between week and month view
@@ -396,6 +410,14 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         let key5 = "14-12-2015"
         let key6 = "03-01-2016"
         
+        let note1 = SSNote(title: "Schedule 1", body: key1)
+        let note2 = SSNote(title: "Schedule 2", body: key2)
+        let note3 = SSNote(title: "Schedule 3", body: key3)
+        let note4 = SSNote(title: "Schedule 4", body: key4)
+        let note5 = SSNote(title: "Schedule 5", body: key5)
+        let note6 = SSNote(title: "Schedule 6a", body: key6)
+        let note7 = SSNote(title: "Schedule 6b", body: nil)
+        
         guard let date1 = self.dateFormatter.dateFromString(key1),
             date2 = self.dateFormatter.dateFromString(key2),
             date3 = self.dateFormatter.dateFromString(key3),
@@ -408,12 +430,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         self.eventsByDate = [
-            key1 : SSScheduleForDay(forDate: date1, withShift: SSShift.DAY, withNotes: [SSNote()], forUser: "Brian"),
-            key2 : SSScheduleForDay(forDate: date2, withShift: SSShift.NIGHT, withNotes: [SSNote()], forUser: "Brian"),
-            key3 : SSScheduleForDay(forDate: date3, withShift: SSShift.NIGHT, withNotes: [SSNote()], forUser: "Brian"),
-            key4 : SSScheduleForDay(forDate: date4, withShift: SSShift.DAY, withNotes: [SSNote()], forUser: "Brian"),
-            key5 : SSScheduleForDay(forDate: date5, withShift: SSShift.DAY, withNotes: [SSNote()], forUser: "Brian"),
-            key6 : SSScheduleForDay(forDate: date6, withShift: SSShift.NIGHT, withNotes: [SSNote()], forUser: "Brian")
+            key1 : SSScheduleForDay(forDate: date1, withShift: SSShift.DAY, withNotes: [note1], forUser: "Brian"),
+            key2 : SSScheduleForDay(forDate: date2, withShift: SSShift.NIGHT, withNotes: [note2], forUser: "Brian"),
+            key3 : SSScheduleForDay(forDate: date3, withShift: SSShift.NIGHT, withNotes: [note3], forUser: "Brian"),
+            key4 : SSScheduleForDay(forDate: date4, withShift: SSShift.DAY, withNotes: [note4], forUser: "Brian"),
+            key5 : SSScheduleForDay(forDate: date5, withShift: SSShift.DAY, withNotes: [note5], forUser: "Brian"),
+            key6 : SSScheduleForDay(forDate: date6, withShift: SSShift.NIGHT, withNotes: [note6, note7], forUser: "Brian")
         ]
         
     }
