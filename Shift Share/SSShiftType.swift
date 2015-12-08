@@ -13,11 +13,10 @@ import UIKit
 enum SSShiftType : Int, CustomStringConvertible {
     
     //image types, using ints
-    case NOSHIFT = 0, DAY, NIGHT, GREEN, YELLOW, RESERVED, VACATION
+    case DAY = 0, NIGHT, GREEN, YELLOW, RESERVED, VACATION
     
     //image names for use in printing and getting images
     static let shiftNames = [
-        NOSHIFT : "No Shift",
         DAY : "Day",
         NIGHT : "Night",
         GREEN: "Green",
@@ -29,7 +28,6 @@ enum SSShiftType : Int, CustomStringConvertible {
     //shift times
     //TODO: MAKE USER SELECTABLE
     static let shiftTimes = [
-        NOSHIFT : "",
         DAY : "7:00AM - 7:30PM",
         NIGHT : "7:00PM - 7:30AM",
         GREEN: "Need Green Body",
@@ -61,7 +59,7 @@ enum SSShiftType : Int, CustomStringConvertible {
         
         //get shift at rawValue, if no image exists, set shit to NOSHIFT
         guard let shift = SSShiftType(rawValue: rawVal) else {
-            self = SSShiftType.NOSHIFT
+            self = SSShiftType.DAY
             return
         }
         

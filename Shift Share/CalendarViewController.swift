@@ -65,9 +65,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //create random events for testability
         //TODO: DELETE THIS
-//        self.createRandomEvents()
+        self.createRandomEvents()
 //        self.createAllMonthEvents()
-        self.createSetEvents()
+//        self.createSetEvents()
         
         //setup views
         self.calendarManager.menuView = self.monthSelectorView
@@ -101,7 +101,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //if event for thatdate exists, set image in view
         //schedule exists, get image if applicable
         if let schedule = self.eventsByDate![self.dateFormatter.stringFromDate(dayView.date)] as? SSScheduleForDay,
-            image = schedule.shift.image {
+            image = schedule.shift?.image {
                 dispatch_async(dispatch_get_main_queue(), {
                     dayView.ssDVImageView.image = image
                 })
@@ -261,7 +261,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         //number of rows equal to shift plus number of notes
-        let cellCount = (schedule.shift.type == .NOSHIFT) ? schedule.notes.count : schedule.notes.count + 1
+        let cellCount = schedule.tableData.count
         
         //show/hide tableView depending on number of cells (should never return anything less than 0)
         tableView.hidden = cellCount <= 0
@@ -440,7 +440,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func createRandomEvents() {
         self.eventsByDate = NSMutableDictionary()
         
-        for var i = 0; i < 10; i++ {
+        for var i = 0; i < 30; i++ {
             
             //create random date from today
             let today = NSDate()
@@ -453,23 +453,26 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             
             //create random shift
             let rawVal = Int(randomNum % 7)
-            let shift = SSShift(type: SSShiftType(rawValue: rawVal)!)
+            print(rawVal)
+            let shift : SSShift? = (rawVal <= 5) ? SSShift(type: SSShiftType(rawValue: rawVal)!) : nil
             
             //create notes for the day
-            let count = Int(randomNum % 3)
+            let count = Int(randomNum % 6)
             var notes : [SSNote] = []
             for var j = 0; j < count; j++ {
-                let note = SSNote(title: "Note\(count)", body: nil)
+                let note = SSNote(title: "Note\(j)", body: "Body\(j)")
                 notes.append(note)
             }
             
             //make schedule from shift and notes
-            let schedule = SSScheduleForDay(forDate: randomDate, withShift: shift, withNotes: notes, forUser: "Brian")
-            let key = self.dateFormatter.stringFromDate(randomDate)
-            
-            if self.eventsByDate![key] == nil {
-                self.eventsByDate![key] = schedule
+            if notes.count != 0 || shift != nil {
+                let schedule = SSScheduleForDay(forDate: randomDate, withShift: shift, withNotes: notes, forUser: "Brian")
+                let key = self.dateFormatter.stringFromDate(randomDate)
+                if self.eventsByDate![key] == nil {
+                    self.eventsByDate![key] = schedule
+                }
             }
+            
         }
     }
 

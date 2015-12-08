@@ -22,7 +22,7 @@ class SSScheduleForDay {
     var user : String   //TODO: MAKE USER NSMANAGEDOBJECT
     
     //shift for the day
-    var shift : SSShift
+    var shift : SSShift?
     
     //notes for the day
     var notes : [SSNote]
@@ -37,7 +37,7 @@ class SSScheduleForDay {
         self.date = NSDate()
         
         //no shift, no notes, no user
-        self.shift = SSShift(type: SSShiftType.NOSHIFT)
+        self.shift = nil
         self.notes = []
         self.user = "NO USER"  //TODO: FIX WHEN USER OBJECT IS IMPLEMENTED
         self.tableData = []
@@ -45,14 +45,17 @@ class SSScheduleForDay {
     }
     
     //init with params
-    init(forDate date: NSDate, withShift shift: SSShift, withNotes notes: [SSNote], forUser user: AnyObject) {
+    init(forDate date: NSDate, withShift shift: SSShift?, withNotes notes: [SSNote], forUser user: AnyObject) {
         
         //set params to properties
         self.date = date
         self.shift = shift
         self.notes = notes
         self.user = user as! String //TODO: FIX WHEN USER OBJECT IS IMPLEMENTED
-        self.tableData = [self.shift] + notes
+        self.tableData = notes
+        if let shift = shift {
+            self.tableData.insert(shift, atIndex: 0)
+        }
         
     }
 }
