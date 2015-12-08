@@ -268,7 +268,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //get tableData
         let tableData = schedule.tableData
         guard let cellData = tableData[indexPath.row] as? SSTBCellData else {
-            return SSTableViewCell()
+            //failed to cast data as SSTBCellData, return cell
+            return cell
         }
         
         //set cell properties
@@ -295,7 +296,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         if let dayForWeekView = self.selectedDate {
             self.calendarView.date = dayForWeekView
         }
-                
+        
         //get height of calendarView based on whether or not your in week or month mode, set constraint to height
         let newHeight : CGFloat = self.calendarManager.settings.weekModeEnabled ? 85 : 300
         self.calendarViewHeight.constant = newHeight
