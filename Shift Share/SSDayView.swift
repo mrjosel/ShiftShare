@@ -43,7 +43,7 @@ class SSDayView: JTCalendarDayView {
         self.layer.borderWidth = 0.25
         
         //remove circleView
-//        self.circleView.removeFromSuperview()
+        self.circleView.removeFromSuperview()
 //        self.dotView.removeFromSuperview()
         
         //layout ssDVImageView

@@ -109,22 +109,25 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //format for today's date
         if calendar.dateHelper.date(NSDate(), isTheSameDayThan: dayView.date) {
-
+            
             //set UI accordingly
-//            dayView.backgroundColor = UIColor(red: 53/255.0, green: 255/255.0, blue: 232/255.0, alpha: 1.0)
-            dayView.circleView.hidden = false
-            dayView.circleView.backgroundColor = UIColor.blueColor()
+            if dayView.date == self.selectedDate {
+                dayView.alpha = 0.5
+                dayView.backgroundColor = UIColor.lightGrayColor()
+            } else {
+                dayView.backgroundColor = UIColor(red: 97/255.0, green: 194/255.0, blue: 250/255.0, alpha: 1.0)
+                dayView.alpha = 1.0
+            }
+            
             dayView.dotView.backgroundColor = UIColor.whiteColor()
 //            dayView.textLabel.textColor = UIColor.whiteColor()
         
         //selected date
         } else if self.selectedDate != nil && calendar.dateHelper.date(self.selectedDate, isTheSameDayThan: dayView.date) {
-
+            
             //set UI accordingly
-//            dayView.alpha = 0.5
-//            dayView.backgroundColor = UIColor.lightGrayColor()
-            dayView.circleView.hidden = false
-            dayView.circleView.backgroundColor = UIColor.redColor()
+            dayView.alpha = 0.5
+            dayView.backgroundColor = UIColor.lightGrayColor()
             dayView.dotView.backgroundColor = UIColor.whiteColor()
 //            dayView.textLabel.textColor = UIColor.whiteColor()
         
@@ -132,14 +135,17 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         } else if !calendar.dateHelper.date(self.calendarView.date, isTheSameMonthThan: dayView.date) {
 
             //set UI accordingly
-            dayView.circleView.hidden = true
+            dayView.backgroundColor = UIColor.clearColor()
+            dayView.alpha = 1.0
             dayView.dotView.backgroundColor = UIColor.redColor()
             dayView.textLabel.textColor = UIColor.lightGrayColor()
             
         //another day of the current month
         } else {
-
-            dayView.circleView.hidden = true
+            
+            //set UI accordingly
+            dayView.backgroundColor = UIColor.clearColor()
+            dayView.alpha = 1.0
             dayView.dotView.backgroundColor = UIColor.redColor()
             dayView.textLabel.textColor = UIColor.blackColor()
         }
@@ -165,12 +171,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //set selected date
         self.selectedDate = dayView.date
         
-        //animation for the circle view
-        dayView.circleView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.1, 0.1)
-        UIView.transitionWithView(dayView, duration: 0.3, options: UIViewAnimationOptions(), animations: {
-            dayView.circleView.transform = CGAffineTransformIdentity
-            calendar.reload()
-            }, completion: nil)
+        //animation for the dayView
+        UIView.transitionWithView(dayView, duration: 0.3, options: UIViewAnimationOptions(), animations: {calendar.reload()}, completion: nil)
         
         //load the previous or next page if a day from another month is selected
         if !calendar.dateHelper.date(self.calendarView.date, isTheSameMonthThan: dayView.date) {
@@ -453,7 +455,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             
             //create random shift
             let rawVal = Int(randomNum % 7)
-            print(rawVal)
             let shift : SSShift? = (rawVal <= 5) ? SSShift(type: SSShiftType(rawValue: rawVal)!) : nil
             
             //create notes for the day
