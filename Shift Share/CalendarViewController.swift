@@ -295,9 +295,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         if let dayForWeekView = self.selectedDate {
             self.calendarView.date = dayForWeekView
         }
-        
-        self.calendarManager.reload()
-        
+                
         //get height of calendarView based on whether or not your in week or month mode, set constraint to height
         let newHeight : CGFloat = self.calendarManager.settings.weekModeEnabled ? 85 : 300
         self.calendarViewHeight.constant = newHeight
