@@ -42,7 +42,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var dayViewTableView: UITableView!
     @IBOutlet weak var menuView: UIView!
     @IBOutlet weak var calendarViewHeight: NSLayoutConstraint!
-    @IBOutlet weak var dayLabel: UILabel!
     @IBOutlet weak var scheduleEditCancelTodayButton: SSButton!
     @IBOutlet weak var scheduleEditDoneButton: SSButton!
 
@@ -74,7 +73,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.calendarManager.contentView = self.calendarView
         self.calendarManager.setDate(NSDate())
         self.locale = NSLocale.currentLocale().localeIdentifier
-        self.dayLabel.text = NSDate().readableDate()
         self.scheduleEditDoneButton.ssButtonType = SSButtonType.DONE
         self.scheduleEditDoneButton.hostViewController = self
         self.scheduleEditCancelTodayButton.ssButtonType = SSButtonType.TODAY
@@ -164,9 +162,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //TODO: REMOVE IN PRODUCTION
             abort()
         }
-
-        //display date in label
-        self.dayLabel.text = dayView.date.readableDate()
         
         //set selected date
         self.selectedDate = dayView.date
@@ -203,13 +198,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //clear out selected date, dayView set calendarManager date to today, reload table
             self.selectedDate = nil
             self.calendarManager.setDate(NSDate())
-            self.dayLabel.text = NSDate().readableDate()
             self.dayViewTableView.reloadData()
-            
-            //TODO: DEBUG, REMOVE LATER
-            for (key, schedule) in self.eventsByDate! {
-                print("\(key) = \((schedule as! SSScheduleForDay).shift)")
-            }
             
         case .CANCEL :
             //discard changes in scheduleEdit mode
