@@ -10,29 +10,39 @@ import Foundation
 import UIKit
 
 //notes to populate SSDayViews
-class SSNote : CustomStringConvertible {
+class SSNote : SSTBCellData, CustomStringConvertible {
     
-    //title and body
-    var title : String
+    //title, body, image for protocol conformance
+    var title : String?
     var body : String?
+    var image : UIImage? = nil  //never has image, allows for easy protocol conformance
     
     //description for CustomStringConvertible conformance
     var description : String {
         get {
+            //if no title, return String of self
+            guard let title = self.title else {
+                return "\(self)"
+            }
+            
+            //title exists, check for body
             guard let body = self.body else {
                 return title
             }
+            
+            //title and body both exist
             return "\(title) (body: \(body))"
         }
     }
     
     //empty initializer
     init() {
-        self.title = "no title"
+        self.title = nil
+        self.body = nil
     }
     
     //init with title, optional body
-    init(title: String, body: String?) {
+    init(title: String?, body: String?) {
         
         //set properties to params
         self.title = title

@@ -21,7 +21,7 @@
 		B79274981BF55E4400FFE21C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B79274961BF55E4400FFE21C /* LaunchScreen.storyboard */; };
 		B79274A31BF55E4400FFE21C /* Shift_ShareTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79274A21BF55E4400FFE21C /* Shift_ShareTests.swift */; };
 		B79274AE1BF55E4400FFE21C /* Shift_ShareUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79274AD1BF55E4400FFE21C /* Shift_ShareUITests.swift */; };
-		B7E6C1311C15FF4B00A30682 /* SSTBCellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E6C1301C15FF4B00A30682 /* SSTBCellData.swift */; };
+		B7E6C1331C16657600A30682 /* SSShiftType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E6C1321C16657600A30682 /* SSShiftType.swift */; };
 		D737A387B0A4C4BDF7D71E54 /* Pods_Shift_Share.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 118FB04471BA827DDB631C39 /* Pods_Shift_Share.framework */; };
 /* End PBXBuildFile section */
 
@@ -66,7 +66,7 @@
 		B79274A91BF55E4400FFE21C /* Shift ShareUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Shift ShareUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B79274AD1BF55E4400FFE21C /* Shift_ShareUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shift_ShareUITests.swift; sourceTree = "<group>"; };
 		B79274AF1BF55E4400FFE21C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B7E6C1301C15FF4B00A30682 /* SSTBCellData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSTBCellData.swift; sourceTree = "<group>"; };
+		B7E6C1321C16657600A30682 /* SSShiftType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSShiftType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,7 +119,7 @@
 				B75A942D1BFEB0200075C2DA /* SSNote.swift */,
 				B75A94251BFE2F3E0075C2DA /* SSShift.swift */,
 				B75A946E1C062B640075C2DA /* SSScheduleForDay.swift */,
-				B7E6C1301C15FF4B00A30682 /* SSTBCellData.swift */,
+				B7E6C1321C16657600A30682 /* SSShiftType.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -395,10 +395,10 @@
 				B75A946B1BFF96510075C2DA /* ExtensionsAndProtocols.swift in Sources */,
 				B75A946D1C0389070075C2DA /* SSButton.swift in Sources */,
 				B75A94281BFE8F640075C2DA /* SSTableViewCell.swift in Sources */,
-				B7E6C1311C15FF4B00A30682 /* SSTBCellData.swift in Sources */,
 				B75A946F1C062B640075C2DA /* SSScheduleForDay.swift in Sources */,
 				B75A940D1BFA67220075C2DA /* SSDayView.swift in Sources */,
 				B75A942E1BFEB0200075C2DA /* SSNote.swift in Sources */,
+				B7E6C1331C16657600A30682 /* SSShiftType.swift in Sources */,
 				B792748E1BF55E4400FFE21C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

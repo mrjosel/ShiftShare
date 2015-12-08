@@ -47,3 +47,17 @@ extension NSDate {
         return self.month + ", " + self.day + " " + self.year
     }
 }
+
+//allows for easy population of tableCell data
+protocol SSTBCellData {
+    
+    //image for shift
+    var image : UIImage? {get set}
+    
+    //string for title (shift, note title, etc)
+    var title : String? {get set}
+    
+    //string for body/description of note
+    var body : String? {get set}
+    
+}

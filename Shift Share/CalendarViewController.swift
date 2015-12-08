@@ -103,7 +103,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         if let schedule = self.eventsByDate![self.dateFormatter.stringFromDate(dayView.date)] as? SSScheduleForDay,
             image = schedule.shift.image {
                 dispatch_async(dispatch_get_main_queue(), {
-//                    dayView.schedule = schedule
                     dayView.ssDVImageView.image = image
                 })
         }
@@ -262,7 +261,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         //number of rows equal to shift plus number of notes
-        let cellCount = (schedule.shift == .NOSHIFT) ? schedule.notes.count : schedule.notes.count + 1
+        let cellCount = (schedule.shift.type == .NOSHIFT) ? schedule.notes.count : schedule.notes.count + 1
         
         //show/hide tableView depending on number of cells (should never return anything less than 0)
         tableView.hidden = cellCount <= 0
@@ -285,15 +284,16 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //set cell date for bookkeeping if neccesary
         cell.date = date
         
-        //get tableData to use for cell creation
+        //get tableData
         let tableData = schedule.tableData
-        let tableDataSource = tableData[indexPath.row]
+        guard let cellData = tableData[indexPath.row] as? SSTBCellData else {
+            return SSTableViewCell()
+        }
         
-        
-        //populate cell
-        cell.imageView?.image = tableDataSource.image
-        cell.textLabel?.text = tableDataSource.title
-        cell.detailTextLabel?.text = tableDataSource.body
+        //set cell properties
+        cell.imageView?.image = cellData.image
+        cell.textLabel?.text = cellData.title
+        cell.detailTextLabel?.text = cellData.body
         
         //no selection style
         cell.selectionStyle = UITableViewCellSelectionStyle.None
@@ -304,9 +304,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //what to do when cell is tapped
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         print("cell was pressed")
-        let cell = tableView.cellForRowAtIndexPath(indexPath)
-        print(cell?.textLabel?.frame)
-        print(cell?.detailTextLabel?.frame)
+
     }
     
     //toggles between week and month view
@@ -389,10 +387,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             let day = NSDate(timeInterval: Double(3600 * 24 * i), sinceDate: today)
             //create random shift
             let randomNum = arc4random()
-            let rawVal = randomNum % 2 + 1
-            guard let shift = SSShift(rawValue: Int(rawVal)) else {
-                abort()
-            }
+            let rawVal = Int(randomNum % 2 + 1)
+            let shift = SSShift(type: SSShiftType(rawValue: rawVal)!)
             let schedule = SSScheduleForDay(forDate: day, withShift: shift, withNotes: [SSNote()], forUser: "Brian")
             self.eventsByDate![self.dateFormatter.stringFromDate(day)] = schedule
             
@@ -430,14 +426,13 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         self.eventsByDate = [
-            key1 : SSScheduleForDay(forDate: date1, withShift: SSShift.DAY, withNotes: [note1], forUser: "Brian"),
-            key2 : SSScheduleForDay(forDate: date2, withShift: SSShift.NIGHT, withNotes: [note2], forUser: "Brian"),
-            key3 : SSScheduleForDay(forDate: date3, withShift: SSShift.NIGHT, withNotes: [note3], forUser: "Brian"),
-            key4 : SSScheduleForDay(forDate: date4, withShift: SSShift.DAY, withNotes: [note4], forUser: "Brian"),
-            key5 : SSScheduleForDay(forDate: date5, withShift: SSShift.DAY, withNotes: [note5], forUser: "Brian"),
-            key6 : SSScheduleForDay(forDate: date6, withShift: SSShift.NIGHT, withNotes: [note6, note7], forUser: "Brian")
+            key1 : SSScheduleForDay(forDate: date1, withShift: SSShift(type: .DAY), withNotes: [note1], forUser: "Brian"),
+            key2 : SSScheduleForDay(forDate: date2, withShift: SSShift(type: .NIGHT), withNotes: [note2], forUser: "Brian"),
+            key3 : SSScheduleForDay(forDate: date3, withShift: SSShift(type: .NIGHT), withNotes: [note3], forUser: "Brian"),
+            key4 : SSScheduleForDay(forDate: date4, withShift: SSShift(type: .DAY), withNotes: [note4], forUser: "Brian"),
+            key5 : SSScheduleForDay(forDate: date5, withShift: SSShift(type: .DAY), withNotes: [note5], forUser: "Brian"),
+            key6 : SSScheduleForDay(forDate: date6, withShift: SSShift(type: .NIGHT), withNotes: [note6, note7], forUser: "Brian")
         ]
-        
     }
     
     //test function
@@ -457,10 +452,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             let randomDate = NSDate(timeInterval: interval, sinceDate: today)
             
             //create random shift
-            let rawVal = randomNum % 7
-            guard let shift = SSShift(rawValue: Int(rawVal)) else {
-                abort()
-            }
+            let rawVal = Int(randomNum % 7)
+            let shift = SSShift(type: SSShiftType(rawValue: rawVal)!)
             
             //create notes for the day
             let count = Int(randomNum % 3)
