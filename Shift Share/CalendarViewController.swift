@@ -29,9 +29,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //locale for use in displaying date formats
     var locale : String?
     
-    //longPress gesture recognizer
-    var longPress : UILongPressGestureRecognizer?
-    
     //tableView Data
     //TODO: REPLACE WITH CORE DATA
     var tableData : [SSTBCellData]?
@@ -49,11 +46,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
                 
-        //delegate and dataSource for tableView, as well as longPressGestureRecognizer
-        self.longPress = UILongPressGestureRecognizer(target: self, action: "longPress:")
+        //delegate and dataSource for tableView
         self.dayViewTableView.delegate = self
         self.dayViewTableView.dataSource = self
-        self.dayViewTableView.addGestureRecognizer(longPress!)
         
         //set up date formatter
         self.dateFormatter.dateFormat = "dd-MM-yyyy"
@@ -76,7 +71,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.calendarManager.contentView = self.calendarView
         self.calendarManager.setDate(NSDate())
         self.locale = NSLocale.currentLocale().localeIdentifier
-        self.scheduleEditDoneButton.ssButtonType = SSButtonType.DONE
+        self.scheduleEditDoneButton.ssButtonType = SSButtonType.EDIT
         self.scheduleEditDoneButton.hostViewController = self
         self.scheduleEditCancelTodayButton.ssButtonType = SSButtonType.TODAY
         self.scheduleEditCancelTodayButton.hostViewController = self
@@ -203,6 +198,11 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             self.calendarManager.setDate(NSDate())
             self.dayViewTableView.reloadData()
             
+            //Edit Button
+        case .EDIT :
+            self.weekMonthView()
+            //TODO: MAKE EDITING FEATURE
+            
         case .CANCEL :
             //discard changes in scheduleEdit mode
             //TODO: DISCARD ALL CHANGES
@@ -218,30 +218,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         default :
             //unknown sender
             break
-        }
-    }
-    
-    func longPress(sender: UILongPressGestureRecognizer) {
-        
-        //only allow cell to be selected once
-        if sender.state == .Began {
-            
-            //get point where long press occurs
-            let point = sender.locationInView(self.dayViewTableView)
-            
-            //get indexPath at point
-            guard let indexPath = self.dayViewTableView.indexPathForRowAtPoint(point) else {
-                
-                //no indexPath found, return
-                return
-            }
-            
-            //deselect all selected cells
-            self.dayViewTableView.deselectAllCells()
-            
-            //present week view
-            self.weekMonthView()
-
         }
     }
     
@@ -273,6 +249,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //set cell date for bookkeeping if neccesary
         cell.date = date
         
+        //no selection style
+        cell.selectionStyle = UITableViewCellSelectionStyle.None
+        
         //get schedule for date, otherwise format cells for no schedule
         guard let schedule = self.getScheduleForDate(date) else {
             
@@ -296,9 +275,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         cell.imageView?.image = cellData.image
         cell.textLabel?.text = cellData.title
         cell.detailTextLabel?.text = cellData.body
-        
-        //no selection style
-        cell.selectionStyle = UITableViewCellSelectionStyle.None
         
         return cell
     }
@@ -326,11 +302,11 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         let newHeight : CGFloat = self.calendarManager.settings.weekModeEnabled ? 85 : 300
         self.calendarViewHeight.constant = newHeight
         
-        //show schedule edit done button only if in week mode
-        self.scheduleEditDoneButton.hidden = !self.calendarManager.settings.weekModeEnabled
-        
         //if in week mode, make button cancel, else make it today
         self.scheduleEditCancelTodayButton.ssButtonType = (self.calendarManager.settings.weekModeEnabled) ? SSButtonType.CANCEL : SSButtonType.TODAY
+        
+        //if in week mode, make button Ddone, else make it edit
+        self.scheduleEditDoneButton.ssButtonType = (self.calendarManager.settings.weekModeEnabled) ? SSButtonType.DONE : SSButtonType.EDIT
         
         //layout if needed
         self.view.layoutIfNeeded()

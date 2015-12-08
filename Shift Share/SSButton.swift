@@ -53,21 +53,17 @@ class SSButton: UIButton {
                 //configure for cancel button
                 self.setTitle(SSButtonType.CANCEL.description, forState: UIControlState.Normal)
                 //cancel and today button is never hidden
-                self.hidden = false
             case .TODAY :
                 self.setTitle(SSButtonType.TODAY.description, forState: UIControlState.Normal)
                 //cancel and today button is never hidden
-                self.hidden = false
             case .DONE :
                 //configure for done button
                 self.setTitle(SSButtonType.DONE.description, forState: UIControlState.Normal)
                 //default state is hidden
-                self.hidden = true
             case .EDIT :
                 //configure for edit button
                 self.setTitle(SSButtonType.EDIT.description, forState: UIControlState.Normal)
                 //default state is hidden
-                self.hidden = true
             default :
                 //unrecognized state
                 break
