@@ -32,6 +32,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //tableView Data
     //TODO: REPLACE WITH CORE DATA
     var tableData : [SSTBCellData]?
+    
+    //bool to let VC know if in editMode
+    var editMode : Bool?
 
     //outlets
     @IBOutlet weak var monthSelectorView: JTCalendarMenuView!
@@ -59,6 +62,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //start with today's date
         self.selectedDate = NSDate()
+        
+        //not in editMode
+        self.editMode = false
         
         //create random events for testability
         //TODO: DELETE THIS
@@ -111,7 +117,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 dayView.alpha = 0.5
                 dayView.backgroundColor = UIColor.lightGrayColor()
             } else {
-                dayView.backgroundColor = UIColor(red: 97/255.0, green: 194/255.0, blue: 250/255.0, alpha: 1.0)
+                dayView.backgroundColor = UIColor.todayColor()
                 dayView.alpha = 1.0
             }
             
@@ -202,6 +208,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         case .EDIT :
             self.weekMonthView()
             //TODO: MAKE EDITING FEATURE
+            self.editMode = true
             
         case .CANCEL :
             //discard changes in scheduleEdit mode
@@ -209,12 +216,20 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             
             //go back to month view
             self.weekMonthView()
+            
+            //no longer in editMode
+            self.editMode = false
+            
         case .DONE :
             //commit changes
             //TODO: MAKE METHOD TO SAVE CHANGES
             
             //go back to month view
             self.weekMonthView()
+            
+            //no longer in editMode
+            self.editMode = false
+            
         default :
             //unknown sender
             break

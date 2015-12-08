@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import JTCalendar
 
-//extending UITableView to allow for delecting all cells
+//extending UITableView to allow for deselecting all cells
 extension UITableView {
     
     //runs through all cells in visible cells and sets selected parameter to false
@@ -18,6 +18,13 @@ extension UITableView {
         for cell in self.visibleCells {
             cell.selected = false
         }
+    }
+}
+
+//custom color for Today's Date
+extension UIColor {
+    public class func todayColor() -> UIColor {
+        return UIColor(red: 97/255.0, green: 194/255.0, blue: 250/255.0, alpha: 1.0)
     }
 }
 
