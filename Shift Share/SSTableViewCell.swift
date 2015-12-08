@@ -23,7 +23,7 @@ class SSTableViewCell: UITableViewCell {
         
         //create imageViewframe, square size equivalent to height x height
         self.imageView?.frame = CGRect(x: 0, y: 0, width: self.frame.height, height: self.frame.height)
-//        self.textLabel?.frame.origin = CGPoint(x: 0, y: 0)
+
     }
 
     required init?(coder aDecoder: NSCoder) {

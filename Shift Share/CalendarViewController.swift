@@ -62,6 +62,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.calendarManager = JTCalendarManager()
         self.calendarManager.delegate = self
         
+        //start with today's date
+        self.selectedDate = NSDate()
+        
         //create random events for testability
         //TODO: DELETE THIS
         self.createRandomEvents()
@@ -195,8 +198,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         switch sender.ssButtonType {
             //Today Button
         case .TODAY :
-            //clear out selected date, dayView set calendarManager date to today, reload table
-            self.selectedDate = nil
+            //select today's date, dayView set calendarManager date to today, reload table
+            self.selectedDate = NSDate()
             self.calendarManager.setDate(NSDate())
             self.dayViewTableView.reloadData()
             
@@ -245,17 +248,13 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //number of rows in tableView
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        //get dayView and schedule if they exist, return 0 otherwise
+        //get dayView and schedule if they exist, return 2 otherwise
         guard let schedule = self.getScheduleForDate(self.selectedDate) else {
-            tableView.hidden = true
-            return 0
+            return 2
         }
         
         //number of rows equal to shift plus number of notes
         let cellCount = schedule.tableData.count
-        
-        //show/hide tableView depending on number of cells (should never return anything less than 0)
-        tableView.hidden = cellCount <= 0
         
         //return cellCount
         return cellCount
@@ -267,13 +266,25 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //create cell
         guard let cell = tableView.dequeueReusableCellWithIdentifier("SSTableViewCell") as? SSTableViewCell,
-        date = self.selectedDate,
-        schedule = self.getScheduleForDate(date) else {
+        date = self.selectedDate else {
             return UITableViewCell()
         }
         
         //set cell date for bookkeeping if neccesary
         cell.date = date
+        
+        //get schedule for date, otherwise format cells for no schedule
+        guard let schedule = self.getScheduleForDate(date) else {
+            
+            //no image nor detailTextLabel
+            cell.imageView?.image = nil
+            cell.detailTextLabel?.text = nil
+            
+            //text differs depending on placement
+            cell.textLabel?.text = (indexPath.row == 0) ? "No Schedule" : "No Notes"
+            
+            return cell
+        }
         
         //get tableData
         let tableData = schedule.tableData
