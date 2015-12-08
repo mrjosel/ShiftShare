@@ -40,7 +40,6 @@ class SSScheduleForDay {
         self.shift = SSShift(type: SSShiftType.NOSHIFT)
         self.notes = []
         self.user = "NO USER"  //TODO: FIX WHEN USER OBJECT IS IMPLEMENTED
-        
         self.tableData = []
         
     }
