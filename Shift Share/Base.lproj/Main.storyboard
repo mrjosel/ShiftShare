@@ -118,10 +118,10 @@
                         <outlet property="calendarView" destination="Vd0-12-PKY" id="kIf-8S-nvr"/>
                         <outlet property="calendarViewHeight" destination="t4z-xQ-tX3" id="UWO-r0-ZLm"/>
                         <outlet property="dayViewTableView" destination="r2A-Pd-HyF" id="EuV-Gs-Cor"/>
+                        <outlet property="leftSSButton" destination="3lz-yx-ED6" id="IdB-ir-lsg"/>
                         <outlet property="menuView" destination="lfP-oG-BD6" id="CKi-ms-OdB"/>
                         <outlet property="monthSelectorView" destination="KkR-sd-dBO" id="N59-SU-o5h"/>
-                        <outlet property="scheduleEditCancelTodayButton" destination="3lz-yx-ED6" id="HyO-qi-vMa"/>
-                        <outlet property="scheduleEditDoneButton" destination="dv3-wz-1tT" id="tf1-sG-jmY"/>
+                        <outlet property="rightSSButton" destination="dv3-wz-1tT" id="01r-U6-32h"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
