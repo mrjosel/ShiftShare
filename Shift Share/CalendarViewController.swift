@@ -229,10 +229,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             
             //no longer in editMode
             self.editMode = false
-            
-        default :
-            //unknown sender
-            break
         }
     }
     

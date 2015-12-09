@@ -64,9 +64,6 @@ class SSButton: UIButton {
                 //configure for edit button
                 self.setTitle(SSButtonType.EDIT.description, forState: UIControlState.Normal)
                 //default state is hidden
-            default :
-                //unrecognized state
-                break
             }
         }
     }
