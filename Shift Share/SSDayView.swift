@@ -48,7 +48,7 @@ class SSDayView: JTCalendarDayView {
         
         //layout ssDVImageView
         self.ssDVImageView = UIImageView()
-        self.insertSubview(self.ssDVImageView, aboveSubview: self.circleView)
+        self.insertSubview(self.ssDVImageView, atIndex: 0)
         self.ssDVImageView.contentMode = UIViewContentMode.ScaleAspectFit
         self.ssDVImageView.hidden = true
 //        self.ssDVImageView.layer.rasterizationScale = UIScreen.mainScreen().scale

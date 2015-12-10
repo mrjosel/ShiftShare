@@ -237,7 +237,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         guard let schedule = self.getScheduleForDate(self.selectedDate) else {
 
             //scroll view based on edit mode
-            tableView.scrollEnabled = self.editMode
+            tableView.userInteractionEnabled = self.editMode
             
             //gray out if in editMode
             tableView.alpha = (self.editMode) ? 1.0 : 0.5
