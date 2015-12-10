@@ -22,6 +22,7 @@
 		B79274A31BF55E4400FFE21C /* Shift_ShareTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79274A21BF55E4400FFE21C /* Shift_ShareTests.swift */; };
 		B79274AE1BF55E4400FFE21C /* Shift_ShareUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79274AD1BF55E4400FFE21C /* Shift_ShareUITests.swift */; };
 		B7E6C1331C16657600A30682 /* SSShiftType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E6C1321C16657600A30682 /* SSShiftType.swift */; };
+		B7E6C1351C19F20800A30682 /* ScheduleEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E6C1341C19F20800A30682 /* ScheduleEditViewController.swift */; };
 		D737A387B0A4C4BDF7D71E54 /* Pods_Shift_Share.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 118FB04471BA827DDB631C39 /* Pods_Shift_Share.framework */; };
 /* End PBXBuildFile section */
 
@@ -67,6 +68,7 @@
 		B79274AD1BF55E4400FFE21C /* Shift_ShareUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shift_ShareUITests.swift; sourceTree = "<group>"; };
 		B79274AF1BF55E4400FFE21C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B7E6C1321C16657600A30682 /* SSShiftType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSShiftType.swift; sourceTree = "<group>"; };
+		B7E6C1341C19F20800A30682 /* ScheduleEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleEditViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,6 +184,7 @@
 			isa = PBXGroup;
 			children = (
 				B792748F1BF55E4400FFE21C /* CalendarViewController.swift */,
+				B7E6C1341C19F20800A30682 /* ScheduleEditViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -394,6 +397,7 @@
 				B75A94261BFE2F3E0075C2DA /* SSShift.swift in Sources */,
 				B75A946B1BFF96510075C2DA /* ExtensionsAndProtocols.swift in Sources */,
 				B75A946D1C0389070075C2DA /* SSButton.swift in Sources */,
+				B7E6C1351C19F20800A30682 /* ScheduleEditViewController.swift in Sources */,
 				B75A94281BFE8F640075C2DA /* SSTableViewCell.swift in Sources */,
 				B75A946F1C062B640075C2DA /* SSScheduleForDay.swift in Sources */,
 				B75A940D1BFA67220075C2DA /* SSDayView.swift in Sources */,

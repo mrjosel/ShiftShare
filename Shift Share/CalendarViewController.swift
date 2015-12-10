@@ -280,11 +280,13 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             cell.imageView?.image = nil
             cell.detailTextLabel?.text = nil
             
-            //text differs depending on placement
+            //text and selection style differ depending on placement
             if !self.editMode {
                 cell.textLabel?.text = (indexPath.row == 0) ? "No Schedule" : "No Notes"
+                cell.selectionStyle = UITableViewCellSelectionStyle.None
             } else {
                 cell.textLabel?.text = (indexPath.row == 0) ? "Touch to Create Schedule" : "Touch to add Note"
+                cell.selectionStyle = UITableViewCellSelectionStyle.Default
             }
             
             return cell
@@ -308,6 +310,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //what to do when cell is tapped
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         print("cell was pressed")
+        print(self.getScheduleForDate(self.selectedDate))
 
     }
     

@@ -132,5 +132,24 @@
             </objects>
             <point key="canvasLocation" x="245" y="349"/>
         </scene>
+        <!--Schedule Edit View Controller-->
+        <scene sceneID="YAa-Tt-AUO">
+            <objects>
+                <viewController storyboardIdentifier="ScheduleEditViewController" id="Lie-ba-gjf" customClass="ScheduleEditViewController" customModule="Shift_Share" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="69i-p8-Kfv"/>
+                        <viewControllerLayoutGuide type="bottom" id="5Mb-Br-rbI"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="FQg-PA-7cl">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="O6B-v4-b0X" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1273" y="349"/>
+        </scene>
     </scenes>
 </document>
