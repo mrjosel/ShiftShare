@@ -56,7 +56,7 @@ extension NSDate {
 }
 
 //allows for easy population of tableCell data
-protocol SSTBCellData {
+@objc protocol SSTBCellData {
     
     //image for shift
     var image : UIImage? {get set}

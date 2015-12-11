@@ -233,7 +233,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //number of rows in tableView
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        //get dayView and schedule if they exist, return 2 otherwise
+        //get dayView and schedule if they exist, return 1 or 2 otherwise
         guard let schedule = self.getScheduleForDate(self.selectedDate) else {
 
             //scroll view based on edit mode
@@ -241,7 +241,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             
             //gray out if in editMode
             tableView.alpha = (self.editMode) ? 1.0 : 0.5
-            return 2
+            return self.editMode ? 2 : 1
         }
         
         //schedule exists, scroll enabled regardless of editMode
@@ -267,37 +267,26 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             return UITableViewCell()
         }
         
-        //set cell date for bookkeeping if neccesary
+        //set date in cell (for bookkeeping, may be removed later)
         cell.date = date
         
-        //no selection style
-        cell.selectionStyle = UITableViewCellSelectionStyle.None
+        //get data to populate cells
+        var tableData : [SSTBCellData] = []
         
-        //get schedule for date, otherwise format cells for no schedule
-        guard let schedule = self.getScheduleForDate(date) else {
+        if let schedule = self.getScheduleForDate(self.selectedDate) {
             
-            //no image nor detailTextLabel
-            cell.imageView?.image = nil
-            cell.detailTextLabel?.text = nil
+            //get tableData
+            tableData = schedule.tableData
             
-            //text and selection style differ depending on placement
-            if !self.editMode {
-                cell.textLabel?.text = (indexPath.row == 0) ? "No Schedule" : "No Notes"
-                cell.selectionStyle = UITableViewCellSelectionStyle.None
-            } else {
-                cell.textLabel?.text = (indexPath.row == 0) ? "Touch to Create Schedule" : "Touch to add Note"
-                cell.selectionStyle = UITableViewCellSelectionStyle.Default
-            }
+        } else {
             
-            return cell
+            //create table data based on edit mode or not
+            tableData = self.editMode ? SSScheduleForDay.editModeTableData() : SSScheduleForDay.emptyTableData()
+            
         }
         
-        //get tableData
-        let tableData = schedule.tableData
-        guard let cellData = tableData[indexPath.row] as? SSTBCellData else {
-            //failed to cast data as SSTBCellData, return cell
-            return cell
-        }
+        //get cellData from tableData
+        let cellData = tableData[indexPath.row]
         
         //set cell properties
         cell.imageView?.image = cellData.image
@@ -310,8 +299,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //what to do when cell is tapped
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         print("cell was pressed")
-        print(self.getScheduleForDate(self.selectedDate))
-
     }
     
     //toggles between week and month view

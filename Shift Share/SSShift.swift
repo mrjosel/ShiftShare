@@ -14,20 +14,30 @@ import UIKit
 class SSShift : SSTBCellData {
     
     //shift type
-    var type : SSShiftType
+    var type : SSShiftType?
     
     //protocol values set when type is set
-    var image : UIImage?
-    var title : String?
-    var body: String?
+    @objc var image : UIImage?
+    @objc var title : String?
+    @objc var body: String?
     
     //initializer
-    init(type: SSShiftType) {
+    init(type: SSShiftType?) {
         
         //set type, title, body, and image
-        self.type = type
-        self.title = SSShiftType.shiftNames[type]
-        self.body = SSShiftType.shiftTimes[type]
-        self.image = UIImage(named: SSShiftType.shiftNames[type]!)
+        if let type = type {
+            //type was set properly
+            self.type = type
+            self.title = SSShiftType.shiftNames[type]
+            self.body = SSShiftType.shiftTimes[type]
+            self.image = UIImage(named: SSShiftType.shiftNames[type]!)
+        } else {
+
+            //no type specified
+            self.type = nil
+            self.title = "No Shift"
+            self.body = nil
+            self.image = nil
+        }
     }
 }

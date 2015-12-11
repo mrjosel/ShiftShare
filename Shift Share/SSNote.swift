@@ -13,9 +13,9 @@ import UIKit
 class SSNote : SSTBCellData, CustomStringConvertible {
     
     //title, body, image for protocol conformance
-    var title : String?
-    var body : String?
-    var image : UIImage? = nil  //never has image, allows for easy protocol conformance
+    @objc var title : String?
+    @objc var body : String?
+    @objc var image : UIImage? = nil  //never has image, allows for easy protocol conformance
     
     //description for CustomStringConvertible conformance
     var description : String {
