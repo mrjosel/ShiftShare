@@ -235,7 +235,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //get dayView and schedule if they exist, return 1 or 2 otherwise
         guard let schedule = self.getScheduleForDate(self.selectedDate) else {
-
+            print("no schedule")
             //scroll view based on edit mode
             tableView.userInteractionEnabled = self.editMode
             
@@ -245,7 +245,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         //schedule exists, scroll enabled regardless of editMode
-        tableView.scrollEnabled = true
+        tableView.userInteractionEnabled = true
         
         //tableView not grayed out and is user accessible
         tableView.alpha = 1.0
