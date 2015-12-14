@@ -296,9 +296,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         return cell
     }
     
-    //what to do when cell is tapped
+    //tapping cells launches detail view or launches edit mode if selected while in edit mode
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         print("cell was pressed")
+        
+        //TODO: ADD SCHEDULEDETAILVC.SWIFT AND STORYBOARD, ADD SCHEDULEDITVC TO STORYBOARD
+        
     }
     
     //toggles between week and month view
