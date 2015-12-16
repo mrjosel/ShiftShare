@@ -235,7 +235,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //get dayView and schedule if they exist, return 1 or 2 otherwise
         guard let schedule = self.getScheduleForDate(self.selectedDate) else {
-            print("no schedule")
             //scroll view based on edit mode
             tableView.userInteractionEnabled = self.editMode
             
@@ -264,6 +263,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //create cell
         guard let cell = tableView.dequeueReusableCellWithIdentifier("SSTableViewCell") as? SSTableViewCell,
         date = self.selectedDate else {
+            print("no cell made")
             return UITableViewCell()
         }
         
@@ -298,10 +298,31 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     
     //tapping cells launches detail view or launches edit mode if selected while in edit mode
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        print("cell was pressed")
         
         //TODO: ADD SCHEDULEDETAILVC.SWIFT AND STORYBOARD, ADD SCHEDULEDITVC TO STORYBOARD
         
+        //get schedule for date corresponding to selected cell
+        if let schedule = self.getScheduleForDate(self.selectedDate) {
+            
+            if self.editMode {
+                //create VC for modal presentation
+                let scheduleEditVC = self.storyboard?.instantiateViewControllerWithIdentifier("ScheduleEditViewController") as! ScheduleEditViewController
+                
+                //set VC's schedule to schedule, and present
+                scheduleEditVC.schedule = schedule
+                self.presentViewController(scheduleEditVC, animated: true, completion: nil)
+            } else {
+                //present detail VC
+            }
+            
+        } else {
+            //launch add note or schedule VC
+            print("should add shift or note")
+        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        //HAI GUYS
     }
     
     //toggles between week and month view

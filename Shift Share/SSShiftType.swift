@@ -13,7 +13,7 @@ import UIKit
 enum SSShiftType : Int, CustomStringConvertible {
     
     //image types, using ints
-    case DAY = 0, NIGHT, GREEN, YELLOW, RESERVED, VACATION
+    case DAY = 0, NIGHT, GREEN, YELLOW, RESERVED, VACATION, EDITMODE
     
     //image names for use in printing and getting images
     static let shiftNames = [

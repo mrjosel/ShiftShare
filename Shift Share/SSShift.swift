@@ -22,22 +22,29 @@ class SSShift : SSTBCellData {
     @objc var body: String?
     
     //initializer
-    init(type: SSShiftType?) {
+    init(type: SSShiftType) {
         
-        //set type, title, body, and image
-        if let type = type {
             //type was set properly
             self.type = type
             self.title = SSShiftType.shiftNames[type]
             self.body = SSShiftType.shiftTimes[type]
             self.image = UIImage(named: SSShiftType.shiftNames[type]!)
-        } else {
-
-            //no type specified
-            self.type = nil
-            self.title = "No Shift"
-            self.body = nil
-            self.image = nil
-        }
+    }
+    
+    //empty initializer
+    init() {
+        
+        //no type specified
+        self.type = nil
+        self.title = "No Shift"
+        self.body = nil
+        self.image = nil
+    }
+    
+    //returns a shift for editMode
+    @objc static func editMode() -> SSTBCellData {
+        let shift = SSShift()
+        shift.title = "Touch to add Shift"
+        return shift
     }
 }
