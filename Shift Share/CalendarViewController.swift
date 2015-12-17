@@ -40,7 +40,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var monthSelectorView: JTCalendarMenuView!
     @IBOutlet weak var calendarView: JTHorizontalCalendarView!
     @IBOutlet weak var dayViewTableView: UITableView!
-    @IBOutlet weak var menuView: UIView!
     @IBOutlet weak var calendarViewHeight: NSLayoutConstraint!
     @IBOutlet weak var leftSSButton: SSButton!
     @IBOutlet weak var rightSSButton: SSButton!
