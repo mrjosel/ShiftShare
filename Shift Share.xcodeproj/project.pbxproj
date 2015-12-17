@@ -21,6 +21,7 @@
 		B79274981BF55E4400FFE21C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B79274961BF55E4400FFE21C /* LaunchScreen.storyboard */; };
 		B79274A31BF55E4400FFE21C /* Shift_ShareTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79274A21BF55E4400FFE21C /* Shift_ShareTests.swift */; };
 		B79274AE1BF55E4400FFE21C /* Shift_ShareUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79274AD1BF55E4400FFE21C /* Shift_ShareUITests.swift */; };
+		B7C7781F1C2210EC006213CA /* ScheduleDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C7781E1C2210EC006213CA /* ScheduleDetailViewController.swift */; };
 		B7E6C1331C16657600A30682 /* SSShiftType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E6C1321C16657600A30682 /* SSShiftType.swift */; };
 		B7E6C1351C19F20800A30682 /* ScheduleEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E6C1341C19F20800A30682 /* ScheduleEditViewController.swift */; };
 		D737A387B0A4C4BDF7D71E54 /* Pods_Shift_Share.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 118FB04471BA827DDB631C39 /* Pods_Shift_Share.framework */; };
@@ -67,6 +68,7 @@
 		B79274A91BF55E4400FFE21C /* Shift ShareUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Shift ShareUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B79274AD1BF55E4400FFE21C /* Shift_ShareUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shift_ShareUITests.swift; sourceTree = "<group>"; };
 		B79274AF1BF55E4400FFE21C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B7C7781E1C2210EC006213CA /* ScheduleDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleDetailViewController.swift; sourceTree = "<group>"; };
 		B7E6C1321C16657600A30682 /* SSShiftType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSShiftType.swift; sourceTree = "<group>"; };
 		B7E6C1341C19F20800A30682 /* ScheduleEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleEditViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -185,6 +187,7 @@
 			children = (
 				B792748F1BF55E4400FFE21C /* CalendarViewController.swift */,
 				B7E6C1341C19F20800A30682 /* ScheduleEditViewController.swift */,
+				B7C7781E1C2210EC006213CA /* ScheduleDetailViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -393,6 +396,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B7C7781F1C2210EC006213CA /* ScheduleDetailViewController.swift in Sources */,
 				B79274901BF55E4400FFE21C /* CalendarViewController.swift in Sources */,
 				B75A94261BFE2F3E0075C2DA /* SSShift.swift in Sources */,
 				B75A946B1BFF96510075C2DA /* ExtensionsAndProtocols.swift in Sources */,

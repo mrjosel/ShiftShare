@@ -44,6 +44,17 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var calendarViewHeight: NSLayoutConstraint!
     @IBOutlet weak var leftSSButton: SSButton!
     @IBOutlet weak var rightSSButton: SSButton!
+    
+    //do anytime view will show
+    override func viewWillAppear(animated: Bool) {
+        
+        //hide navBar
+        self.navigationController?.navigationBar.hidden = true
+        
+        //always appear in month mode
+        self.calendarManager.settings.weekModeEnabled = false
+
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,8 +87,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.locale = NSLocale.currentLocale().localeIdentifier
         self.leftSSButton.hostViewController = self
         self.rightSSButton.hostViewController = self
-        self.leftSSButton.ssButtonType = .TODAY
-        self.rightSSButton.ssButtonType = .EDIT
+        self.leftSSButton.ssButtonType = .EDIT
+        self.rightSSButton.ssButtonType = .TODAY
+
     }
     
     //delegate method that produces UIView conforming to JTCalendarDay protocol, returns custom ShiftShareDayView object
@@ -201,8 +213,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //now in edit mode
             self.editMode = true
             
-            //toggle weekMonthView
-            self.weekMonthView()
+            //enter weekView
+            self.weekViewEnabled(true)
             //TODO: MAKE EDITING FEATURE
             
         case .CANCEL :
@@ -213,7 +225,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             self.editMode = false
             
             //go back to month view
-            self.weekMonthView()
+            self.weekViewEnabled(false)
             
         case .DONE :
             //commit changes
@@ -223,7 +235,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             self.editMode = false
             
             //go back to month view
-            self.weekMonthView()
+            self.weekViewEnabled(false)
         }
         
         //reload table data if applicable
@@ -302,31 +314,45 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //TODO: ADD SCHEDULEDETAILVC.SWIFT AND STORYBOARD, ADD SCHEDULEDITVC TO STORYBOARD
         
         //get schedule for date corresponding to selected cell
-        if let schedule = self.getScheduleForDate(self.selectedDate) {
+        guard let schedule = self.getScheduleForDate(self.selectedDate) else{
             
-            if self.editMode {
-                //create VC for modal presentation
-                let scheduleEditVC = self.storyboard?.instantiateViewControllerWithIdentifier("ScheduleEditViewController") as! ScheduleEditViewController
-                
-                //set VC's schedule to schedule, and present
-                scheduleEditVC.schedule = schedule
-                self.presentViewController(scheduleEditVC, animated: true, completion: nil)
-            } else {
-                //present detail VC
-            }
+            //add notes or shifts
+            return
+        }
+        
+        //schedule exists, show detail or edit mode
+        if self.editMode {
+            print("about to present scheduleEditVC")
+            //create VC for modal presentation
+            let scheduleEditVC = self.storyboard?.instantiateViewControllerWithIdentifier("ScheduleEditViewController") as! ScheduleEditViewController
+            
+            //set VC's schedule to schedule, and present
+            scheduleEditVC.schedule = schedule
+            self.presentViewController(scheduleEditVC, animated: true, completion: nil)
             
         } else {
-            //launch add note or schedule VC
-            print("should add shift or note")
+            print("about to present scheduleDetailVC")
+            self.performSegueWithIdentifier("detailVCSegue", sender: schedule)
         }
     }
     
+    //handles segue to scheduleDetailVC
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        //HAI GUYS
+        
+        if segue.identifier == "detailVCSegue" {
+            print("at the correct segue")
+            //create VC for show presentation
+            let scheduleDetailVC : ScheduleDetailViewController = segue.destinationViewController as! ScheduleDetailViewController
+            
+            //set VC's schedule to schedule
+            scheduleDetailVC.schedule = sender as? SSScheduleForDay
+            
+        }
+        
     }
     
     //toggles between week and month view
-    func weekMonthView() {
+    func weekViewEnabled(flag: Bool) {
         
         //configure buttons based on edit mode
         if self.editMode {
@@ -340,7 +366,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         //toggle week/month mode and reload
-        self.calendarManager.settings.weekModeEnabled = !self.calendarManager.settings.weekModeEnabled
+        self.calendarManager.settings.weekModeEnabled = flag
         
         //set calendarView date to selectedDate if not nil, leave the same otherwise
         if let dayForWeekView = self.selectedDate {
@@ -348,7 +374,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         //get height of calendarView based on whether or not your in week or month mode, set constraint to height
-        let newHeight : CGFloat = self.calendarManager.settings.weekModeEnabled ? 85 : 300
+        let newHeight : CGFloat = flag ? 85 : 300
         self.calendarViewHeight.constant = newHeight
         
         //layout if needed

@@ -50,8 +50,10 @@ extension NSDate {
     
     //outputs readable date
     //TODO: MAKE PRINTOUT DIFFERENT BY COUNTRY?
-    func readableDate() -> String {
-        return self.month + ", " + self.day + " " + self.year
+    var readableDate : String  {
+        get {
+            return self.month + ", " + self.day + " " + self.year
+        }
     }
 }
 
