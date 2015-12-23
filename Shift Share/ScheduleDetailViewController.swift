@@ -10,7 +10,8 @@ import UIKit
 
 //presents shift or note in detail
 class ScheduleDetailViewController: UIViewController {
-    
+    //TODO: PRESENT NOTES NICELY
+    //TODO: PRESENT SHIFT SOMEHOW
     //outlets
     @IBOutlet weak var noteView: UIView!    //view with all components for when note is selected
     @IBOutlet weak var shiftView: UIView!   //view with all components for when shift is selected
