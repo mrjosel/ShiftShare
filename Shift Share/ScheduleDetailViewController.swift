@@ -8,15 +8,13 @@
 
 import UIKit
 
+//presents shift or note in detail
 class ScheduleDetailViewController: UIViewController {
     
     //outlets
     @IBOutlet weak var noteView: UIView!    //view with all components for when note is selected
     @IBOutlet weak var shiftView: UIView!   //view with all components for when shift is selected
     @IBOutlet weak var noteBody: UITextView!
-    
-    //parentVC (ALWAYS CALENDARVC)
-    var parentVC : CalendarViewController?
     
     //data from cell selected in CalendarVC
     var userSelectedData : SSTBCellData?
@@ -27,7 +25,7 @@ class ScheduleDetailViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         //ensure that userSelectedData has made it to VC
-        guard let data = self.userSelectedData, _ = parentVC else {
+        guard let data = self.userSelectedData else {
             
             //no data found, do not configure, return
             return
@@ -44,10 +42,6 @@ class ScheduleDetailViewController: UIViewController {
         self.noteBody.text = data.body
         self.noteBody.textAlignment = NSTextAlignment.Left
 
-    }
-
-    override func viewWillDisappear(animated: Bool) {
-        print(parentVC)
     }
     
     override func didReceiveMemoryWarning() {
