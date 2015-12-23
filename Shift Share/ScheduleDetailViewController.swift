@@ -15,6 +15,9 @@ class ScheduleDetailViewController: UIViewController {
     @IBOutlet weak var shiftView: UIView!   //view with all components for when shift is selected
     @IBOutlet weak var noteBody: UITextView!
     
+    //parentVC (ALWAYS CALENDARVC)
+    var parentVC : CalendarViewController?
+    
     //data from cell selected in CalendarVC
     var userSelectedData : SSTBCellData?
 
@@ -24,7 +27,7 @@ class ScheduleDetailViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         //ensure that userSelectedData has made it to VC
-        guard let data = self.userSelectedData else {
+        guard let data = self.userSelectedData, _ = parentVC else {
             
             //no data found, do not configure, return
             return
@@ -43,11 +46,14 @@ class ScheduleDetailViewController: UIViewController {
 
     }
 
+    override func viewWillDisappear(animated: Bool) {
+        print(parentVC)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 
     /*
     // MARK: - Navigation

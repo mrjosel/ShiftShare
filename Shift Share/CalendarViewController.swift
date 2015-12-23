@@ -32,9 +32,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //tableView Data
     //TODO: REPLACE WITH CORE DATA
     var tableData : [SSTBCellData]?
-    
-    //bool to let VC know if in editMode
-    var editMode : Bool = false
 
     //outlets
     @IBOutlet weak var monthSelectorView: JTCalendarMenuView!
@@ -49,11 +46,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //hide navBar
         self.navigationController?.navigationBar.hidden = true
-        self.navigationController?.navigationBar.titleTextAttributes
         
-        //always appear in month mode
-        self.calendarManager.settings.weekModeEnabled = false
-
     }
 
     override func viewDidLoad() {
@@ -87,8 +80,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.locale = NSLocale.currentLocale().localeIdentifier
         self.leftSSButton.hostViewController = self
         self.rightSSButton.hostViewController = self
-        self.leftSSButton.ssButtonType = .TODAY
-        self.rightSSButton.ssButtonType = .EDIT
+        self.leftSSButton.ssButtonType = .EDIT
+        self.rightSSButton.ssButtonType = .TODAY
         self.monthSelectorView.bringSubviewToFront(self.leftSSButton)
         self.monthSelectorView.bringSubviewToFront(self.rightSSButton)
     }
@@ -176,7 +169,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.selectedDate = dayView.date
         
         //animation for the dayView
-        UIView.transitionWithView(dayView, duration: 0.3, options: UIViewAnimationOptions(), animations: {calendar.reload()}, completion: nil)
+        UIView.transitionWithView(dayView, duration: 0.1, options: UIViewAnimationOptions(), animations: {calendar.reload()}, completion: nil)
         
         //load the previous or next page if a day from another month is selected
         if !calendar.dateHelper.date(self.calendarView.date, isTheSameMonthThan: dayView.date) {
@@ -201,13 +194,17 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func calendar(calendar: JTCalendarManager!, didDoubleTapDayView dayView: UIView!) {
         
         //cast dayView to ShiftShareDayView
-        guard let dayView = dayView as? SSDayView else {
+        guard let _ = dayView as? SSDayView else {
             //failed to cast, abort
             //TODO: REMOVE IN PRODUCTION
             abort()
         }
         
-        print("double tap recognized in calendarViewController")
+        //toggle weekView
+        self.weekViewEnabled(!self.calendarManager.settings.weekModeEnabled)
+        
+        //reload table data
+        self.dayViewTableView.reloadData()
     }
     
     //functions to carry out when Today/Cancel button is pressed based on which Type the button is
@@ -220,23 +217,22 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //select today's date, dayView set calendarManager date to today, reload table
             self.selectedDate = NSDate()
             self.calendarManager.setDate(NSDate())
+            self.weekViewEnabled(false)
             self.dayViewTableView.reloadData()
             
             //Edit Button
         case .EDIT :
-            //now in edit mode
-            self.editMode = true
             
-            //enter weekView
-            self.weekViewEnabled(true)
-            //TODO: MAKE EDITING FEATURE
+            //present editVC, if no date is selected then present for today's date
+            if let date = self.selectedDate {
+                self.presentEditVC(forDate: date)
+            } else {
+                self.presentEditVC(forDate: NSDate())
+            }
             
         case .CANCEL :
             //discard changes in scheduleEdit mode
             //TODO: DISCARD ALL CHANGES
-            
-            //no longer in editMode
-            self.editMode = false
             
             //go back to month view
             self.weekViewEnabled(false)
@@ -245,11 +241,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //commit changes
             //TODO: MAKE METHOD TO SAVE CHANGES
             
-            //no longer in editMode
-            self.editMode = false
-            
             //go back to month view
             self.weekViewEnabled(false)
+
         }
         
         //reload table data if applicable
@@ -261,16 +255,18 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //get dayView and schedule if they exist, return 1 or 2 otherwise
         guard let schedule = self.getScheduleForDate(self.selectedDate) else {
-            //scroll view based on edit mode
-            tableView.userInteractionEnabled = self.editMode
             
-            //gray out if in editMode
-            tableView.alpha = (self.editMode) ? 1.0 : 0.5
-            return self.editMode ? 2 : 1
+            //scroll and cell selection based
+            tableView.userInteractionEnabled = false
+            
+            //gray out
+            tableView.alpha = 0.5
+            return 1
         }
         
-        //schedule exists, scroll enabled regardless of editMode
+        //schedule exists, scroll enabled
         tableView.userInteractionEnabled = true
+        tableView.scrollEnabled = true
         
         //tableView not grayed out and is user accessible
         tableView.alpha = 1.0
@@ -307,7 +303,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         } else {
             
             //create table data based on edit mode or not
-            tableData = self.editMode ? SSScheduleForDay.editModeTableData() : SSScheduleForDay.emptyTableData()
+            tableData = SSScheduleForDay.emptyTableData()
             
         }
         
@@ -325,31 +321,19 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //tapping cells launches detail view or launches edit mode if selected while in edit mode
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        //TODO: ADD SCHEDULEDETAILVC.SWIFT AND STORYBOARD, ADD SCHEDULEDITVC TO STORYBOARD
-        
+        print("didSelectCell")
         //get schedule for date corresponding to selected cell
-        guard let schedule = self.getScheduleForDate(self.selectedDate) else{
+        guard let schedule = self.getScheduleForDate(self.selectedDate) else {
             
-            //add notes or shifts
+            //no schedule, add shifts, notes
             return
         }
         
+        //get data for detailVC
         let cellData = schedule.tableData[indexPath.row]
         
-        //schedule exists, show detail or edit mode
-        if self.editMode {
-            print("about to present scheduleEditVC")
-            //create VC for modal presentation
-            let scheduleEditVC = self.storyboard?.instantiateViewControllerWithIdentifier("ScheduleEditViewController") as! ScheduleEditViewController
-            
-            //set VC's schedule to schedule, and present
-            scheduleEditVC.schedule = schedule
-            self.presentViewController(scheduleEditVC, animated: true, completion: nil)
-            
-        } else {
-            //perform segue to detailVC
-            self.performSegueWithIdentifier("detailVCSegue", sender: cellData)
-        }
+        //perform segue to detailVC
+        self.performSegueWithIdentifier("detailVCSegue", sender: cellData)
     }
     
     //handles segues
@@ -367,21 +351,22 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
-    
+    //presents editVC
+    func presentEditVC(forDate date: NSDate) {
+
+        //create VC for modal presentation
+        let scheduleEditVC = self.storyboard?.instantiateViewControllerWithIdentifier("ScheduleEditViewController") as! ScheduleEditViewController
+        
+        //get schedule
+        let schedule = self.getScheduleForDate(date)
+        
+        //set VC's schedule to schedule, and present
+        scheduleEditVC.schedule = schedule
+        self.presentViewController(scheduleEditVC, animated: true, completion: nil)
+    }
     
     //toggles between week and month view
     func weekViewEnabled(flag: Bool) {
-        
-        //configure buttons based on edit mode
-        if self.editMode {
-            //editMode is true
-            self.leftSSButton.ssButtonType = .CANCEL
-            self.rightSSButton.ssButtonType = .DONE
-        } else {
-            //editMode is false
-            self.leftSSButton.ssButtonType = .TODAY
-            self.rightSSButton.ssButtonType = .EDIT
-        }
         
         //toggle week/month mode and reload
         self.calendarManager.settings.weekModeEnabled = flag

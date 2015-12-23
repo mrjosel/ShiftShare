@@ -65,10 +65,4 @@ class SSScheduleForDay {
         
         return [SSShift()]
     }
-    
-    //class func to return text for table when in edit mode
-    class func editModeTableData() -> [SSTBCellData] {
-        
-        return [SSShift.editMode(), SSNote.editMode()]
-    }
 }

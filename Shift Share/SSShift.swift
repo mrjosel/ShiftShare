@@ -40,11 +40,4 @@ class SSShift : SSTBCellData {
         self.body = nil
         self.image = nil
     }
-    
-    //returns a shift for editMode
-    @objc static func editMode() -> SSTBCellData {
-        let shift = SSShift()
-        shift.title = "Touch to add Shift"
-        return shift
-    }
 }

@@ -49,9 +49,4 @@ class SSNote : SSTBCellData, CustomStringConvertible {
         self.body = body
         
     }
-    
-    //returns a note for editMode
-    @objc static func editMode() -> SSTBCellData {
-        return SSNote(title: "Touch to add Note", body: nil)
-    }
 }

@@ -87,7 +87,4 @@ extension JTCalendarDelegateManager {
     //string for body/description of note
     var body : String? {get set}
     
-    //returns special version specifically for editMode
-    static func editMode() -> SSTBCellData
-    
 }
