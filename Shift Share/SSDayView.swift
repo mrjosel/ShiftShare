@@ -57,9 +57,11 @@ class SSDayView: JTCalendarDayView {
         
     }
     
+    //invoke double tap gesture
     func handleDoubleTap(sender: UITapGestureRecognizer) {
-        print(sender)
-        print("handling double tap from dayView")
+        
+        //alert the delegate
+        self.manager?.delegateManager.didDoubleTapDayView(self)
 
     }
 }

@@ -57,21 +57,23 @@ extension NSDate {
     }
 }
 
-//protocol SSCalendarDelegate : JTCalendarDelegate {
-//    
-//    func calendar(calendar: JTCalendarManager!, didDoubleTapDayView dayView: UIView!)
-//
-//}
-//
-//extension JTCalendarDelegateManager {
-////    - (void)didTouchDayView:(UIView<JTCalendarDay> *)dayView
-////    {
-////    if(_manager.delegate && [_manager.delegate respondsToSelector:@selector(calendar:didTouchDayView:)]){
-////    [_manager.delegate calendar:self.manager didTouchDayView:dayView];
-////    }
-////    }
-//
-//}
+//extending to allow for double tap gestures
+extension JTCalendarDelegateManager {
+    
+    //double tapped dayView
+    func didDoubleTapDayView(dayView: UIView!) {
+        
+        //get manager and delegate, can't continue otherwise
+        guard let manager = self.manager, delegate = manager.delegate as? SSCalendarDelegate else {
+            return
+        }
+        
+        //execute double tap in delegate
+        if delegate.respondsToSelector("calendar:didDoubleTapDayView:") {
+            delegate.calendar(manager, didDoubleTapDayView: dayView)
+        }
+    }
+}
 
 //allows for easy population of tableCell data
 @objc protocol SSTBCellData {

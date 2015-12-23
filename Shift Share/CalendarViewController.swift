@@ -12,7 +12,7 @@ import Parse
 import Foundation
 
 //main calendarView
-class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, JTCalendarDelegate {
+class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SSCalendarDelegate {
         
     //vars for logging events in calendar
     var eventsByDate : NSMutableDictionary?
@@ -195,6 +195,19 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //reload tableViews
         self.dayViewTableView.reloadData()
+    }
+    
+    //handles double taps of dayViews
+    func calendar(calendar: JTCalendarManager!, didDoubleTapDayView dayView: UIView!) {
+        
+        //cast dayView to ShiftShareDayView
+        guard let dayView = dayView as? SSDayView else {
+            //failed to cast, abort
+            //TODO: REMOVE IN PRODUCTION
+            abort()
+        }
+        
+        print("double tap recognized in calendarViewController")
     }
     
     //functions to carry out when Today/Cancel button is pressed based on which Type the button is
