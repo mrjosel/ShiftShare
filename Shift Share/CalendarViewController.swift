@@ -87,8 +87,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.locale = NSLocale.currentLocale().localeIdentifier
         self.leftSSButton.hostViewController = self
         self.rightSSButton.hostViewController = self
-        self.leftSSButton.ssButtonType = .EDIT
-        self.rightSSButton.ssButtonType = .TODAY
+        self.leftSSButton.ssButtonType = .TODAY
+        self.rightSSButton.ssButtonType = .EDIT
+        self.monthSelectorView.bringSubviewToFront(self.leftSSButton)
+        self.monthSelectorView.bringSubviewToFront(self.rightSSButton)
 
     }
     
