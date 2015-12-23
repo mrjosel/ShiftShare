@@ -57,6 +57,22 @@ extension NSDate {
     }
 }
 
+//protocol SSCalendarDelegate : JTCalendarDelegate {
+//    
+//    func calendar(calendar: JTCalendarManager!, didDoubleTapDayView dayView: UIView!)
+//
+//}
+//
+//extension JTCalendarDelegateManager {
+////    - (void)didTouchDayView:(UIView<JTCalendarDay> *)dayView
+////    {
+////    if(_manager.delegate && [_manager.delegate respondsToSelector:@selector(calendar:didTouchDayView:)]){
+////    [_manager.delegate calendar:self.manager didTouchDayView:dayView];
+////    }
+////    }
+//
+//}
+
 //allows for easy population of tableCell data
 @objc protocol SSTBCellData {
     

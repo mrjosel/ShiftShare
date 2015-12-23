@@ -91,7 +91,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.rightSSButton.ssButtonType = .EDIT
         self.monthSelectorView.bringSubviewToFront(self.leftSSButton)
         self.monthSelectorView.bringSubviewToFront(self.rightSSButton)
-
     }
     
     //delegate method that produces UIView conforming to JTCalendarDay protocol, returns custom ShiftShareDayView object
@@ -354,6 +353,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
     }
+    
+    
     
     //toggles between week and month view
     func weekViewEnabled(flag: Bool) {

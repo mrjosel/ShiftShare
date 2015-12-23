@@ -22,6 +22,7 @@
                                 <rect key="frame" x="0.0" y="424" width="600" height="176"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
                                 <color key="sectionIndexColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SSTableViewCell" textLabel="y3V-3L-3CV" detailTextLabel="GOz-8k-VWC" style="IBUITableViewCellStyleSubtitle" id="Hha-cM-QdT" customClass="SSTableViewCell" customModule="Shift_Share" customModuleProvider="target">
@@ -97,6 +98,7 @@
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="r2A-Pd-HyF" firstAttribute="top" secondItem="Vd0-12-PKY" secondAttribute="bottom" id="873-XO-NrE"/>
                             <constraint firstItem="r2A-Pd-HyF" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="DZg-Fe-ARB"/>

@@ -8,7 +8,6 @@
 
 import UIKit
 import JTCalendar
-import QuartzCore
 
 //custom class of JTCalendarDayView with UIImageView? parameter and method to cycle through images
 class SSDayView: JTCalendarDayView {
@@ -18,10 +17,9 @@ class SSDayView: JTCalendarDayView {
     
     //image displayed for sun, moon, other events
     var ssDVImageView: UIImageView!
-        
-    //schedule for the day
-//    var schedule : SSScheduleForDay?
     
+    var doubleTapGesture: UITapGestureRecognizer!
+        
     override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -44,16 +42,24 @@ class SSDayView: JTCalendarDayView {
         
         //remove circleView
         self.circleView.removeFromSuperview()
-//        self.dotView.removeFromSuperview()
         
         //layout ssDVImageView
         self.ssDVImageView = UIImageView()
         self.insertSubview(self.ssDVImageView, atIndex: 0)
         self.ssDVImageView.contentMode = UIViewContentMode.ScaleAspectFit
         self.ssDVImageView.hidden = true
-//        self.ssDVImageView.layer.rasterizationScale = UIScreen.mainScreen().scale
-//        self.ssDVImageView.layer.shouldRasterize = true
-
+        self.ssDVImageView.layer.rasterizationScale = UIScreen.mainScreen().scale
+        self.ssDVImageView.layer.shouldRasterize = true
         
+        self.doubleTapGesture = UITapGestureRecognizer(target: self, action: "handleDoubleTap:")
+        self.doubleTapGesture.numberOfTapsRequired = 2
+        self.addGestureRecognizer(self.doubleTapGesture)
+        
+    }
+    
+    func handleDoubleTap(sender: UITapGestureRecognizer) {
+        print(sender)
+        print("handling double tap from dayView")
+
     }
 }
