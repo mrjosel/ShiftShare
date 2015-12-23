@@ -9,18 +9,19 @@
 import UIKit
 
 class ScheduleDetailViewController: UIViewController {
-    
-    var schedule : SSScheduleForDay?
+        
+    //data from cell selected in CalendarVC
+    var userSelectedData : SSTBCellData?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         
-        print(schedule)
-        
         //setup views
         self.navigationController?.navigationBar.hidden = false
+        self.navigationController?.topViewController?.title = (self.userSelectedData is SSShift) ? "Shift" : "Note"
+
     }
 
     override func didReceiveMemoryWarning() {

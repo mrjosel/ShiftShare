@@ -49,6 +49,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //hide navBar
         self.navigationController?.navigationBar.hidden = true
+        self.navigationController?.navigationBar.titleTextAttributes
         
         //always appear in month mode
         self.calendarManager.settings.weekModeEnabled = false
@@ -319,6 +320,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             return
         }
         
+        let cellData = schedule.tableData[indexPath.row]
+        
         //schedule exists, show detail or edit mode
         if self.editMode {
             print("about to present scheduleEditVC")
@@ -330,21 +333,21 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             self.presentViewController(scheduleEditVC, animated: true, completion: nil)
             
         } else {
-            print("about to present scheduleDetailVC")
-            self.performSegueWithIdentifier("detailVCSegue", sender: schedule)
+            //perform segue to detailVC
+            self.performSegueWithIdentifier("detailVCSegue", sender: cellData)
         }
     }
     
-    //handles segue to scheduleDetailVC
+    //handles segues
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "detailVCSegue" {
-            print("at the correct segue")
+
             //create VC for show presentation
             let scheduleDetailVC : ScheduleDetailViewController = segue.destinationViewController as! ScheduleDetailViewController
             
-            //set VC's schedule to schedule
-            scheduleDetailVC.schedule = sender as? SSScheduleForDay
+            //set VC's userData to cellData (sender)
+            scheduleDetailVC.userSelectedData = sender as? SSTBCellData
             
         }
         
