@@ -9,7 +9,12 @@
 import UIKit
 
 class ScheduleDetailViewController: UIViewController {
-        
+    
+    //outlets
+    @IBOutlet weak var noteView: UIView!    //view with all components for when note is selected
+    @IBOutlet weak var shiftView: UIView!   //view with all components for when shift is selected
+    @IBOutlet weak var noteBody: UITextView!
+    
     //data from cell selected in CalendarVC
     var userSelectedData : SSTBCellData?
 
@@ -18,9 +23,23 @@ class ScheduleDetailViewController: UIViewController {
 
         // Do any additional setup after loading the view.
         
+        //ensure that userSelectedData has made it to VC
+        guard let data = self.userSelectedData else {
+            
+            //no data found, do not configure, return
+            return
+        }
+        
+        //use dataIsShift as Bool for configuation.  If false, implies that data is of SSNote type
+        let dataIsShift = (data is SSShift)
+        
         //setup views
         self.navigationController?.navigationBar.hidden = false
-        self.navigationController?.topViewController?.title = (self.userSelectedData is SSShift) ? "Shift" : "Note"
+        self.navigationController?.topViewController?.title = (dataIsShift) ? "Shift" : "Note"
+        self.shiftView.hidden = !dataIsShift
+        self.noteView.hidden = dataIsShift
+        self.noteBody.text = data.body
+        self.noteBody.textAlignment = NSTextAlignment.Left
 
     }
 

@@ -138,9 +138,52 @@
                     <view key="view" contentMode="scaleToFill" id="wIM-zJ-edq">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Ql-an-orU">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <animations/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g6c-ma-LZA">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <subviews>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="nX4-si-F2p">
+                                        <rect key="frame" x="0.0" y="59" width="600" height="477"/>
+                                        <animations/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    </textView>
+                                </subviews>
+                                <animations/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="nX4-si-F2p" secondAttribute="trailing" id="8XY-nX-l1e"/>
+                                    <constraint firstItem="nX4-si-F2p" firstAttribute="leading" secondItem="g6c-ma-LZA" secondAttribute="leading" id="EQT-YI-hd8"/>
+                                    <constraint firstAttribute="bottom" secondItem="nX4-si-F2p" secondAttribute="bottom" id="Pet-bx-3si"/>
+                                    <constraint firstItem="nX4-si-F2p" firstAttribute="top" secondItem="g6c-ma-LZA" secondAttribute="top" constant="59" id="iiT-ae-Qfp"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="PPr-fe-bOu" firstAttribute="top" secondItem="2Ql-an-orU" secondAttribute="bottom" id="0W4-Av-bja"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="2Ql-an-orU" secondAttribute="trailing" constant="-20" id="EgZ-fD-5HN"/>
+                            <constraint firstItem="2Ql-an-orU" firstAttribute="leading" secondItem="wIM-zJ-edq" secondAttribute="leadingMargin" constant="-20" id="QzB-qu-OFV"/>
+                            <constraint firstItem="2Ql-an-orU" firstAttribute="top" secondItem="wIM-zJ-edq" secondAttribute="topMargin" id="Tj6-oR-duP"/>
+                            <constraint firstItem="g6c-ma-LZA" firstAttribute="bottom" secondItem="PPr-fe-bOu" secondAttribute="top" id="WZ9-KY-sSu"/>
+                            <constraint firstItem="g6c-ma-LZA" firstAttribute="trailing" secondItem="2Ql-an-orU" secondAttribute="trailing" id="nJ9-66-VzO"/>
+                            <constraint firstItem="g6c-ma-LZA" firstAttribute="top" secondItem="Owf-Dz-0vi" secondAttribute="bottom" id="rQF-l0-Ahz"/>
+                            <constraint firstItem="g6c-ma-LZA" firstAttribute="leading" secondItem="2Ql-an-orU" secondAttribute="leading" id="whB-Yf-n6z"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="noteBody" destination="nX4-si-F2p" id="Lxr-02-mJa"/>
+                        <outlet property="noteView" destination="g6c-ma-LZA" id="IlM-QO-Xw5"/>
+                        <outlet property="shiftView" destination="2Ql-an-orU" id="VtP-5M-U5R"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OSI-Eu-6N7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -202,7 +245,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="O6B-v4-b0X" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1316" y="1131"/>
+            <point key="canvasLocation" x="2114" y="1133"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="S9w-Q4-8Fo">
