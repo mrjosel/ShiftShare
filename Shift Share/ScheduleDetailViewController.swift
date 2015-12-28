@@ -9,17 +9,20 @@
 import UIKit
 
 //presents shift or note in detail
-class ScheduleDetailViewController: UIViewController {
+class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
     //TODO: PRESENT NOTES NICELY
     //TODO: PRESENT SHIFT SOMEHOW
     //outlets
     @IBOutlet weak var noteView: UIView!    //view with all components for when note is selected
     @IBOutlet weak var shiftView: UIView!   //view with all components for when shift is selected
+    @IBOutlet weak var shiftImageView: UIImageView!
     @IBOutlet weak var noteBody: UITextView!
+    @IBOutlet weak var shiftTime: UITextView!
     
     //data from cell selected in CalendarVC
     var userSelectedData : SSTBCellData?
-
+    var dataIsShift : Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -32,23 +35,37 @@ class ScheduleDetailViewController: UIViewController {
             return
         }
         
+        self.automaticallyAdjustsScrollViewInsets = false
+        
         //use dataIsShift as Bool for configuation.  If false, implies that data is of SSNote type
-        let dataIsShift = (data is SSShift)
+        self.dataIsShift = (data is SSShift)
         
         //setup views
         self.navigationController?.navigationBar.hidden = false
-        self.navigationController?.topViewController?.title = (dataIsShift) ? "Shift" : "Note"
-        self.shiftView.hidden = !dataIsShift
-        self.noteView.hidden = dataIsShift
+        self.navigationController?.topViewController?.title = data.title
+        self.shiftView.hidden = !self.dataIsShift
+        self.shiftImageView.image = data.image
+        self.shiftTime.text = data.body
+        self.shiftTime.textAlignment = NSTextAlignment.Center
+        self.shiftTime.delegate = self
+        self.noteView.hidden = self.dataIsShift
         self.noteBody.text = data.body
         self.noteBody.textAlignment = NSTextAlignment.Left
+        self.noteBody.delegate = self
 
+    }
+    
+    //when field is selected, allow for editing of notes, and selection of shifts
+    func textViewShouldBeginEditing(textView: UITextView) -> Bool {
+        print("did select textView")
+        return !self.dataIsShift
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
 
     /*
     // MARK: - Navigation

@@ -321,7 +321,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //tapping cells launches detail view or launches edit mode if selected while in edit mode
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        print("didSelectCell")
         //get schedule for date corresponding to selected cell
         guard let schedule = self.getScheduleForDate(self.selectedDate) else {
             
