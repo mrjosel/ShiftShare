@@ -84,6 +84,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.rightSSButton.ssButtonType = .TODAY
         self.monthSelectorView.bringSubviewToFront(self.leftSSButton)
         self.monthSelectorView.bringSubviewToFront(self.rightSSButton)
+        
     }
     
     //delegate method that produces UIView conforming to JTCalendarDay protocol, returns custom ShiftShareDayView object
@@ -258,9 +259,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             
             //scroll and cell selection based
             tableView.userInteractionEnabled = false
-            
-            //gray out
-            tableView.alpha = 0.5
             return 1
         }
         
@@ -279,9 +277,22 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
 
     }
     
+    //cell alpha values depending on schedule present or not
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        //check if schedule exists for date
+        if let _ = self.getScheduleForDate(self.selectedDate) {
+            //schedule exists, full color
+            cell.alpha = 1.0
+        } else {
+            //no schedule, gray out
+            cell.alpha = 0.5
+        }
+    }
+    
     //creates cells for tableView
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
+
         //create cell
         guard let cell = tableView.dequeueReusableCellWithIdentifier("SSTableViewCell") as? SSTableViewCell,
         date = self.selectedDate else {
@@ -335,6 +346,24 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.performSegueWithIdentifier("detailVCSegue", sender: cellData)
     }
     
+    //header for table view, displays selected date
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        //create view with frame
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 30))
+        headerView.backgroundColor = UIColor.whiteColor()
+        headerView.tag = section
+        
+        //create label with readable date, add to header
+        let headerString = UILabel(frame: CGRect(x: 10, y: 5, width: headerView.frame.width, height: headerView.frame.height - 10)) as UILabel
+        headerString.text = self.selectedDate?.readableDate
+        headerString.font = UIFont(name: ".SFUIText-Regular", size: 15)
+        headerView.addSubview(headerString)
+        
+        //return header
+        return headerView
+    }
+    
     //handles segues
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
@@ -345,6 +374,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             
             //set VC's userData to cellData (sender)
             scheduleDetailVC.userSelectedData = sender as? SSTBCellData
+            scheduleDetailVC.date = self.selectedDate
             
         }
         

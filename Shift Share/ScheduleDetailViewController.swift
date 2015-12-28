@@ -21,7 +21,10 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
     
     //data from cell selected in CalendarVC
     var userSelectedData : SSTBCellData?
-    var dataIsShift : Bool = false
+    var dataIsShift : Bool = false  //set to false as default
+    
+    //selected date
+    var date : NSDate!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +38,8 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
             return
         }
         
+        print(self.date)
+        
         self.automaticallyAdjustsScrollViewInsets = false
         
         //use dataIsShift as Bool for configuation.  If false, implies that data is of SSNote type
@@ -42,7 +47,7 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
         
         //setup views
         self.navigationController?.navigationBar.hidden = false
-        self.navigationController?.topViewController?.title = data.title
+        self.navigationController?.topViewController?.title = self.date.readableDate
         self.shiftView.hidden = !self.dataIsShift
         self.shiftImageView.image = data.image
         self.shiftTime.text = data.body
