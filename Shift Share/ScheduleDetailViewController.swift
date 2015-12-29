@@ -18,6 +18,7 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var shiftImageView: UIImageView!
     @IBOutlet weak var noteBody: UITextView!
     @IBOutlet weak var shiftTime: UITextView!
+    @IBOutlet weak var shiftName: UILabel!
     
     //data from cell selected in CalendarVC
     var userSelectedData : SSTBCellData?
@@ -53,6 +54,8 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
         self.shiftTime.text = data.body
         self.shiftTime.textAlignment = NSTextAlignment.Center
         self.shiftTime.delegate = self
+        self.shiftName.text = data.title
+        self.shiftName.textAlignment = NSTextAlignment.Center
         self.noteView.hidden = self.dataIsShift
         self.noteBody.text = data.body
         self.noteBody.textAlignment = NSTextAlignment.Left
