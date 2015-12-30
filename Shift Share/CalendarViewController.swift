@@ -118,7 +118,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //set UI accordingly
             dayView.backgroundColor = UIColor.todayColor()
             dayView.alpha = 1.0
-            
             dayView.dotView.backgroundColor = UIColor.whiteColor()
             dayView.textLabel.textColor = UIColor.blackColor()
         
