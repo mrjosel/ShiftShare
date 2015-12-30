@@ -66,6 +66,7 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
         self.numLines = Int((self.dataBody.contentSize.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
     }
     
+    //TODO: DEBUG, REMOVE
     func textBody(lineCount: Int) -> String {
         var content = ""
         let usableCount = lineCount > self.maxLines ? self.maxLines : lineCount
