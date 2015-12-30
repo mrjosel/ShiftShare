@@ -53,9 +53,8 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
         self.navigationController?.navigationBar.hidden = false
         self.navigationController?.topViewController?.title = self.date.readableDate
         self.dataImageView.image = data.image
-//        self.dataBody.text = data.body
+        self.dataBody.text = data.body
         self.dataBody.textAlignment = self.dataIsShift ? NSTextAlignment.Center : NSTextAlignment.Left
-//        self.dataBody.scrollEnabled = false
         self.dataBody.font = UIFont(name: "Helvetica", size: 14.0)
         self.dataBody.delegate = self
         self.dataTitle.text = data.title
@@ -63,32 +62,20 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
         
         //get numLines and maxLines
         self.maxLines = Int((self.dataBody.frame.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
-        self.dataBody.text = self.testBody()
+//        self.dataBody.text = self.textBody(16)
         self.numLines = Int((self.dataBody.contentSize.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
-        print("self.numLines = \(self.numLines)")
-        print("self.maxLines = \(self.maxLines)")
     }
     
-    //DEBUG
-    func testBody() -> String {
-        var text = ""
-        for var i = 0; i < self.maxLines - 1; i++ {
-            text = text + "\(i).)\n"
+    func textBody(lineCount: Int) -> String {
+        var content = ""
+        let usableCount = lineCount > self.maxLines ? self.maxLines : lineCount
+        print("lineCount is \(lineCount), maxLines is \(self.maxLines)")
+        for var i = 0; i < usableCount - 1; i++ {
+            content += "\(i).)\n"
         }
-        return text + "\(self.maxLines - 1).)"
-    }
-    
-    //update numLines everytime text changes, if word wrap occurs after maxLines reached, remove last char
-    func textViewDidChange(textView: UITextView) {
-        print("didChange")
-        //update number of lines
-        self.numLines = Int((self.dataBody.contentSize.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
-
-        //check for word wrap event if numLines exceeds maxLines, if wordwrap occured remove last char and recompute numLines, else do nothing
-        if self.numLines > self.maxLines {
-            textView.text = textView.text.substringToIndex(textView.text.endIndex.predecessor())
-            self.numLines = Int((self.dataBody.contentSize.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
-        }
+        content += "\(usableCount - 1).)"
+        
+        return content
     }
     
     //check if data is shift, if not shift, allow editing of text body until body is full, otherwise disallow
@@ -115,6 +102,20 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
             //data is shift, do not allow editing of body
             return false
         }
+    }
+    
+    //update numLines everytime text changes, if word wrap occurs after maxLines reached, remove last char
+    func textViewDidChange(textView: UITextView) {
+        
+        //update number of lines
+        self.numLines = Int((self.dataBody.contentSize.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
+        
+        //check for word wrap event if numLines exceeds maxLines, if wordwrap occured remove chars until maxLines not exceeded
+        while self.numLines > self.maxLines {
+            textView.text = textView.text.substringToIndex(textView.text.endIndex.predecessor())
+            self.numLines = Int((self.dataBody.contentSize.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
+        }
+        
     }
     
     override func didReceiveMemoryWarning() {
