@@ -15,7 +15,7 @@ class ScheduleEditViewController: UIViewController {
 
     
     //schedule that will be created
-    var schedule : SSScheduleForDay?
+    var schedule : SSSchedule?
     
     //outlets
     @IBOutlet weak var topView: UIView!

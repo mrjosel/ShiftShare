@@ -14,7 +14,7 @@
 		B75A942E1BFEB0200075C2DA /* SSNote.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75A942D1BFEB0200075C2DA /* SSNote.swift */; };
 		B75A946B1BFF96510075C2DA /* ExtensionsAndProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75A946A1BFF96510075C2DA /* ExtensionsAndProtocols.swift */; };
 		B75A946D1C0389070075C2DA /* SSButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75A946C1C0389070075C2DA /* SSButton.swift */; };
-		B75A946F1C062B640075C2DA /* SSScheduleForDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75A946E1C062B640075C2DA /* SSScheduleForDay.swift */; };
+		B75A946F1C062B640075C2DA /* SSSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75A946E1C062B640075C2DA /* SSSchedule.swift */; };
 		B792748E1BF55E4400FFE21C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B792748D1BF55E4400FFE21C /* AppDelegate.swift */; };
 		B79274901BF55E4400FFE21C /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B792748F1BF55E4400FFE21C /* CalendarViewController.swift */; };
 		B79274931BF55E4400FFE21C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B79274911BF55E4400FFE21C /* Main.storyboard */; };
@@ -56,7 +56,7 @@
 		B75A942D1BFEB0200075C2DA /* SSNote.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSNote.swift; sourceTree = "<group>"; };
 		B75A946A1BFF96510075C2DA /* ExtensionsAndProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionsAndProtocols.swift; sourceTree = "<group>"; };
 		B75A946C1C0389070075C2DA /* SSButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSButton.swift; sourceTree = "<group>"; };
-		B75A946E1C062B640075C2DA /* SSScheduleForDay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSScheduleForDay.swift; sourceTree = "<group>"; };
+		B75A946E1C062B640075C2DA /* SSSchedule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSSchedule.swift; sourceTree = "<group>"; };
 		B792748A1BF55E4400FFE21C /* Shift Share.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Shift Share.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B792748D1BF55E4400FFE21C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B792748F1BF55E4400FFE21C /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
@@ -124,7 +124,7 @@
 			children = (
 				B75A942D1BFEB0200075C2DA /* SSNote.swift */,
 				B75A94251BFE2F3E0075C2DA /* SSShift.swift */,
-				B75A946E1C062B640075C2DA /* SSScheduleForDay.swift */,
+				B75A946E1C062B640075C2DA /* SSSchedule.swift */,
 				B7E6C1321C16657600A30682 /* SSShiftType.swift */,
 				B74932361C2B1BB3004F04A1 /* SSCalendarDelegate.swift */,
 			);
@@ -406,7 +406,7 @@
 				B75A946D1C0389070075C2DA /* SSButton.swift in Sources */,
 				B7E6C1351C19F20800A30682 /* ScheduleEditViewController.swift in Sources */,
 				B75A94281BFE8F640075C2DA /* SSTableViewCell.swift in Sources */,
-				B75A946F1C062B640075C2DA /* SSScheduleForDay.swift in Sources */,
+				B75A946F1C062B640075C2DA /* SSSchedule.swift in Sources */,
 				B75A940D1BFA67220075C2DA /* SSDayView.swift in Sources */,
 				B75A942E1BFEB0200075C2DA /* SSNote.swift in Sources */,
 				B7E6C1331C16657600A30682 /* SSShiftType.swift in Sources */,

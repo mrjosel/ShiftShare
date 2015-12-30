@@ -13,9 +13,9 @@ import Foundation
 
 //main calendarView
 class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SSCalendarDelegate {
-        
-    //vars for logging events in calendar
-    var eventsByDate : NSMutableDictionary?
+    
+//    //vars for logging events in calendar
+//    var eventsByDate : NSMutableDictionary?
     
     //calendar manager
     var calendarManager : JTCalendarManager!
@@ -104,10 +104,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             abort()
         }
 
-        //if event for thatdate exists, set image in view
-        //schedule exists, get image if applicable
-        if let schedule = self.eventsByDate![self.dateFormatter.stringFromDate(dayView.date)] as? SSScheduleForDay,
-            image = schedule.shift?.image {
+        //if event for that date exists, set image in view
+        let key = self.dateFormatter.stringFromDate(dayView.date)
+        if let schedule = SSSchedule.sharedInstance().schedules[key], image = schedule.shift?.image {
                 dispatch_async(dispatch_get_main_queue(), {
                     dayView.ssDVImageView.image = image
                 })
@@ -314,7 +313,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         } else {
             
             //create table data based on edit mode or not
-            tableData = SSScheduleForDay.emptyTableData()
+            tableData = SSSchedule.emptyTableData()
             
         }
         
@@ -420,7 +419,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         let key = self.dateFormatter.stringFromDate(date)
         
         //check if there is an event for the key
-        guard let events = self.eventsByDate, _ = events[key] as? SSScheduleForDay else {
+        guard let _ = SSSchedule.sharedInstance().schedules[key] else {
             
             //no key for that date
             return false
@@ -432,7 +431,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     //retrieves schedule for date, if one exists
-    func getScheduleForDate(date: NSDate?) -> SSScheduleForDay? {
+    func getScheduleForDate(date: NSDate?) -> SSSchedule? {
         
         //unwrap optional date
         guard let date = date else {
@@ -445,7 +444,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         let key = self.dateFormatter.stringFromDate(date)
         
         //check if events exist and if so for schedules on that date using the aboive key
-        guard let events = self.eventsByDate, schedule = events[key] as? SSScheduleForDay else {
+        guard let schedule = SSSchedule.sharedInstance().schedules[key] else {
             
             //no events, or schedules on that date
             return nil
@@ -458,7 +457,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //test function
     //TODO: DELETE THIS
     func createAllMonthEvents() {
-        self.eventsByDate = NSMutableDictionary()
+//        self.eventsByDate = NSMutableDictionary()
         let today = self.dateFormatter.dateFromString("01-12-2015")!
         
         for var i = 0; i < 80; i++ {
@@ -468,8 +467,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             let randomNum = arc4random()
             let rawVal = Int(randomNum % 2 + 1)
             let shift = SSShift(type: SSShiftType(rawValue: rawVal)!)
-            let schedule = SSScheduleForDay(forDate: day, withShift: shift, withNotes: [SSNote()], forUser: "Brian")
-            self.eventsByDate![self.dateFormatter.stringFromDate(day)] = schedule
+            let schedule = SSSchedule(forDate: day, withShift: shift, withNotes: [SSNote()], forUser: "Brian")
+            SSSchedule.sharedInstance().schedules[self.dateFormatter.stringFromDate(day)] = schedule
             
         }
     }
@@ -504,20 +503,20 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             return
         }
         
-        self.eventsByDate = [
-            key1 : SSScheduleForDay(forDate: date1, withShift: SSShift(type: .DAY), withNotes: [note1], forUser: "Brian"),
-            key2 : SSScheduleForDay(forDate: date2, withShift: SSShift(type: .NIGHT), withNotes: [note2], forUser: "Brian"),
-            key3 : SSScheduleForDay(forDate: date3, withShift: SSShift(type: .NIGHT), withNotes: [note3], forUser: "Brian"),
-            key4 : SSScheduleForDay(forDate: date4, withShift: SSShift(type: .DAY), withNotes: [note4], forUser: "Brian"),
-            key5 : SSScheduleForDay(forDate: date5, withShift: SSShift(type: .DAY), withNotes: [note5], forUser: "Brian"),
-            key6 : SSScheduleForDay(forDate: date6, withShift: SSShift(type: .NIGHT), withNotes: [note6, note7], forUser: "Brian")
+        SSSchedule.sharedInstance().schedules = [
+            key1 : SSSchedule(forDate: date1, withShift: SSShift(type: .DAY), withNotes: [note1], forUser: "Brian"),
+            key2 : SSSchedule(forDate: date2, withShift: SSShift(type: .NIGHT), withNotes: [note2], forUser: "Brian"),
+            key3 : SSSchedule(forDate: date3, withShift: SSShift(type: .NIGHT), withNotes: [note3], forUser: "Brian"),
+            key4 : SSSchedule(forDate: date4, withShift: SSShift(type: .DAY), withNotes: [note4], forUser: "Brian"),
+            key5 : SSSchedule(forDate: date5, withShift: SSShift(type: .DAY), withNotes: [note5], forUser: "Brian"),
+            key6 : SSSchedule(forDate: date6, withShift: SSShift(type: .NIGHT), withNotes: [note6, note7], forUser: "Brian")
         ]
     }
     
     //test function
     //TODO: DELETE THIS
     func createRandomEvents() {
-        self.eventsByDate = NSMutableDictionary()
+//        self.eventsByDate = NSMutableDictionary()
         
         for var i = 0; i < 30; i++ {
             
@@ -544,10 +543,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             
             //make schedule from shift and notes
             if notes.count != 0 || shift != nil {
-                let schedule = SSScheduleForDay(forDate: randomDate, withShift: shift, withNotes: notes, forUser: "Brian")
+                let schedule = SSSchedule(forDate: randomDate, withShift: shift, withNotes: notes, forUser: "Brian")
                 let key = self.dateFormatter.stringFromDate(randomDate)
-                if self.eventsByDate![key] == nil {
-                    self.eventsByDate![key] = schedule
+                if /*self.eventsByDate![key]*/ SSSchedule.sharedInstance().schedules[key] == nil {
+                    SSSchedule.sharedInstance().schedules[key] = schedule
                 }
             }
             

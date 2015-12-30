@@ -1,5 +1,5 @@
 //
-//  SSScheduleForDay.swift
+//  SSSchedule.swift
 //  Shift Share
 //
 //  Created by Brian Josel on 11/25/15.
@@ -13,7 +13,9 @@ import CoreData
 
 //persisted object for a schedule for that day
 //TODO: MAKE OBJECT NSMANAGEDOBJECT
-class SSScheduleForDay {
+class SSSchedule {
+    
+    var schedules = [String : SSSchedule]()
     
     //date for the object
     var date : NSDate?
@@ -64,5 +66,12 @@ class SSScheduleForDay {
     class func emptyTableData() -> [SSTBCellData] {
         
         return [SSShift()]
+    }
+    
+    class func  sharedInstance() -> SSSchedule {
+        struct Singleton {
+            static let instance = SSSchedule()
+        }
+        return Singleton.instance
     }
 }
