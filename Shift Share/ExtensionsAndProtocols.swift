@@ -39,7 +39,12 @@ extension NSDate {
     var day: String {
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "dd"
+        //helps display days at 7, 8, 9 instead of 07, 08, 09
+        if let intDay = Int(dateFormatter.stringFromDate(self)) {
+            return String(intDay)
+        }
         return dateFormatter.stringFromDate(self)
+        
     }
     
     var year: String {

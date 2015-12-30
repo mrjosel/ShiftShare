@@ -15,7 +15,7 @@ class SSNote : SSTBCellData, CustomStringConvertible {
     //title, body, image for protocol conformance
     @objc var title : String?
     @objc var body : String?
-    @objc var image : UIImage? = nil  //never has image, allows for easy protocol conformance
+    @objc var image : UIImage? = UIImage(named: "Note")  //Note image is always of "Note"
     
     //description for CustomStringConvertible conformance
     var description : String {

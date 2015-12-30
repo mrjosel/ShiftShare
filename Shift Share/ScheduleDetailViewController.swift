@@ -13,16 +13,19 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
     //TODO: PRESENT NOTES NICELY
     //TODO: PRESENT SHIFT SOMEHOW
     //outlets
-    @IBOutlet weak var noteView: UIView!    //view with all components for when note is selected
-    @IBOutlet weak var shiftView: UIView!   //view with all components for when shift is selected
-    @IBOutlet weak var shiftImageView: UIImageView!
-    @IBOutlet weak var noteBody: UITextView!
-    @IBOutlet weak var shiftTime: UITextView!
-    @IBOutlet weak var shiftName: UILabel!
+    @IBOutlet weak var dataImageView: UIImageView!
+    @IBOutlet weak var dataBody: UITextView!
+    @IBOutlet weak var dataTitle: UILabel!
+    @IBOutlet weak var leftTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var rightTrailingConstraint: NSLayoutConstraint!
     
     //data from cell selected in CalendarVC
     var userSelectedData : SSTBCellData?
     var dataIsShift : Bool = false  //set to false as default
+    var previousRect = CGRectZero
+    var newLineCount = 0
+    var numLines : Int?
+    var maxLines : Int!
     
     //selected date
     var date : NSDate!
@@ -39,34 +42,79 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
             return
         }
         
-        print(self.date)
-        
-        self.automaticallyAdjustsScrollViewInsets = false
-        
-        //use dataIsShift as Bool for configuation.  If false, implies that data is of SSNote type
+        //determine if data is shift or not
         self.dataIsShift = (data is SSShift)
         
         //setup views
+        let trailingConstraint = self.view.frame.width / 16.0
+        self.leftTrailingConstraint.constant = trailingConstraint
+        self.rightTrailingConstraint.constant = trailingConstraint
+        self.automaticallyAdjustsScrollViewInsets = false
         self.navigationController?.navigationBar.hidden = false
         self.navigationController?.topViewController?.title = self.date.readableDate
-        self.shiftView.hidden = !self.dataIsShift
-        self.shiftImageView.image = data.image
-        self.shiftTime.text = data.body
-        self.shiftTime.textAlignment = NSTextAlignment.Center
-        self.shiftTime.delegate = self
-        self.shiftName.text = data.title
-        self.shiftName.textAlignment = NSTextAlignment.Center
-        self.noteView.hidden = self.dataIsShift
-        self.noteBody.text = data.body
-        self.noteBody.textAlignment = NSTextAlignment.Left
-        self.noteBody.delegate = self
-
+        self.dataImageView.image = data.image
+//        self.dataBody.text = data.body
+        self.dataBody.textAlignment = self.dataIsShift ? NSTextAlignment.Center : NSTextAlignment.Left
+//        self.dataBody.scrollEnabled = false
+        self.dataBody.font = UIFont(name: "Helvetica", size: 14.0)
+        self.dataBody.delegate = self
+        self.dataTitle.text = data.title
+        self.dataTitle.textAlignment = NSTextAlignment.Center
+        
+        //get numLines and maxLines
+        self.maxLines = Int((self.dataBody.frame.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
+        self.dataBody.text = self.testBody()
+        self.numLines = Int((self.dataBody.contentSize.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
+        print("self.numLines = \(self.numLines)")
+        print("self.maxLines = \(self.maxLines)")
     }
     
-    //when field is selected, allow for editing of notes, and selection of shifts
-    func textViewShouldBeginEditing(textView: UITextView) -> Bool {
-        print("did select textView")
-        return !self.dataIsShift
+    //DEBUG
+    func testBody() -> String {
+        var text = ""
+        for var i = 0; i < self.maxLines - 1; i++ {
+            text = text + "\(i).)\n"
+        }
+        return text + "\(self.maxLines - 1).)"
+    }
+    
+    //update numLines everytime text changes, if word wrap occurs after maxLines reached, remove last char
+    func textViewDidChange(textView: UITextView) {
+        print("didChange")
+        //update number of lines
+        self.numLines = Int((self.dataBody.contentSize.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
+
+        //check for word wrap event if numLines exceeds maxLines, if wordwrap occured remove last char and recompute numLines, else do nothing
+        if self.numLines > self.maxLines {
+            textView.text = textView.text.substringToIndex(textView.text.endIndex.predecessor())
+            self.numLines = Int((self.dataBody.contentSize.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
+        }
+    }
+    
+    //check if data is shift, if not shift, allow editing of text body until body is full, otherwise disallow
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        
+        //get text and new text
+        let content = textView.text as NSString
+        let newText = content.stringByReplacingCharactersInRange(range, withString: text)
+        
+        //check if data is shift
+        if !self.dataIsShift {
+            
+            //allow text input until last line is reached
+            if self.numLines > self.maxLines {
+                
+                //last line was reached, textViewDidChange will check for wordwrap, return conditional allowing backspaces only
+                return newText.characters.count < textView.text.characters.count
+            }
+            
+            //allow change
+            return true
+            
+        } else {
+            //data is shift, do not allow editing of body
+            return false
+        }
     }
     
     override func didReceiveMemoryWarning() {
