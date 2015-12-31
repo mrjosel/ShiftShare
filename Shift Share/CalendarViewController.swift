@@ -13,9 +13,7 @@ import Foundation
 
 //main calendarView
 class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SSCalendarDelegate {
-    
-//    //vars for logging events in calendar
-//    var eventsByDate : NSMutableDictionary?
+
     
     //calendar manager
     var calendarManager : JTCalendarManager!
@@ -97,21 +95,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //TODO: REMOVE IN PRODUCTION
             abort()
         }
-
-        //set image and dotViews accordingly if shift or notes exist
-        if let schedule = SSSchedule.sharedInstance().schedules[dayView.date.keyFromDate] {
-            if let image = schedule.shift?.image {
-                dispatch_async(dispatch_get_main_queue(), {
-                    dayView.ssDVImageView.image = image
-                    dayView.ssDVImageView.hidden = false
-                })
-            }
-            //if schedule has notes, display dotView
-            if let _ = schedule.notes {
-                dayView.dotView.hidden = false
-            }
-            
-        }
         
         //format for today's date
         if calendar.dateHelper.date(NSDate(), isTheSameDayThan: dayView.date) {
@@ -149,10 +132,30 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             dayView.dotView.backgroundColor = UIColor.redColor()
             dayView.textLabel.textColor = UIColor.blackColor()
         }
+    
+        //set image and dotViews accordingly if shift or notes exist
+        guard let schedule = SSSchedule.sharedInstance().schedules[dayView.date.keyFromDate] else {
+            //no schedule, keep defaults
+            //NOTE: This is likely redundant (the following two params are hidden by default,
+            //      but it fixes a bug in the JTCalendar Framework where dayViews without schedules have shift images
+            //      and dotViews displayed.  The JTCalendar example project has a similar method in its viewController.
+            dayView.dotView.hidden = true
+            dayView.ssDVImageView.hidden = true
+            return
+        }
         
-        //check if there is an event set for that day
-//        dayView.dotView.hidden = !self.haveEventForThatDay(dayView.date)
-//        dayView.ssDVImageView.hidden = !self.haveEventForThatDay(dayView.date)
+        if let image = schedule.shift?.image {
+            dispatch_async(dispatch_get_main_queue(), {
+                dayView.ssDVImageView.image = image
+                dayView.ssDVImageView.hidden = false
+            })
+        }
+        
+        if let _ = schedule.notes {
+            dispatch_async(dispatch_get_main_queue(), {
+                dayView.dotView.hidden = false
+            })
+        }
     }
     
     //code for handling touching the dayView of the calendar
@@ -164,8 +167,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //TODO: REMOVE IN PRODUCTION
             abort()
         }
-        
-        print(SSSchedule.sharedInstance().schedules)
         
         //set selected date
         self.selectedDate = dayView.date
@@ -322,7 +323,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             tableData = SSSchedule.emptyTableData()
             
         }
-        print(tableData.count)
+        
         //get cellData from tableData
         let cellData = tableData[indexPath.row]
         
@@ -418,23 +419,20 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.view.layoutIfNeeded()
     }
     
-//    //returns bool if an event is scheduled for that day
-//    func haveEventForThatDay(date: NSDate) -> Bool {
-//        
-//        //setup key for date
-//        let key = self.dateFormatter.stringFromDate(date)
-//        
-//        //check if there is an event for the key
-//        guard let _ = SSSchedule.sharedInstance().schedules[key] else {
-//            
-//            //no key for that date
-//            return false
-//        }
-//
-//        //events exist on this date
-//        return true
-//        
-//    }
+    //returns bool if an event is scheduled for that day
+    func haveEventForThatDay(date: NSDate) -> Bool {
+        
+        //check if there is an event for the key
+        guard let _ = SSSchedule.sharedInstance().schedules[date.keyFromDate] else {
+            
+            //no key for that date
+            return false
+        }
+
+        //events exist on this date
+        return true
+        
+    }
     
 //    //retrieves schedule for date, if one exists
 //    func getScheduleForDate(date: NSDate?) -> SSSchedule? {
@@ -484,6 +482,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func createSetEvents() {
         
         let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy"
         
         let key1 = "06-12-2015"
         let key2 = "13-12-2015"
@@ -501,16 +500,16 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         let note7 = SSNote(title: "Schedule 6b", body: nil)
         
         guard let date1 = dateFormatter.dateFromString(key1),
-            date2 = dateFormatter.dateFromString(key2),
-            date3 = dateFormatter.dateFromString(key3),
-            date4 = dateFormatter.dateFromString(key4),
-            date5 = dateFormatter.dateFromString(key5),
-            date6 = dateFormatter.dateFromString(key6)
+            let date2 = dateFormatter.dateFromString(key2),
+            let date3 = dateFormatter.dateFromString(key3),
+            let date4 = dateFormatter.dateFromString(key4),
+            let date5 = dateFormatter.dateFromString(key5),
+            let date6 = dateFormatter.dateFromString(key6)
         else {
             print("no events set")
             return
         }
-        
+    
         SSSchedule.sharedInstance().schedules = [
             date1.keyFromDate : SSSchedule(forDate: date1, withShift: SSShift(type: .DAY), withNotes: [note1], forUser: "Brian"),
             date2.keyFromDate : SSSchedule(forDate: date2, withShift: SSShift(type: .NIGHT), withNotes: [note2], forUser: "Brian"),
