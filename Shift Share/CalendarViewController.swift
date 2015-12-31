@@ -22,11 +22,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     var selectedDate : NSDate!
     
     //locale for use in displaying date formats
+    //TODO: IMPLEMENT THIS
     var locale : String?
-    
-    //tableView Data
-    //TODO: REPLACE WITH CORE DATA
-    var tableData : [SSTBCellData]?
 
     //outlets
     @IBOutlet weak var monthSelectorView: JTCalendarMenuView!
@@ -62,7 +59,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //create random events for testability
         //TODO: DELETE THIS
         self.createRandomEvents()
-//        self.createAllMonthEvents()
 //        self.createSetEvents()
         
         //setup views
@@ -144,6 +140,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             return
         }
         
+        //display image if shift/image exist
         if let image = schedule.shift?.image {
             dispatch_async(dispatch_get_main_queue(), {
                 dayView.ssDVImageView.image = image
@@ -151,7 +148,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             })
         }
         
-        if let _ = schedule.notes {
+        //display dotView if notes exist
+        if let notes = schedule.notes where notes.count != 0 {
             dispatch_async(dispatch_get_main_queue(), {
                 dayView.dotView.hidden = false
             })
@@ -188,6 +186,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 self.calendarView.loadPreviousPageWithAnimation()
             }
         }
+        
+        print(SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate]?.notes?.count)
         
         //reload tableViews
         self.dayViewTableView.reloadData()
@@ -313,14 +313,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //get tableData
             tableData = schedule.tableData
             
-            //populate tableData with doubleTap cell depending on weekViewEnabled
-            let doubleTapCell = self.calendarManager.settings.weekModeEnabled ? SSSchedule.doubleTapCell(SSScheduleDoubleTapCellType.COLLAPSE) : SSSchedule.doubleTapCell(SSScheduleDoubleTapCellType.EXPAND)
-            tableData.append(doubleTapCell)
-            
         } else {
             
             //create table data based on edit mode or not
-            tableData = SSSchedule.emptyTableData()
+            tableData = SSSchedule.emptyTableData().tableData
             
         }
         
@@ -419,63 +415,20 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.view.layoutIfNeeded()
     }
     
-    //returns bool if an event is scheduled for that day
-    func haveEventForThatDay(date: NSDate) -> Bool {
-        
-        //check if there is an event for the key
-        guard let _ = SSSchedule.sharedInstance().schedules[date.keyFromDate] else {
-            
-            //no key for that date
-            return false
-        }
-
-        //events exist on this date
-        return true
-        
-    }
-    
-//    //retrieves schedule for date, if one exists
-//    func getScheduleForDate(date: NSDate?) -> SSSchedule? {
+//    //returns bool if an event is scheduled for that day
+//    func haveEventForThatDay(date: NSDate) -> Bool {
 //        
-//        //unwrap optional date
-//        guard let date = date else {
+//        //check if there is an event for the key
+//        guard let _ = SSSchedule.sharedInstance().schedules[date.keyFromDate] else {
 //            
-//            //no date selected
-//            return nil
+//            //no key for that date
+//            return false
 //        }
+//
+//        //events exist on this date
+//        return true
 //        
-//        //get key for date
-//        let key = self.dateFormatter.stringFromDate(date)
-//        
-//        //check if events exist and if so for schedules on that date using the aboive key
-//        guard let schedule = SSSchedule.sharedInstance().schedules[key] else {
-//            
-//            //no events, or schedules on that date
-//            return nil
-//        }
-//        
-//        //return schedule
-//        return schedule
 //    }
-    
-    //test function
-    //TODO: DELETE THIS
-    func createAllMonthEvents() {
-//        self.eventsByDate = NSMutableDictionary()
-        let today = NSDate()
-        
-        for var i = 0; i < 80; i++ {
-            
-            let day = NSDate(timeInterval: Double(3600 * 24 * i), sinceDate: today)
-            //create random shift
-            let randomNum = arc4random()
-            let rawVal = Int(randomNum % 2 + 1)
-            let shift = SSShift(type: SSShiftType(rawValue: rawVal)!)
-            let schedule = SSSchedule(forDate: day, withShift: shift, withNotes: [SSNote()], forUser: "Brian")
-            SSSchedule.sharedInstance().schedules[day.keyFromDate] = schedule
-            
-        }
-    }
     
     //test function
     //TODO: DELETE THIS
@@ -490,21 +443,26 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         let key4 = "27-12-2015"
         let key5 = "14-12-2015"
         let key6 = "03-01-2016"
+        let key7 = "30-12-2015"
+        let key8 = "24-12-2015"
         
         let note1 = SSNote(title: "Schedule 1", body: key1)
         let note2 = SSNote(title: "Schedule 2", body: key2)
         let note3 = SSNote(title: "Schedule 3", body: key3)
         let note4 = SSNote(title: "Schedule 4", body: key4)
         let note5 = SSNote(title: "Schedule 5", body: key5)
-        let note6 = SSNote(title: "Schedule 6a", body: key6)
-        let note7 = SSNote(title: "Schedule 6b", body: nil)
+        let note6a = SSNote(title: "Schedule 6a", body: key6)
+        let note6b = SSNote(title: "Schedule 6b", body: nil)
+        let note8 = SSNote(title: "Schedule 8", body: key8)
         
         guard let date1 = dateFormatter.dateFromString(key1),
             let date2 = dateFormatter.dateFromString(key2),
             let date3 = dateFormatter.dateFromString(key3),
             let date4 = dateFormatter.dateFromString(key4),
             let date5 = dateFormatter.dateFromString(key5),
-            let date6 = dateFormatter.dateFromString(key6)
+            let date6 = dateFormatter.dateFromString(key6),
+            let date7 = dateFormatter.dateFromString(key7),
+            let date8 = dateFormatter.dateFromString(key8)
         else {
             print("no events set")
             return
@@ -516,7 +474,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             date3.keyFromDate : SSSchedule(forDate: date3, withShift: SSShift(type: .NIGHT), withNotes: [note3], forUser: "Brian"),
             date4.keyFromDate : SSSchedule(forDate: date4, withShift: SSShift(type: .DAY), withNotes: [note4], forUser: "Brian"),
             date5.keyFromDate : SSSchedule(forDate: date5, withShift: SSShift(type: .DAY), withNotes: [note5], forUser: "Brian"),
-            date6.keyFromDate : SSSchedule(forDate: date6, withShift: SSShift(type: .NIGHT), withNotes: [note6, note7], forUser: "Brian")
+            date6.keyFromDate : SSSchedule(forDate: date6, withShift: SSShift(type: .NIGHT), withNotes: [note6a, note6b], forUser: "Brian"),
+            date7.keyFromDate : SSSchedule(forDate: date7, withShift: SSShift(type: .VACATION), withNotes: nil, forUser: "Brian"),
+            date8.keyFromDate : SSSchedule(forDate: date8, withShift: nil, withNotes: [note8], forUser: "Brian")
         ]
     }
     
@@ -549,6 +509,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             
             //make schedule from shift and notes
             if notes.count != 0 || shift != nil {
+                
                 let schedule = SSSchedule(forDate: randomDate, withShift: shift, withNotes: notes, forUser: "Brian")
                 if SSSchedule.sharedInstance().schedules[randomDate.keyFromDate] == nil {
                     SSSchedule.sharedInstance().schedules[randomDate.keyFromDate] = schedule

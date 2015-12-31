@@ -11,11 +11,6 @@ import UIKit
 import JTCalendar
 import CoreData
 
-//type to switch for doubleTapCell
-enum SSScheduleDoubleTapCellType {
-    case EXPAND, COLLAPSE
-}
-
 //persisted object for a schedule for that day
 //TODO: MAKE OBJECT NSMANAGEDOBJECT
 class SSSchedule {
@@ -48,7 +43,10 @@ class SSSchedule {
             if let shift = shift {
                 output.insert(shift, atIndex: 0)
             }
-
+            //TODO: IMPLELEMENT DOUBLETAP CELL IF SWIPE FAILS
+//            //append with expland/collapse cell (expand by default)
+//            output.append(SSScheduleDoubleTapCell())
+            
             return output
         }
     }
@@ -64,33 +62,31 @@ class SSSchedule {
         self.shift = shift
         self.notes = notes
         self.user = user as? String //TODO: FIX WHEN USER OBJECT IS IMPLEMENTED
-        
-        //create table data if values are not optional, leave [] otherwise
 
     }
     
-    //cell that instructs user to double tap expand/collapse table/month views. Cell is of typse SSNote arbitrarily
-    class func doubleTapCell(expandOrCollapse: SSScheduleDoubleTapCellType) -> SSTBCellData {
-        
-        //output cell
-        let outputCell = SSNote()
-        outputCell.image = nil   //force image nil
-        
-        //check string value for expandOrCollapse
-        switch expandOrCollapse {
-        case .EXPAND :
-            outputCell.title = "Double Tap Day to Expand"
-        case .COLLAPSE :
-            outputCell.title = "Double Tap Day to Collapse"
-        }
-        
-        return outputCell
-    }
-    
+//    //cell that instructs user to double tap expand/collapse table/month views. Cell is of typse SSNote arbitrarily
+//    class func doubleTapCell(expandOrCollapse: SSScheduleDoubleTapCellType) -> SSTBCellData {
+//        
+//        //output cell
+//        let outputCell = SSNote()
+//        outputCell.image = nil   //force image nil
+//        
+//        //check string value for expandOrCollapse
+//        switch expandOrCollapse {
+//        case .EXPAND :
+//            outputCell.title = "Double Tap Day to Expand"
+//        case .COLLAPSE :
+//            outputCell.title = "Double Tap Day to Collapse"
+//        }
+//        
+//        return outputCell
+//    }
+//    
     //class func to return "schedule" to populate table when there is no schedule for that date
-    class func emptyTableData() -> [SSTBCellData] {
+    class func emptyTableData() -> SSSchedule {
         
-        return [SSShift()]
+        return SSSchedule(forDate: nil, withShift: SSShift(), withNotes: nil, forUser: nil)
     }
     
     class func  sharedInstance() -> SSSchedule {
