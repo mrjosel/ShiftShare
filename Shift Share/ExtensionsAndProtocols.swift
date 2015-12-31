@@ -5,6 +5,8 @@
 //  Created by Brian Josel on 11/20/15.
 //  Copyright © 2015 Brian Josel. All rights reserved.
 //
+//  Extensions of existing CocoaTouch and custom classes as well as custom protocols
+
 
 import Foundation
 import UIKit
@@ -28,8 +30,15 @@ extension UIColor {
     }
 }
 
-//allows easily getting date information in readable text
+//allows easily getting date information in readable text, or for use in keying dicts
 extension NSDate {
+    
+    var keyFromDate: String {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy"
+        return dateFormatter.stringFromDate(self)
+    }
+    
     var month: String {
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "MMMM"

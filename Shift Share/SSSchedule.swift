@@ -11,10 +11,16 @@ import UIKit
 import JTCalendar
 import CoreData
 
+//type to switch for doubleTapCell
+enum SSScheduleDoubleTapCellType {
+    case EXPAND, COLLAPSE
+}
+
 //persisted object for a schedule for that day
 //TODO: MAKE OBJECT NSMANAGEDOBJECT
 class SSSchedule {
     
+    //schedules across application, used by singleton
     var schedules = [String : SSSchedule]()
     
     //date for the object
@@ -42,6 +48,7 @@ class SSSchedule {
             if let shift = shift {
                 output.insert(shift, atIndex: 0)
             }
+
             return output
         }
     }
@@ -60,6 +67,24 @@ class SSSchedule {
         
         //create table data if values are not optional, leave [] otherwise
 
+    }
+    
+    //cell that instructs user to double tap expand/collapse table/month views. Cell is of typse SSNote arbitrarily
+    class func doubleTapCell(expandOrCollapse: SSScheduleDoubleTapCellType) -> SSTBCellData {
+        
+        //output cell
+        let outputCell = SSNote()
+        outputCell.image = nil   //force image nil
+        
+        //check string value for expandOrCollapse
+        switch expandOrCollapse {
+        case .EXPAND :
+            outputCell.title = "Double Tap Day to Expand"
+        case .COLLAPSE :
+            outputCell.title = "Double Tap Day to Collapse"
+        }
+        
+        return outputCell
     }
     
     //class func to return "schedule" to populate table when there is no schedule for that date

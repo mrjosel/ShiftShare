@@ -27,8 +27,15 @@ class SSDayView: JTCalendarDayView {
         self.textLabel.frame = CGRect(x: 5, y: 5, width: self.frame.width / 4, height: self.frame.height / 4)
         self.textLabel.font = UIFont(name: ".SFUIText-Regular", size: 9.0)
         
+        //override placement of dotView
+        self.dotView.frame.origin = CGPoint(x: 5, y: self.frame.height - (self.dotView.frame.height + 5))
+        
         //layout the imageView
-        self.ssDVImageView.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height)
+        let scaleFactor = CGFloat(0.7)
+        let originOffset = (1 - scaleFactor) / 2
+        let imgSize = CGSize(width: self.frame.width * scaleFactor, height: self.frame.height * scaleFactor)
+        let imgOrigin = CGPoint(x: self.frame.width * originOffset, y: self.frame.height * originOffset)
+        self.ssDVImageView.frame = CGRect(origin: imgOrigin, size: imgSize)
         
     }
     
@@ -43,7 +50,7 @@ class SSDayView: JTCalendarDayView {
         //remove circleView
         self.circleView.removeFromSuperview()
         
-        //layout ssDVImageView
+        //create ssDVImageView
         self.ssDVImageView = UIImageView()
         self.insertSubview(self.ssDVImageView, atIndex: 0)
         self.ssDVImageView.contentMode = UIViewContentMode.ScaleAspectFit
@@ -51,9 +58,13 @@ class SSDayView: JTCalendarDayView {
         self.ssDVImageView.layer.rasterizationScale = UIScreen.mainScreen().scale
         self.ssDVImageView.layer.shouldRasterize = true
         
+        //set up doubleTap Gesture
         self.doubleTapGesture = UITapGestureRecognizer(target: self, action: "handleDoubleTap:")
         self.doubleTapGesture.numberOfTapsRequired = 2
         self.addGestureRecognizer(self.doubleTapGesture)
+        
+        //dotView default is hidden
+        self.dotView.hidden = true
         
     }
     

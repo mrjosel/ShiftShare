@@ -10,8 +10,9 @@ import UIKit
 
 //presents shift or note in detail
 class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
-    //TODO: PRESENT NOTES NICELY
-    //TODO: PRESENT SHIFT SOMEHOW
+
+    //TODO: EDIT SHIFTS!!!
+    
     //outlets
     @IBOutlet weak var dataImageView: UIImageView!
     @IBOutlet weak var dataBody: UITextView!
@@ -62,7 +63,6 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
         
         //get numLines and maxLines
         self.maxLines = Int((self.dataBody.frame.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
-//        self.dataBody.text = self.textBody(16)
         self.numLines = Int((self.dataBody.contentSize.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
     }
     
@@ -124,7 +124,6 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-
     /*
     // MARK: - Navigation
 
