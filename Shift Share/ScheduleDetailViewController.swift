@@ -9,14 +9,16 @@
 import UIKit
 
 //presents shift or note in detail
-class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
+class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
 
-    //TODO: EDIT SHIFTS!!!
+    //TODO: CHANGE SHIFT BODY WHEN IMAGE IS CHANGED
+    //TODO: BRING EDITED NOTES BACK INTO THE SCHEDULE DATA (SO THEY ARE VIEWED PROPERLY IN THE CALENDARVC
+    //TODO: LIMIT CHARACTERS IN DATATITLE TEXTFIELD
     
     //outlets
     @IBOutlet weak var dataImageView: UIImageView!
     @IBOutlet weak var dataBody: UITextView!
-    @IBOutlet weak var dataTitle: UILabel!
+    @IBOutlet weak var dataTitle: UITextField!
     @IBOutlet weak var leftTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var rightTrailingConstraint: NSLayoutConstraint!
     
@@ -43,7 +45,7 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
             //no data found, do not configure, return
             return
         }
-        print(data)
+
         //determine if data is shift or not
         self.dataIsShift = (data is SSShift)
         
@@ -58,9 +60,14 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
         self.dataBody.text = data.body
         self.dataBody.textAlignment = self.dataIsShift ? NSTextAlignment.Center : NSTextAlignment.Left
         self.dataBody.font = UIFont(name: "Helvetica", size: 14.0)
+        self.dataBody.userInteractionEnabled = !self.dataIsShift
         self.dataBody.delegate = self
+        self.dataTitle.delegate = self
         self.dataTitle.text = data.title
+        self.dataTitle.borderStyle = .None
         self.dataTitle.textAlignment = NSTextAlignment.Center
+        self.dataTitle.userInteractionEnabled = !self.dataIsShift
+        self.dataTitle.selected = !self.dataIsShift
         self.touchGesture = UITapGestureRecognizer(target: self, action: "imageViewTapped:")
         self.dataImageView.addGestureRecognizer(self.touchGesture!)
         self.dataImageView.userInteractionEnabled = true
@@ -120,7 +127,8 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
             return true
             
         } else {
-            //data is shift, do not allow editing of body
+            //data is a shift, hide caret and do not allow editing
+            textView.selectedTextRange = nil
             return false
         }
     }
@@ -137,6 +145,18 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
             self.numLines = Int((self.dataBody.contentSize.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
         }
         
+    }
+    
+    //manages text editing for dataTitle
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        if !self.dataIsShift {
+            //TODO: HANDLE EDITING OF NOTE LABEL
+            return true //for now
+        } else {
+            //data is a shift, hide caret and do not allow editing
+            textField.selectedTextRange = nil
+            return false
+        }
     }
     
     //make all values nil
