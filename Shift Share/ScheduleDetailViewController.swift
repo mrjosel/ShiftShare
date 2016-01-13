@@ -27,6 +27,7 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
     var newLineCount = 0
     var numLines : Int?
     var maxLines : Int!
+    var touchGesture : UITapGestureRecognizer?
     
     //selected date
     var date : NSDate!
@@ -42,7 +43,7 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
             //no data found, do not configure, return
             return
         }
-        
+        print(data)
         //determine if data is shift or not
         self.dataIsShift = (data is SSShift)
         
@@ -60,10 +61,29 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
         self.dataBody.delegate = self
         self.dataTitle.text = data.title
         self.dataTitle.textAlignment = NSTextAlignment.Center
+        self.touchGesture = UITapGestureRecognizer(target: self, action: "imageViewTapped:")
+        self.dataImageView.addGestureRecognizer(self.touchGesture!)
+        self.dataImageView.userInteractionEnabled = true
         
         //get numLines and maxLines
         self.maxLines = Int((self.dataBody.frame.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
         self.numLines = Int((self.dataBody.contentSize.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
+    }
+    
+    func imageViewTapped(sender: UITapGestureRecognizer) {
+        if !self.dataIsShift {
+            print("data is not shift")
+        } else {
+            if let schedule = SSSchedule.sharedInstance().schedules[self.date.keyFromDate], shift = schedule.shift {
+                if let _ = shift.type {
+                    shift.type!.cycleShift()
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.dataImageView.image = UIImage(named: shift.type!.description)
+                        self.dataTitle.text = shift.type!.description
+                    })
+                }
+            }
+        }
     }
     
     //TODO: DEBUG, REMOVE
@@ -117,6 +137,12 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate {
             self.numLines = Int((self.dataBody.contentSize.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
         }
         
+    }
+    
+    //make all values nil
+    override func viewWillDisappear(animated: Bool) {
+        self.userSelectedData = nil
+        self.numLines = nil
     }
     
     override func didReceiveMemoryWarning() {

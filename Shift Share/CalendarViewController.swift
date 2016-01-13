@@ -14,7 +14,6 @@ import Foundation
 //main calendarView
 class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SSCalendarDelegate {
 
-    
     //calendar manager
     var calendarManager : JTCalendarManager!
     
@@ -39,9 +38,15 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //hide navBar
         self.navigationController?.navigationBar.hidden = true
         
+        //reload calendar
+        self.calendarManager.reload()
+        self.calendarView.reloadInputViews()
+        self.dayViewTableView.reloadData()
+        
     }
 
     override func viewDidLoad() {
+
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
                 
@@ -165,10 +170,11 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //TODO: REMOVE IN PRODUCTION
             abort()
         }
-        
+
         //set selected date
         self.selectedDate = dayView.date
-        
+        let schedule = SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate]
+        print(schedule?.shift?.type)
         //animation for the dayView
         UIView.transitionWithView(dayView, duration: 0.1, options: UIViewAnimationOptions(), animations: {calendar.reload()}, completion: nil)
         
@@ -186,8 +192,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 self.calendarView.loadPreviousPageWithAnimation()
             }
         }
-        
-        print(SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate]?.notes?.count)
         
         //reload tableViews
         self.dayViewTableView.reloadData()
@@ -343,6 +347,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //get data for detailVC
         let cellData = schedule.tableData[indexPath.row]
+        print(schedule.shift?.type)
+//        print(cellData)
         
         //perform segue to detailVC
         self.performSegueWithIdentifier("detailVCSegue", sender: cellData)

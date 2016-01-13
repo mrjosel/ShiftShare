@@ -11,10 +11,15 @@ import UIKit
 
 
 //class for actual shift
-class SSShift : SSTBCellData {
+class SSShift : NSObject, SSTBCellData {
     
     //shift type
-    var type : SSShiftType?
+    var type : SSShiftType? {
+        didSet {
+            //reconfig with new type
+            self.reload()
+        }
+    }
     
     //protocol values set when type is set
     @objc var image : UIImage?
@@ -32,12 +37,34 @@ class SSShift : SSTBCellData {
     }
     
     //empty initializer
-    init() {
+    override init() {
         
         //no type specified
         self.type = nil
         self.title = "No Shift"
         self.body = nil
         self.image = nil
+    }
+    
+    //config function switching all params to given SSShiftType
+    func reload() {
+        
+        //type is nil, clear out all data
+        guard let type = self.type else {
+            self.type = nil
+            self.title = "No Shift"
+            self.body = nil
+            self.image = nil
+            return
+        }
+        
+        //type was set properly
+        self.title = SSShiftType.shiftNames[type]
+        self.body = SSShiftType.shiftTimes[type]
+        if let name = SSShiftType.shiftNames[type] {
+            self.image = UIImage(named: name)
+        } else {
+            self.image = nil
+        }
     }
 }
