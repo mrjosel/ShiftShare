@@ -380,7 +380,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //create VC for show presentation
             let scheduleDetailVC : ScheduleDetailViewController = segue.destinationViewController as! ScheduleDetailViewController
             
-            //set VC's userData to cellData (sender)
+            //set VC's date to selectedDate, and cast sender as SSTBCellData
             scheduleDetailVC.userSelectedData = sender as? SSTBCellData
             scheduleDetailVC.date = self.selectedDate
             

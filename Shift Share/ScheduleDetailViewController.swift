@@ -11,8 +11,7 @@ import UIKit
 //presents shift or note in detail
 class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
 
-    //TODO: CHANGE SHIFT BODY WHEN IMAGE IS CHANGED
-    //TODO: BRING EDITED NOTES BACK INTO THE SCHEDULE DATA (SO THEY ARE VIEWED PROPERLY IN THE CALENDARVC
+    //TODO: CREATE SAVE BUTTON ON RIGHT THAT SAVES NOTE AND SEGUES BACK TO CALENDARVC
     //TODO: LIMIT CHARACTERS IN DATATITLE TEXTFIELD
     
     //outlets
@@ -23,8 +22,9 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
     @IBOutlet weak var rightTrailingConstraint: NSLayoutConstraint!
     
     //data from cell selected in CalendarVC
-    var userSelectedData : SSTBCellData?
-    var dataIsShift : Bool = false  //set to false as default
+    var userSelectedData : SSTBCellData!    //set in calendarViewController
+    var schedule : SSSchedule?
+    var dataIsShift : Bool = false          //default value
     var previousRect = CGRectZero
     var newLineCount = 0
     var numLines : Int?
@@ -32,46 +32,39 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
     var touchGesture : UITapGestureRecognizer?
     
     //selected date
-    var date : NSDate!
+    var date : NSDate!                      //set in calendarViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         
-        //ensure that userSelectedData has made it to VC
-        guard let data = self.userSelectedData else {
-            
-            //no data found, do not configure, return
-            return
+        //get schedule for use in other methods
+        if let schedule = SSSchedule.sharedInstance().schedules[date.keyFromDate] {
+            self.schedule = schedule
         }
-
-        //determine if data is shift or not
-        self.dataIsShift = (data is SSShift)
         
-        //setup views
+        //determine if data is shift or note
+        self.dataIsShift = self.userSelectedData is SSShift
+        
+        //setup views for all common/static behaviors
         let trailingConstraint = self.view.frame.width / 16.0
         self.leftTrailingConstraint.constant = trailingConstraint
         self.rightTrailingConstraint.constant = trailingConstraint
         self.automaticallyAdjustsScrollViewInsets = false
         self.navigationController?.navigationBar.hidden = false
-        self.navigationController?.topViewController?.title = self.date.readableDate
-        self.dataImageView.image = data.image
-        self.dataBody.text = data.body
-        self.dataBody.textAlignment = self.dataIsShift ? NSTextAlignment.Center : NSTextAlignment.Left
-        self.dataBody.font = UIFont(name: "Helvetica", size: 14.0)
-        self.dataBody.userInteractionEnabled = !self.dataIsShift
-        self.dataBody.delegate = self
-        self.dataTitle.delegate = self
-        self.dataTitle.text = data.title
+        self.navigationController?.topViewController?.title = date.readableDate
         self.dataTitle.borderStyle = .None
         self.dataTitle.textAlignment = NSTextAlignment.Center
-        self.dataTitle.userInteractionEnabled = !self.dataIsShift
-        self.dataTitle.selected = !self.dataIsShift
         self.touchGesture = UITapGestureRecognizer(target: self, action: "imageViewTapped:")
         self.dataImageView.addGestureRecognizer(self.touchGesture!)
-        self.dataImageView.userInteractionEnabled = true
+        self.dataBody.font = UIFont(name: "Helvetica", size: 14.0)
+        self.dataBody.delegate = self
+        self.dataTitle.delegate = self
         
+        //configure UI elements for all dynamic behaviors (e.g. - if shift, or note changes)
+        self.configUIForData()
+
         //get numLines and maxLines
         self.maxLines = Int((self.dataBody.frame.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
         self.numLines = Int((self.dataBody.contentSize.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
@@ -85,8 +78,9 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
                 if let _ = shift.type {
                     shift.type!.cycleShift()
                     dispatch_async(dispatch_get_main_queue(), {
-                        self.dataImageView.image = UIImage(named: shift.type!.description)
-                        self.dataTitle.text = shift.type!.description
+                        //reconfig UI and reload shift
+                        self.configUIForData()
+                        shift.reload()
                     })
                 }
             }
@@ -157,6 +151,22 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
             textField.selectedTextRange = nil
             return false
         }
+    }
+    
+    //using shift type or note configure all UI elements
+    func configUIForData() {
+
+        //UI Outlet setup
+        self.dataImageView.image = self.userSelectedData.image
+        self.dataBody.text = self.userSelectedData.body
+        self.dataTitle.text = self.userSelectedData.title
+        
+        //Outlet configuration depending if data is a shift or a note
+        self.dataBody.textAlignment = self.dataIsShift ? NSTextAlignment.Center : NSTextAlignment.Left
+        self.dataBody.userInteractionEnabled = !self.dataIsShift
+        self.dataTitle.userInteractionEnabled = !self.dataIsShift
+        self.dataTitle.selected = !self.dataIsShift
+        self.dataImageView.userInteractionEnabled = self.dataIsShift
     }
     
     //make all values nil
