@@ -75,14 +75,12 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
             print("data is not shift")
         } else {
             if let schedule = SSSchedule.sharedInstance().schedules[self.date.keyFromDate], shift = schedule.shift {
-                if let _ = shift.type {
-                    shift.type!.cycleShift()
-                    dispatch_async(dispatch_get_main_queue(), {
-                        //reconfig UI and reload shift
-                        self.configUIForData()
-                        shift.reload()
-                    })
-                }
+                shift./*type!.*/cycleShift()
+                dispatch_async(dispatch_get_main_queue(), {
+                    //reconfig UI and reload shift
+                    self.configUIForData()
+                    shift.reload()
+                })
             }
         }
     }
@@ -91,7 +89,6 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
     func textBody(lineCount: Int) -> String {
         var content = ""
         let usableCount = lineCount > self.maxLines ? self.maxLines : lineCount
-        print("lineCount is \(lineCount), maxLines is \(self.maxLines)")
         for var i = 0; i < usableCount - 1; i++ {
             content += "\(i).)\n"
         }

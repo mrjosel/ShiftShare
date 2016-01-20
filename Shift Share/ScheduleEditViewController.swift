@@ -26,9 +26,7 @@ class ScheduleEditViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        
-        print(schedule)
-        
+                
         //setup views
         self.cancelButton.setTitle("Cancel", forState: UIControlState.Normal)
         self.doneButton.setTitle("Done", forState: UIControlState.Normal)

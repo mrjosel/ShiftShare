@@ -173,8 +173,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
 
         //set selected date
         self.selectedDate = dayView.date
-        let schedule = SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate]
-        print(schedule?.shift?.type)
+
         //animation for the dayView
         UIView.transitionWithView(dayView, duration: 0.1, options: UIViewAnimationOptions(), animations: {calendar.reload()}, completion: nil)
         
@@ -347,7 +346,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //get data for detailVC
         let cellData = schedule.tableData[indexPath.row]
-        print(schedule.shift?.type)
         
         //perform segue to detailVC
         self.performSegueWithIdentifier("detailVCSegue", sender: cellData)
