@@ -84,11 +84,15 @@ class SSSchedule {
 //        
 //        return outputCell
 //    }
-//    
+//
+    
     //class func to return "schedule" to populate table when there is no schedule for that date
-    class func emptyTableData() -> SSSchedule {
+    class func emptyTableData() -> [SSTBCellData] {
         
-        return SSSchedule(forDate: nil, withShift: SSShift(), withNotes: nil, forUser: nil)
+        //create dummy data from SSShift class
+        let emptyData = SSShift()
+        emptyData.title = "No Schedule"
+        return [emptyData]
     }
     
     class func  sharedInstance() -> SSSchedule {
