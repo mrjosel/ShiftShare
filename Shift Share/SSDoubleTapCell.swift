@@ -17,9 +17,12 @@ enum SSScheduleDoubleTapCellType {
 class SSScheduleDoubleTapCell: SSTBCellData {
     
     //vars for protocol conformance
-    @objc var image : UIImage?
-    @objc var title : String?
-    @objc var body : String?
+    var image : UIImage?
+    var title : String?
+    var body : String?
+    
+    //schedule associated with data
+    var schedule : SSSchedule?
     
     //type
     var type : SSScheduleDoubleTapCellType {

@@ -37,10 +37,12 @@ class SSSchedule {
             var output = [SSTBCellData]()
             
             if let notes = self.notes {
-                output = notes
+                for note in notes.reverse() {
+                    output.insert(note, atIndex: 0)
+                }
             }
             
-            if let shift = shift {
+            if let shift = self.shift {
                 output.insert(shift, atIndex: 0)
             }
             //TODO: IMPLELEMENT DOUBLETAP CELL IF SWIPE FAILS

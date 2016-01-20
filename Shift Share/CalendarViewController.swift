@@ -348,7 +348,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //get data for detailVC
         let cellData = schedule.tableData[indexPath.row]
         print(schedule.shift?.type)
-//        print(cellData)
         
         //perform segue to detailVC
         self.performSegueWithIdentifier("detailVCSegue", sender: cellData)

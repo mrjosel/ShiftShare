@@ -90,7 +90,7 @@ extension JTCalendarDelegateManager {
 }
 
 //allows for easy population of tableCell data
-@objc protocol SSTBCellData {
+protocol SSTBCellData : AnyObject {
     
     //image for shift
     var image : UIImage? {get set}
@@ -100,5 +100,8 @@ extension JTCalendarDelegateManager {
     
     //string for body/description of note
     var body : String? {get set}
+    
+    //schedule for data
+    var schedule : SSSchedule? {get set}
     
 }

@@ -13,9 +13,12 @@ import UIKit
 class SSNote : SSTBCellData, CustomStringConvertible {
     
     //title, body, image for protocol conformance
-    @objc var title : String?
-    @objc var body : String?
-    @objc var image : UIImage? = UIImage(named: "Note")  //Note image is always of "Note"
+    var title : String?
+    var body : String?
+    var image : UIImage? = UIImage(named: "Note")  //Note image is always of "Note"
+    
+    //schedule assiciated with note
+    var schedule : SSSchedule?
     
     //description for CustomStringConvertible conformance
     var description : String {
