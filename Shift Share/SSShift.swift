@@ -16,8 +16,9 @@ class SSShift : NSObject, SSTBCellData {
     //shift type
     var type : SSShiftType? {
         didSet {
-            //reconfig with new type
-            self.reload()
+            
+            //alert manager
+            self.schedule?.manager?.didChangeShiftType(self.schedule!)
         }
     }
     
@@ -50,33 +51,34 @@ class SSShift : NSObject, SSTBCellData {
     }
     
     //config function switching all params to given SSShiftType
-    func reload() {
-
-        //check if type exists
-        guard let type = self.type else {
-            
-            //type is nil, clear out all data
-            self.title = "No Shift"
-            self.body = nil
-            self.image = nil
-            return
-        }
-        
-        //type was set properly
-        self.title = SSShiftType.shiftNames[type]
-        self.body = SSShiftType.shiftTimes[type]
-        if let name = SSShiftType.shiftNames[type], image = UIImage(named: name) {
-            self.image = image
-        } else {
-            self.image = nil
-        }
-    }
+//    func reload() {
+//
+//        //check if type exists
+//        guard let type = self.type else {
+//            
+//            //type is nil, clear out all data
+//            self.title = "No Shift"
+//            self.body = nil
+//            self.image = nil
+//            return
+//        }
+//        
+//        //type was set properly
+//        self.title = SSShiftType.shiftNames[type]
+//        self.body = SSShiftType.shiftTimes[type]
+//        if let name = SSShiftType.shiftNames[type], image = UIImage(named: name) {
+//            self.image = image
+//        } else {
+//            self.image = nil
+//        }
+//    }
     
     //increments shiftType rawValue by 1 and changes shiftType accordingly
     func cycleShift() {
-        
+        print("cycling shift")
         //get rawValue of current shift, if no type exists, set to .DAY
         guard let type = self.type else {
+            print("type is nil, setting to DAY")
             self.type = SSShiftType.DAY
             return
         }
@@ -84,16 +86,17 @@ class SSShift : NSObject, SSTBCellData {
         //get rawValue
         let rawVal = type.rawValue
         
-        //if rawVal is less than 6, increment and set shift, rollover after 6
-        let newVal = (rawVal < 6) ? rawVal + 1 : 0
+        //if rawVal is less than 5, increment and set shift, rollover after 6
+        let newVal = (rawVal < 5) ? rawVal + 1 : 0
         
         //get shift at rawValue, if no image exists, set shit to nil
-        guard let shift = SSShiftType(rawValue: newVal) else {
+        guard let shiftType = SSShiftType(rawValue: newVal) else {
+            print("setting type to nil")
             self.type = nil
             return
         }
-        
+        print("setting type to \(shiftType)")
         //shift exists for rawVal, set
-        self.type = shift
+        self.type = shiftType
     }
 }

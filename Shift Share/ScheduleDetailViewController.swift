@@ -71,17 +71,24 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
     }
     
     func imageViewTapped(sender: UITapGestureRecognizer) {
+        print("shift is \(self.schedule!.shift)")
+        print("userData is \(self.userSelectedData)")
+        //TODO: RACE CONDITION: WHEN SHIFT IS NIL USERSELECTEDDATA PERSISTS
         if !self.dataIsShift {
             print("data is not shift")
         } else {
+            
+            //get schedule and cycle the shift, if shift is nil, set it to day
             if let schedule = SSSchedule.sharedInstance().schedules[self.date.keyFromDate], shift = schedule.shift {
-                shift./*type!.*/cycleShift()
-                dispatch_async(dispatch_get_main_queue(), {
-                    //reconfig UI and reload shift
-                    self.configUIForData()
-                    shift.reload()
-                })
+                shift.cycleShift()
+            } else {
+                schedule?.shift = SSShift(type: SSShiftType.DAY)
             }
+            
+            //config UI
+            dispatch_async(dispatch_get_main_queue(), {
+                self.configUIForData()
+            })
         }
     }
     
@@ -152,7 +159,7 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
     
     //using shift type or note configure all UI elements
     func configUIForData() {
-
+        
         //UI Outlet setup
         self.dataImageView.image = self.userSelectedData.image
         self.dataBody.text = self.userSelectedData.body

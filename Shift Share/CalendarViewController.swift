@@ -17,6 +17,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //calendar manager
     var calendarManager : JTCalendarManager!
     
+    //schedule manager
+    var scheduleManager : SSScheduleManager!
+    
     //date is selected when a user touches that dayView
     var selectedDate : NSDate!
     
@@ -58,13 +61,16 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.calendarManager = JTCalendarManager()
         self.calendarManager.delegate = self
         
+        //create schedule manager, when schedules are created, set schedules manager var to this
+        self.scheduleManager = SSScheduleManager()
+        
         //start with today's date
         self.selectedDate = NSDate()
         
         //create random events for testability
         //TODO: DELETE THIS
-        self.createRandomEvents()
-//        self.createSetEvents()
+//        self.createRandomEvents()
+        self.createSetEvents()
         
         //setup views
         self.calendarManager.menuView = self.monthSelectorView
@@ -145,18 +151,20 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             return
         }
         
-        //display image if shift/image exist
-        if let image = schedule.shift?.image {
-            dispatch_async(dispatch_get_main_queue(), {
-                dayView.ssDVImageView.image = image
-                dayView.ssDVImageView.hidden = false
-            })
-        }
+        //set image
+        dispatch_async(dispatch_get_main_queue(), {
+            dayView.ssDVImageView.image = schedule.shift?.image
+            dayView.ssDVImageView.hidden = (dayView.ssDVImageView.image == nil)
+        })
         
         //display dotView if notes exist
         if let notes = schedule.notes where notes.count != 0 {
             dispatch_async(dispatch_get_main_queue(), {
                 dayView.dotView.hidden = false
+            })
+        } else {
+            dispatch_async(dispatch_get_main_queue(), {
+                dayView.dotView.hidden = true
             })
         }
     }
@@ -481,6 +489,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             date7.keyFromDate : SSSchedule(forDate: date7, withShift: SSShift(type: .VACATION), withNotes: nil, forUser: "Brian"),
             date8.keyFromDate : SSSchedule(forDate: date8, withShift: nil, withNotes: [note8], forUser: "Brian")
         ]
+        
+        for (_, schedule) in SSSchedule.sharedInstance().schedules {
+            schedule.manager = self.scheduleManager
+        }
     }
     
     //test function
@@ -514,6 +526,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             if notes.count != 0 || shift != nil {
                 
                 let schedule = SSSchedule(forDate: randomDate, withShift: shift, withNotes: notes, forUser: "Brian")
+                schedule.manager = self.scheduleManager
                 if SSSchedule.sharedInstance().schedules[randomDate.keyFromDate] == nil {
                     SSSchedule.sharedInstance().schedules[randomDate.keyFromDate] = schedule
                 }

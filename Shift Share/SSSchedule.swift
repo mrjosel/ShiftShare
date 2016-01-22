@@ -30,6 +30,9 @@ class SSSchedule {
     //notes for the day
     var notes : [SSNote]?
     
+    //schedule manager
+    var manager : SSScheduleManager?
+    
     //array for populating tableView
     var tableData : [SSTBCellData] {
         get {
@@ -62,7 +65,20 @@ class SSSchedule {
         //set params to properties
         self.date = date
         self.shift = shift
+        
+        //if shift is not nil, set shift's schedule to self
+        if let shift = self.shift {
+            shift.schedule = self
+        }
         self.notes = notes
+        
+        //do the same thing for every note in notes
+        if let notes = self.notes {
+            for note in notes {
+                note.schedule = self
+            }
+        }
+        
         self.user = user as? String //TODO: FIX WHEN USER OBJECT IS IMPLEMENTED
 
     }
