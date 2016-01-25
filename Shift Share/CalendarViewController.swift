@@ -386,7 +386,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     
     //remove shift or note
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        print("deleting")
+
         //perform the following if deleting
         if editingStyle == UITableViewCellEditingStyle.Delete {
             
@@ -398,12 +398,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             
             //determine if data is shift or is note
             if let _ = data as? SSShift {
-                print("removing shift")
+
                 //data is shift, set shift in schedule to nil
                 schedule?.shift = nil
                 
             } else if let _ = data as? SSNote {
-                print("removing note")
+
                 //data is note, remove from notes array
                 schedule?.notes?.removeAtIndex(indexPath.row)
             }

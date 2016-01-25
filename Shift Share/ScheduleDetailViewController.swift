@@ -9,7 +9,7 @@
 import UIKit
 
 //presents shift or note in detail
-class ScheduleDetailViewController: UIViewController, UINavigationBarDelegate, UITextViewDelegate, UITextFieldDelegate {
+class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
 
     //TODO: CREATE SAVE BUTTON ON RIGHT THAT SAVES NOTE AND SEGUES BACK TO CALENDARVC
     //TODO: LIMIT CHARACTERS IN DATATITLE TEXTFIELD
@@ -34,6 +34,9 @@ class ScheduleDetailViewController: UIViewController, UINavigationBarDelegate, U
     //selected date
     var date : NSDate!                      //set in calendarViewController
     
+    //default shiftType
+    var defaultShiftType : SSShiftType?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -46,6 +49,11 @@ class ScheduleDetailViewController: UIViewController, UINavigationBarDelegate, U
         
         //determine if data is shift or note
         self.dataIsShift = self.userSelectedData is SSShift
+        
+        //get default shift
+        if self.dataIsShift {
+            self.defaultShiftType = (self.userSelectedData as! SSShift).type
+        }
         
         //setup views for all common/static behaviors
         let trailingConstraint = self.view.frame.width / 16.0
@@ -61,8 +69,7 @@ class ScheduleDetailViewController: UIViewController, UINavigationBarDelegate, U
         self.dataBody.font = UIFont(name: "Helvetica", size: 14.0)
         self.dataBody.delegate = self
         self.dataTitle.delegate = self
-        self.navigationController?.navigationBar.delegate = self
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "commitChanges:")
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "commitChanges")
         self.navigationItem.hidesBackButton = true
         let cancelButton = UIBarButtonItem(title: " < Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: "cancelButtonPressed:")
         self.navigationItem.leftBarButtonItem = cancelButton
@@ -181,6 +188,8 @@ class ScheduleDetailViewController: UIViewController, UINavigationBarDelegate, U
     //commit changes and return to calendar
     func commitChanges() {
         
+        //SAVE CONTEXT IN CORE DATA
+        
         //changes made by schedule manager, just transition back to calendar
         self.navigationController?.popViewControllerAnimated(true)
     }
@@ -188,14 +197,8 @@ class ScheduleDetailViewController: UIViewController, UINavigationBarDelegate, U
     //return to calendar without changes
     func cancelButtonPressed() {
         
-        //TODO: IMPLEMENT FUNCTION
-        
-        //set defaults based on whether data is shift or note
-        if self.dataIsShift {
-            //set shift to default
-        } else {
-            //set note to default
-        }
+        //TODO: FINALIZE USING COREDATA
+        //      FUNCTION WILL MOVE BACK TO CALENDAR AND RECALL
     }
     
     
