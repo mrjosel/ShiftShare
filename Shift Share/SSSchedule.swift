@@ -127,9 +127,6 @@ class SSSchedule {
     //if a note is made, its added, with "new note" remaining at the end of the stack
     class func newScheduleData(schedule: SSSchedule?) -> [SSTBCellData] {
         
-        //output schedule (if one does not exist)
-        var newSchedule : SSSchedule?
-        
         //make dummy data
         let newShift = SSShift()
         newShift.title = "Tap to Create New Shift"
@@ -139,29 +136,30 @@ class SSSchedule {
         //get schedule
         if let schedule = schedule {
             
-            //schedule exists, check for shift
-            if let _ = schedule.shift {
-                
-                //shift exists, append notes with newNote
-                newSchedule = schedule
-                newSchedule!.notes?.append(newNote)
-                
-            } else {
+            //schedule exists, check for shift and notes
+            if schedule.shift == nil {
                 
                 //schedule exists, but no shift
                 schedule.shift = newShift
+            }
+            
+            if schedule.notes == nil {
+                
+                //schedule exists, but no notes
+                schedule.notes = [newNote]
             }
             
             //return tableData
             return schedule.tableData
             
         } else {
-            //schedule does not exist
-            newSchedule = SSSchedule()
-            newSchedule!.shift = newShift
-            newSchedule!.notes = [newNote]
             
-            return newSchedule!.tableData
+            //schedule does not exist
+            let newSchedule = SSSchedule()
+            newSchedule.shift = newShift
+            newSchedule.notes = [newNote]
+            
+            return newSchedule.tableData
         }
     }
     

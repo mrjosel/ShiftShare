@@ -15,7 +15,7 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
 
     
     //schedule that will be created for that date
-    var schedule : SSSchedule?
+    var schedule : SSSchedule!
     var date : NSDate!
     
     //outlets
@@ -38,17 +38,20 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
         self.doneButton.setTitle("Done", forState: UIControlState.Normal)
         self.cancelButton.addTarget(self, action: "cancelButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
         self.doneButton.addTarget(self, action: "doneButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
+        
+        //make schedule
+        self.schedule = SSSchedule(forDate: self.date, withShift: nil, withNotes: nil, forUser: nil)
 
     }
     
     //number of rows in the table, populate with new schedule data cells
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let schedule = schedule {
-            print("count is \(SSSchedule.newScheduleData(schedule).count)")
-            return SSSchedule.newScheduleData(schedule).count
-        }
-        print("count is \(SSSchedule.newScheduleData(nil).count)")
-        return SSSchedule.newScheduleData(nil).count
+//        if let schedule = schedule {
+//            print("count is \(SSSchedule.newScheduleData(schedule).count)")
+//            return SSSchedule.newScheduleData(schedule).count
+//        }
+        print("count is \(SSSchedule.newScheduleData(schedule).count)")
+        return SSSchedule.newScheduleData(schedule).count
     }
     
     
@@ -66,19 +69,19 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
         cell.date = date
         
         //get data to populate cells
-        var tableData : [SSTBCellData] = []
+//        var tableData : [SSTBCellData] = []
+//        
+//        if let schedule = schedule {
+//            
+//            //get tableData
+//            tableData = schedule.tableData
+//            
+//        } else {
         
-        if let schedule = schedule {
-            
-            //get tableData
-            tableData = schedule.tableData
-            
-        } else {
-            
             //create table data based on edit mode or not
-            tableData = SSSchedule.newScheduleData(nil)
+            let tableData = SSSchedule.newScheduleData(schedule)
             
-        }
+//        }
         
         //get cellData from tableData
         let cellData = tableData[indexPath.row]
@@ -89,6 +92,13 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
         cell.detailTextLabel?.text = cellData.body
         
         return cell
+        
+    }
+    
+    //clicking cells launches VC to create shift
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        
         
     }
     

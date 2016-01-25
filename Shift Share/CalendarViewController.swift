@@ -437,6 +437,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //presents editVC
     func presentNewScheduleVC(forDate date: NSDate) {
 
+        if SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate] != nil {
+            //TODO: ALERT FUNCTION TO DELETE SCHEDULE
+            print("delete schedule?")
+            return
+        }
+        
         //create VC for modal presentation
         let newScheduleVC = self.storyboard?.instantiateViewControllerWithIdentifier("NewScheduleViewController") as! NewScheduleViewController
         
