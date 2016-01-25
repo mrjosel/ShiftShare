@@ -46,11 +46,7 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
     
     //number of rows in the table, populate with new schedule data cells
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if let schedule = schedule {
-//            print("count is \(SSSchedule.newScheduleData(schedule).count)")
-//            return SSSchedule.newScheduleData(schedule).count
-//        }
-        print("count is \(SSSchedule.newScheduleData(schedule).count)")
+
         return SSSchedule.newScheduleData(schedule).count
     }
     
@@ -68,20 +64,8 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
         //set date in cell (for bookkeeping, may be removed later)
         cell.date = date
         
-        //get data to populate cells
-//        var tableData : [SSTBCellData] = []
-//        
-//        if let schedule = schedule {
-//            
-//            //get tableData
-//            tableData = schedule.tableData
-//            
-//        } else {
-        
-            //create table data based on edit mode or not
-            let tableData = SSSchedule.newScheduleData(schedule)
-            
-//        }
+        //create table data based on edit mode or not
+        let tableData = SSSchedule.newScheduleData(schedule)
         
         //get cellData from tableData
         let cellData = tableData[indexPath.row]
@@ -98,7 +82,12 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
     //clicking cells launches VC to create shift
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        
+        //check if seleted cell is shift or note
+        if self.schedule.tableData[indexPath.row] is SSShift {
+            print("adding new shift")
+        } else {
+            print("adding new note")
+        }
         
     }
     
