@@ -10,13 +10,13 @@ import UIKit
 
 //enum for type of button
 enum SSButtonType : Int, CustomStringConvertible {
-    case CANCEL = 0, TODAY, DONE, EDIT
+    case CANCEL = 0, TODAY, DONE, NEW
     
     static let SSButtonTypes = [
         CANCEL : "Cancel",
         TODAY : "Today",
         DONE : "Done",
-        EDIT : "Edit"
+        NEW : "New"
     ]
     
     var description : String {
@@ -60,9 +60,9 @@ class SSButton: UIButton {
                 //configure for done button
                 self.setTitle(SSButtonType.DONE.description, forState: UIControlState.Normal)
                 //default state is hidden
-            case .EDIT :
+            case .NEW :
                 //configure for edit button
-                self.setTitle(SSButtonType.EDIT.description, forState: UIControlState.Normal)
+                self.setTitle(SSButtonType.NEW.description, forState: UIControlState.Normal)
                 //default state is hidden
             }
         }

@@ -79,7 +79,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.locale = NSLocale.currentLocale().localeIdentifier
         self.leftSSButton.hostViewController = self
         self.rightSSButton.hostViewController = self
-        self.leftSSButton.ssButtonType = .EDIT
+        self.leftSSButton.ssButtonType = .NEW
         self.rightSSButton.ssButtonType = .TODAY
         self.monthSelectorView.bringSubviewToFront(self.leftSSButton)
         self.monthSelectorView.bringSubviewToFront(self.rightSSButton)
@@ -236,13 +236,13 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             self.dayViewTableView.reloadData()
             
             //Edit Button
-        case .EDIT :
+        case .NEW :
             
             //present editVC, if no date is selected then present for today's date
             if let date = self.selectedDate {
-                self.presentEditVC(forDate: date)
+                self.presentNewScheduleVC(forDate: date)
             } else {
-                self.presentEditVC(forDate: NSDate())
+                self.presentNewScheduleVC(forDate: NSDate())
             }
             
         case .CANCEL :
@@ -356,8 +356,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //get data for detailVC
         let cellData = schedule.tableData[indexPath.row]
         
-        //perform segue to detailVC
-        self.performSegueWithIdentifier("detailVCSegue", sender: cellData)
+        //perform segue to editVC
+        self.performSegueWithIdentifier("editVCSegue", sender: cellData)
     }
     
     //header for table view, displays selected date
@@ -421,10 +421,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //handles segues
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
-        if segue.identifier == "detailVCSegue" {
+        if segue.identifier == "editVCSegue" {
 
             //create VC for show presentation
-            let scheduleDetailVC : ScheduleDetailViewController = segue.destinationViewController as! ScheduleDetailViewController
+            let scheduleDetailVC : ScheduleEditViewController = segue.destinationViewController as! ScheduleEditViewController
             
             //set VC's date to selectedDate, and cast sender as SSTBCellData
             scheduleDetailVC.userSelectedData = sender as? SSTBCellData
@@ -435,17 +435,16 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     //presents editVC
-    func presentEditVC(forDate date: NSDate) {
+    func presentNewScheduleVC(forDate date: NSDate) {
 
         //create VC for modal presentation
-        let scheduleEditVC = self.storyboard?.instantiateViewControllerWithIdentifier("ScheduleEditViewController") as! ScheduleEditViewController
+        let newScheduleVC = self.storyboard?.instantiateViewControllerWithIdentifier("NewScheduleViewController") as! NewScheduleViewController
         
-        //get schedule
-        let schedule = SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate]
+        //send date to new VC
+        newScheduleVC.date = self.selectedDate
         
         //set VC's schedule to schedule, and present
-        scheduleEditVC.schedule = schedule
-        self.presentViewController(scheduleEditVC, animated: true, completion: nil)
+        self.presentViewController(newScheduleVC, animated: true, completion: nil)
     }
     
     //toggles between week and month view

@@ -123,17 +123,17 @@
                         <outlet property="leftSSButton" destination="3lz-yx-ED6" id="IdB-ir-lsg"/>
                         <outlet property="monthSelectorView" destination="KkR-sd-dBO" id="N59-SU-o5h"/>
                         <outlet property="rightSSButton" destination="dv3-wz-1tT" id="01r-U6-32h"/>
-                        <segue destination="3pj-eg-jkr" kind="show" identifier="detailVCSegue" id="fWd-yi-8Hw"/>
+                        <segue destination="3pj-eg-jkr" kind="show" identifier="editVCSegue" id="fWd-yi-8Hw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1316" y="378"/>
         </scene>
-        <!--Schedule Detail View Controller-->
+        <!--Schedule Edit View Controller-->
         <scene sceneID="nXN-l7-bXK">
             <objects>
-                <viewController storyboardIdentifier="ScheduleDetailViewController" id="3pj-eg-jkr" customClass="ScheduleDetailViewController" customModule="Shift_Share" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ScheduleEditViewController" id="3pj-eg-jkr" customClass="ScheduleEditViewController" customModule="Shift_Share" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Owf-Dz-0vi"/>
                         <viewControllerLayoutGuide type="bottom" id="PPr-fe-bOu"/>
@@ -215,10 +215,10 @@
             </objects>
             <point key="canvasLocation" x="2114" y="378"/>
         </scene>
-        <!--Schedule Edit View Controller-->
+        <!--New Schedule View Controller-->
         <scene sceneID="YAa-Tt-AUO">
             <objects>
-                <viewController storyboardIdentifier="ScheduleEditViewController" id="Lie-ba-gjf" customClass="ScheduleEditViewController" customModule="Shift_Share" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NewScheduleViewController" id="Lie-ba-gjf" customClass="NewScheduleViewController" customModule="Shift_Share" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="69i-p8-Kfv"/>
                         <viewControllerLayoutGuide type="bottom" id="5Mb-Br-rbI"/>
