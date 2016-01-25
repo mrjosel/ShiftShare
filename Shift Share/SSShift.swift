@@ -73,28 +73,4 @@ class SSShift : NSObject, SSTBCellData {
 //        }
 //    }
     
-    //increments shiftType rawValue by 1 and changes shiftType accordingly
-    func cycleShift() {
-
-        //get rawValue of current shift, if no type exists, set to .DAY
-        guard let type = self.type else {
-            self.type = SSShiftType.DAY
-            return
-        }
-        
-        //get rawValue
-        let rawVal = type.rawValue
-        
-        //if rawVal is less than 5, increment and set shift, rollover after 6
-        let newVal = (rawVal < 5) ? rawVal + 1 : 0
-        
-        //get shift at rawValue, if no image exists, set shit to nil
-        guard let shiftType = SSShiftType(rawValue: newVal) else {
-            self.type = nil
-            return
-        }
-
-        //shift exists for rawVal, set
-        self.type = shiftType
-    }
 }

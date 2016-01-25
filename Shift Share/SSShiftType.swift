@@ -46,4 +46,23 @@ enum SSShiftType : Int, CustomStringConvertible {
             return name
         }
     }
+    
+    //cycles DayViewImage enum case up by 1, wraps around at the end
+    mutating func cycleShift() {
+        
+        //get rawValue of current shift
+        var rawVal = self.rawValue
+        
+        //if rawVal is less than 5, increment and set shift, rollover after 5
+        rawVal = (rawVal < 5) ? rawVal + 1 : 0
+        
+        //get shift at rawValue, if no image exists, set shit to DAY
+        guard let shift = SSShiftType(rawValue: rawVal) else {
+            self = SSShiftType.DAY
+            return
+        }
+        
+        //shift exists for rawVal, set
+        self = shift
+    }
 }

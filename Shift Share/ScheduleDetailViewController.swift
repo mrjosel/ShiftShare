@@ -35,7 +35,7 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
     var date : NSDate!                      //set in calendarViewController
     
     //default shiftType
-    var defaultShiftType : SSShiftType?
+    var scratchShiftType : SSShiftType?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +52,7 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
         
         //get default shift
         if self.dataIsShift {
-            self.defaultShiftType = (self.userSelectedData as! SSShift).type
+            self.scratchShiftType = (self.userSelectedData as! SSShift).type
         }
         
         //setup views for all common/static behaviors
@@ -69,9 +69,10 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
         self.dataBody.font = UIFont(name: "Helvetica", size: 14.0)
         self.dataBody.delegate = self
         self.dataTitle.delegate = self
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "commitChanges")
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: "commitChanges")
+        self.navigationItem.rightBarButtonItem?.enabled = false
         self.navigationItem.hidesBackButton = true
-        let cancelButton = UIBarButtonItem(title: " < Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: "cancelButtonPressed:")
+        let cancelButton = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: "cancelButtonPressed")
         self.navigationItem.leftBarButtonItem = cancelButton
         
         //configure UI elements for all dynamic behaviors (e.g. - if shift, or note changes)
@@ -83,19 +84,19 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
         
     }
     
+    //cycle shift when image tapped, ignore for notes
     func imageViewTapped(sender: UITapGestureRecognizer) {
+        
+        //enable save button
+        self.navigationItem.rightBarButtonItem?.enabled = true
         
         //check if data is shift or not
         if !self.dataIsShift {
             print("data is not shift")
         } else {
             
-            //get schedule and cycle the shift, if shift is nil, set it to day
-            if let schedule = SSSchedule.sharedInstance().schedules[self.date.keyFromDate], shift = schedule.shift {
-                shift.cycleShift()
-            } else {
-                schedule?.shift = SSShift(type: SSShiftType.DAY)
-            }
+            //cycle shift
+            self.scratchShiftType!.cycleShift()
             
             //config UI
             dispatch_async(dispatch_get_main_queue(), {
@@ -172,10 +173,16 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
     //using shift type or note configure all UI elements
     func configUIForData() {
         
-        //UI Outlet setup
-        self.dataImageView.image = self.userSelectedData.image
-        self.dataBody.text = self.userSelectedData.body
-        self.dataTitle.text = self.userSelectedData.title
+        //UI Outlet setup depending on whether shift or data
+        if !self.dataIsShift {
+            self.dataImageView.image = self.userSelectedData.image
+            self.dataBody.text = self.userSelectedData.body
+            self.dataTitle.text = self.userSelectedData.title
+        } else {
+            self.dataImageView.image = UIImage(named: SSShiftType.shiftNames[self.scratchShiftType!]!)
+            self.dataBody.text = SSShiftType.shiftTimes[self.scratchShiftType!]
+            self.dataTitle.text = SSShiftType.shiftNames[self.scratchShiftType!]
+        }
         
         //Outlet configuration depending if data is a shift or a note
         self.dataBody.textAlignment = self.dataIsShift ? NSTextAlignment.Center : NSTextAlignment.Left
@@ -188,17 +195,30 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
     //commit changes and return to calendar
     func commitChanges() {
         
-        //SAVE CONTEXT IN CORE DATA
+        //make changes to shift/note
+        if self.dataIsShift {
+            let data = self.userSelectedData as! SSShift
+            data.type = self.scratchShiftType
+        } else {
+            let data = self.userSelectedData as! SSNote
+            data.body = self.dataBody.text
+            data.title = self.dataTitle.text
+        }
         
-        //changes made by schedule manager, just transition back to calendar
+        //return back to calendar
         self.navigationController?.popViewControllerAnimated(true)
+        
+        
+        //TODO: SAVE CONTEXT IN CORE DATA
+        
+
     }
     
     //return to calendar without changes
     func cancelButtonPressed() {
         
-        //TODO: FINALIZE USING COREDATA
-        //      FUNCTION WILL MOVE BACK TO CALENDAR AND RECALL
+        //return back to calendar
+        self.navigationController?.popViewControllerAnimated(true)
     }
     
     

@@ -38,8 +38,6 @@ class SSScheduleManager: SSScheduleManagerDelegate {
     
     //when any aspect of note changes, make appropriate changes in note, remove from array if nil
     func didChangeNoteOrContents(schedule: SSSchedule) {
-        print("note content changed")
-        
         
         //if notes is [], set to nil
         if let notes = schedule.notes where notes.count == 0 {
@@ -52,7 +50,7 @@ class SSScheduleManager: SSScheduleManagerDelegate {
     
     //if shift AND [notes] are nil, clear from memory
     func checkForShiftOrNotes(schedule: SSSchedule) {
-        print("checking for shift or notes")
+
         if (schedule.shift == nil && (schedule.notes == nil || schedule.notes!.count == 0)) {
             
             //shift is nil, notes are nil or empty, remove schedule from memory

@@ -404,8 +404,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 
             } else if let _ = data as? SSNote {
 
-                //data is note, remove from notes array
-                schedule?.notes?.removeAtIndex(indexPath.row)
+                //data is note, remove from notes array (index has to be minus 1 if shift exists
+                if let _ = schedule?.shift {
+                    schedule?.notes?.removeAtIndex(indexPath.row - 1)
+                } else {
+                    schedule?.notes?.removeAtIndex(indexPath.row)
+                }
             }
             
             //reload calendar and table
