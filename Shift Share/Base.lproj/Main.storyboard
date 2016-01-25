@@ -167,6 +167,23 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kfn-su-uQr">
+                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                <animations/>
+                                <items>
+                                    <barButtonItem title="Item" id="xNy-Oa-bsA">
+                                        <connections>
+                                            <action selector="saveButtonPressed:" destination="3pj-eg-jkr" id="lhC-BJ-c32"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="fWC-ak-VQy"/>
+                                    <barButtonItem title="Item" id="wfW-Pb-r0j">
+                                        <connections>
+                                            <action selector="deleteButtonPressed:" destination="3pj-eg-jkr" id="YyN-4y-viN"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -175,9 +192,12 @@
                             <constraint firstAttribute="trailingMargin" secondItem="Ekc-fV-OhD" secondAttribute="trailing" constant="50" id="2wC-5g-zc5"/>
                             <constraint firstItem="kyH-mJ-WgJ" firstAttribute="leading" secondItem="wIM-zJ-edq" secondAttribute="leadingMargin" constant="25" id="EeZ-mf-Run"/>
                             <constraint firstAttribute="trailingMargin" secondItem="kyH-mJ-WgJ" secondAttribute="trailing" constant="25" id="K1T-4F-cmv"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Kfn-su-uQr" secondAttribute="trailing" constant="-20" id="NVY-Qz-4Kr"/>
                             <constraint firstItem="r8n-L9-iO1" firstAttribute="centerX" secondItem="wIM-zJ-edq" secondAttribute="centerX" id="ORd-aN-ovl"/>
                             <constraint firstItem="Ekc-fV-OhD" firstAttribute="leading" secondItem="wIM-zJ-edq" secondAttribute="leadingMargin" constant="50" id="SXR-XY-vnn"/>
+                            <constraint firstItem="Kfn-su-uQr" firstAttribute="leading" secondItem="wIM-zJ-edq" secondAttribute="leadingMargin" constant="-20" id="aF6-Ic-01I"/>
                             <constraint firstItem="r8n-L9-iO1" firstAttribute="top" secondItem="Owf-Dz-0vi" secondAttribute="bottom" constant="35" id="ae5-gg-SR4"/>
+                            <constraint firstItem="PPr-fe-bOu" firstAttribute="top" secondItem="Kfn-su-uQr" secondAttribute="bottom" id="n4Z-fk-JM1"/>
                             <constraint firstItem="kyH-mJ-WgJ" firstAttribute="top" secondItem="Ekc-fV-OhD" secondAttribute="bottom" constant="21" id="z1b-SD-JkL"/>
                         </constraints>
                     </view>
@@ -185,8 +205,10 @@
                         <outlet property="dataBody" destination="kyH-mJ-WgJ" id="h3v-6k-aft"/>
                         <outlet property="dataImageView" destination="r8n-L9-iO1" id="Cjw-aG-Ryy"/>
                         <outlet property="dataTitle" destination="Ekc-fV-OhD" id="vEx-fR-JAj"/>
+                        <outlet property="deleteButton" destination="wfW-Pb-r0j" id="eI3-II-ag6"/>
                         <outlet property="leftTrailingConstraint" destination="EeZ-mf-Run" id="Nc6-WB-DZZ"/>
                         <outlet property="rightTrailingConstraint" destination="K1T-4F-cmv" id="o4K-tM-Fni"/>
+                        <outlet property="saveButton" destination="xNy-Oa-bsA" id="k3x-qm-x55"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OSI-Eu-6N7" userLabel="First Responder" sceneMemberID="firstResponder"/>

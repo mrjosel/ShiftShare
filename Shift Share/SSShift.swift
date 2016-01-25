@@ -49,28 +49,4 @@ class SSShift : NSObject, SSTBCellData {
         self.body = nil
         self.image = nil
     }
-    
-    //config function switching all params to given SSShiftType
-//    func reload() {
-//
-//        //check if type exists
-//        guard let type = self.type else {
-//            
-//            //type is nil, clear out all data
-//            self.title = "No Shift"
-//            self.body = nil
-//            self.image = nil
-//            return
-//        }
-//        
-//        //type was set properly
-//        self.title = SSShiftType.shiftNames[type]
-//        self.body = SSShiftType.shiftTimes[type]
-//        if let name = SSShiftType.shiftNames[type], image = UIImage(named: name) {
-//            self.image = image
-//        } else {
-//            self.image = nil
-//        }
-//    }
-    
 }

@@ -69,8 +69,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //create random events for testability
         //TODO: DELETE THIS
-//        self.createRandomEvents()
-        self.createSetEvents()
+        self.createRandomEvents()
+//        self.createSetEvents()
         
         //setup views
         self.calendarManager.menuView = self.monthSelectorView

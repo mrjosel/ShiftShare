@@ -20,6 +20,8 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
     @IBOutlet weak var dataTitle: UITextField!
     @IBOutlet weak var leftTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var rightTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var saveButton: UIBarButtonItem!
+    @IBOutlet weak var deleteButton: UIBarButtonItem!
     
     //data from cell selected in CalendarVC
     var userSelectedData : SSTBCellData!    //set in calendarViewController
@@ -69,10 +71,13 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
         self.dataBody.font = UIFont(name: "Helvetica", size: 14.0)
         self.dataBody.delegate = self
         self.dataTitle.delegate = self
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: "commitChanges")
-        self.navigationItem.rightBarButtonItem?.enabled = false
+//        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: "commitChanges")
+//        self.navigationItem.rightBarButtonItem?.enabled = false
+        self.saveButton.title = "Save"
+        self.saveButton.enabled = false
+        self.deleteButton.title = "Delete"
         self.navigationItem.hidesBackButton = true
-        let cancelButton = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: "cancelButtonPressed")
+        let cancelButton = UIBarButtonItem(title: "< Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: "cancelButtonPressed")
         self.navigationItem.leftBarButtonItem = cancelButton
         
         //configure UI elements for all dynamic behaviors (e.g. - if shift, or note changes)
@@ -88,7 +93,8 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
     func imageViewTapped(sender: UITapGestureRecognizer) {
         
         //enable save button
-        self.navigationItem.rightBarButtonItem?.enabled = true
+//        self.navigationItem.rightBarButtonItem?.enabled = true
+        self.saveButton.enabled = true
         
         //check if data is shift or not
         if !self.dataIsShift {
@@ -192,9 +198,16 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
         self.dataImageView.userInteractionEnabled = self.dataIsShift
     }
     
-    //commit changes and return to calendar
-    func commitChanges() {
-        
+    //return to calendar without changes
+    func cancelButtonPressed() {
+    
+        //return back to calendar
+        self.navigationController?.popViewControllerAnimated(true)
+    }
+    
+    //return to calendar without changes
+    @IBAction func saveButtonPressed(sender: UIBarButtonItem) {
+
         //make changes to shift/note
         if self.dataIsShift {
             let data = self.userSelectedData as! SSShift
@@ -203,6 +216,11 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
             let data = self.userSelectedData as! SSNote
             data.body = self.dataBody.text
             data.title = self.dataTitle.text
+            
+            //if body and title are "", delete
+            if self.dataBody.text == "" && self.dataTitle.text == "" {
+                //delete note
+            }
         }
         
         //return back to calendar
@@ -210,17 +228,30 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
         
         
         //TODO: SAVE CONTEXT IN CORE DATA
-        
 
+    
     }
     
-    //return to calendar without changes
-    func cancelButtonPressed() {
+    //delete shift or note
+    @IBAction func deleteButtonPressed(sender: UIBarButtonItem) {
+        
+        //determine shit or not
+        if self.dataIsShift {
+            //data is shift, set to nil
+            self.schedule?.shift = nil
+        } else {
+            //data is note, remove from notes index, forst case data to note object
+            let note = self.userSelectedData as! SSNote
+            
+            //get index and remove
+            if let index = self.schedule?.notes?.indexOf({$0.body == note.body && $0.title == note.title}) {
+                self.schedule?.notes?.removeAtIndex(index)
+            }
+        }
         
         //return back to calendar
         self.navigationController?.popViewControllerAnimated(true)
     }
-    
     
     //make all values nil
     override func viewWillDisappear(animated: Bool) {
