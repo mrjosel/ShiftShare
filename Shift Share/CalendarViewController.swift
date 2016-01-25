@@ -328,7 +328,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         } else {
             
             //create table data based on edit mode or not
-            tableData = SSSchedule.emptyTableData()//.tableData
+            tableData = SSSchedule.emptyTableData()
             
         }
         

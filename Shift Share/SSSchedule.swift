@@ -121,6 +121,50 @@ class SSSchedule {
         return [emptyData]
     }
     
+    //returns dummy data for use in creating new schedules
+    //two cells are returned, "new shift" and "new note"
+    //if a shift is made, "new shift" is replaced with the shift
+    //if a note is made, its added, with "new note" remaining at the end of the stack
+    class func newScheduleData(schedule: SSSchedule?) -> [SSTBCellData] {
+        
+        //output schedule (if one does not exist)
+        var newSchedule : SSSchedule?
+        
+        //make dummy data
+        let newShift = SSShift()
+        newShift.title = "Tap to Create New Shift"
+        let newNote = SSNote()
+        newNote.title = "Tap to Create New Note"
+        
+        //get schedule
+        if let schedule = schedule {
+            
+            //schedule exists, check for shift
+            if let _ = schedule.shift {
+                
+                //shift exists, append notes with newNote
+                newSchedule = schedule
+                newSchedule!.notes?.append(newNote)
+                
+            } else {
+                
+                //schedule exists, but no shift
+                schedule.shift = newShift
+            }
+            
+            //return tableData
+            return schedule.tableData
+            
+        } else {
+            //schedule does not exist
+            newSchedule = SSSchedule()
+            newSchedule!.shift = newShift
+            newSchedule!.notes = [newNote]
+            
+            return newSchedule!.tableData
+        }
+    }
+    
     class func  sharedInstance() -> SSSchedule {
         struct Singleton {
             static let instance = SSSchedule()

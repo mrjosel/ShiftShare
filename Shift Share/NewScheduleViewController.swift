@@ -11,7 +11,7 @@ import JTCalendar
 import Parse
 
 //vc for creating/editing schedules
-class NewScheduleViewController: UIViewController {
+class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     
     //schedule that will be created for that date
@@ -28,7 +28,11 @@ class NewScheduleViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-                
+        
+        //delegate and datasource for tableView
+        self.newScheduleTable.delegate = self
+        self.newScheduleTable.dataSource = self
+        
         //setup views
         self.cancelButton.setTitle("Cancel", forState: UIControlState.Normal)
         self.doneButton.setTitle("Done", forState: UIControlState.Normal)
@@ -36,6 +40,58 @@ class NewScheduleViewController: UIViewController {
         self.doneButton.addTarget(self, action: "doneButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
 
     }
+    
+    //number of rows in the table, populate with new schedule data cells
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let schedule = schedule {
+            print("count is \(SSSchedule.newScheduleData(schedule).count)")
+            return SSSchedule.newScheduleData(schedule).count
+        }
+        print("count is \(SSSchedule.newScheduleData(nil).count)")
+        return SSSchedule.newScheduleData(nil).count
+    }
+    
+    
+    //creates cells for the table
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        //create cell
+        guard let cell = tableView.dequeueReusableCellWithIdentifier("SSTableViewCell") as? SSTableViewCell,
+            date = self.date else {
+                print("no cell made")
+                return UITableViewCell()
+        }
+        
+        //set date in cell (for bookkeeping, may be removed later)
+        cell.date = date
+        
+        //get data to populate cells
+        var tableData : [SSTBCellData] = []
+        
+        if let schedule = schedule {
+            
+            //get tableData
+            tableData = schedule.tableData
+            
+        } else {
+            
+            //create table data based on edit mode or not
+            tableData = SSSchedule.newScheduleData(nil)
+            
+        }
+        
+        //get cellData from tableData
+        let cellData = tableData[indexPath.row]
+        
+        //set cell properties
+        cell.imageView?.image = cellData.image
+        cell.textLabel?.text = cellData.title
+        cell.detailTextLabel?.text = cellData.body
+        
+        return cell
+        
+    }
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
