@@ -22,6 +22,7 @@ class NewScheduleViewController: UIViewController {
     @IBOutlet weak var topView: UIView!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var doneButton: UIButton!
+    @IBOutlet weak var newScheduleTable: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()

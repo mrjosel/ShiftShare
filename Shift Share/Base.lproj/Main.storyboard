@@ -254,18 +254,40 @@
                                     <constraint firstItem="MFy-6H-BN5" firstAttribute="leading" secondItem="wy2-iG-FGN" secondAttribute="leading" constant="8" id="uZl-yf-L9C"/>
                                 </constraints>
                             </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3R8-Y7-rlx">
+                                <rect key="frame" x="0.0" y="63" width="600" height="537"/>
+                                <animations/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="newScheduleCell" id="rcI-hh-1LI">
+                                        <rect key="frame" x="0.0" y="28" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rcI-hh-1LI" id="QUu-nq-eqn">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <animations/>
+                                        </tableViewCellContentView>
+                                        <animations/>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="5Mb-Br-rbI" firstAttribute="top" secondItem="3R8-Y7-rlx" secondAttribute="bottom" id="ECX-HQ-pzt"/>
+                            <constraint firstItem="3R8-Y7-rlx" firstAttribute="top" secondItem="wy2-iG-FGN" secondAttribute="bottom" constant="8" id="KTA-TN-iUk"/>
+                            <constraint firstItem="3R8-Y7-rlx" firstAttribute="leading" secondItem="FQg-PA-7cl" secondAttribute="leadingMargin" constant="-20" id="PTX-F0-N3b"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="3R8-Y7-rlx" secondAttribute="trailing" constant="-20" id="XI6-dX-DYJ"/>
                             <constraint firstItem="wy2-iG-FGN" firstAttribute="top" secondItem="69i-p8-Kfv" secondAttribute="bottom" id="io7-pX-TQs"/>
                             <constraint firstAttribute="trailingMargin" secondItem="wy2-iG-FGN" secondAttribute="trailing" constant="-20" id="nd2-Xj-FUM"/>
                             <constraint firstItem="wy2-iG-FGN" firstAttribute="leading" secondItem="FQg-PA-7cl" secondAttribute="leadingMargin" constant="-20" id="y8n-zV-Jen"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="cancelButton" destination="Gd0-s7-iZg" id="r95-6H-JSj"/>
-                        <outlet property="doneButton" destination="MFy-6H-BN5" id="678-ox-drP"/>
+                        <outlet property="cancelButton" destination="MFy-6H-BN5" id="ELZ-hK-nuQ"/>
+                        <outlet property="doneButton" destination="Gd0-s7-iZg" id="YsZ-Ug-qUe"/>
+                        <outlet property="newScheduleTable" destination="3R8-Y7-rlx" id="N6g-9k-k7g"/>
                         <outlet property="topView" destination="wy2-iG-FGN" id="tny-n7-NlA"/>
                     </connections>
                 </viewController>
