@@ -83,6 +83,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.rightSSButton.ssButtonType = .TODAY
         self.monthSelectorView.bringSubviewToFront(self.leftSSButton)
         self.monthSelectorView.bringSubviewToFront(self.rightSSButton)
+        self.dayViewTableView.allowsMultipleSelectionDuringEditing = false
         
     }
     
@@ -375,6 +376,42 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //return header
         return headerView
+    }
+    
+    
+    //allow editing
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    //remove shift or note
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        print("deleting")
+        //perform the following if deleting
+        if editingStyle == UITableViewCellEditingStyle.Delete {
+            
+            //get schedule
+            let schedule = SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate]
+            
+            //get tableData
+            let data = schedule?.tableData[indexPath.row]
+            
+            //determine if data is shift or is note
+            if let _ = data as? SSShift {
+                print("removing shift")
+                //data is shift, set shift in schedule to nil
+                schedule?.shift = nil
+                
+            } else if let _ = data as? SSNote {
+                print("removing note")
+                //data is note, remove from notes array
+                schedule?.notes?.removeAtIndex(indexPath.row)
+            }
+            
+            //reload calendar and table
+            self.calendarManager.reload()
+            self.dayViewTableView.reloadData()
+        }
     }
     
     //handles segues

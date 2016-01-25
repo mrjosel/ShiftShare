@@ -9,7 +9,7 @@
 import UIKit
 
 //presents shift or note in detail
-class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
+class ScheduleDetailViewController: UIViewController, UINavigationBarDelegate, UITextViewDelegate, UITextFieldDelegate {
 
     //TODO: CREATE SAVE BUTTON ON RIGHT THAT SAVES NOTE AND SEGUES BACK TO CALENDARVC
     //TODO: LIMIT CHARACTERS IN DATATITLE TEXTFIELD
@@ -61,6 +61,11 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
         self.dataBody.font = UIFont(name: "Helvetica", size: 14.0)
         self.dataBody.delegate = self
         self.dataTitle.delegate = self
+        self.navigationController?.navigationBar.delegate = self
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "commitChanges:")
+        self.navigationItem.hidesBackButton = true
+        let cancelButton = UIBarButtonItem(title: " < Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: "cancelButtonPressed:")
+        self.navigationItem.leftBarButtonItem = cancelButton
         
         //configure UI elements for all dynamic behaviors (e.g. - if shift, or note changes)
         self.configUIForData()
@@ -68,12 +73,12 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
         //get numLines and maxLines
         self.maxLines = Int((self.dataBody.frame.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
         self.numLines = Int((self.dataBody.contentSize.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
+        
     }
     
     func imageViewTapped(sender: UITapGestureRecognizer) {
-        print("shift is \(self.schedule!.shift)")
-        print("userData is \(self.userSelectedData)")
-        //TODO: RACE CONDITION: WHEN SHIFT IS NIL USERSELECTEDDATA PERSISTS
+        
+        //check if data is shift or not
         if !self.dataIsShift {
             print("data is not shift")
         } else {
@@ -172,6 +177,27 @@ class ScheduleDetailViewController: UIViewController, UITextViewDelegate, UIText
         self.dataTitle.selected = !self.dataIsShift
         self.dataImageView.userInteractionEnabled = self.dataIsShift
     }
+    
+    //commit changes and return to calendar
+    func commitChanges() {
+        
+        //changes made by schedule manager, just transition back to calendar
+        self.navigationController?.popViewControllerAnimated(true)
+    }
+    
+    //return to calendar without changes
+    func cancelButtonPressed() {
+        
+        //TODO: IMPLEMENT FUNCTION
+        
+        //set defaults based on whether data is shift or note
+        if self.dataIsShift {
+            //set shift to default
+        } else {
+            //set note to default
+        }
+    }
+    
     
     //make all values nil
     override func viewWillDisappear(animated: Bool) {

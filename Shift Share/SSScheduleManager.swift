@@ -14,11 +14,10 @@ import UIKit
 class SSScheduleManager: SSScheduleManagerDelegate {
     
     //when shift type changes, make all necessary changes in shift parameters
-    func didChangeShiftType(schedule: SSSchedule) {
-        print("type changed")
+    func didChangeShiftOrType(schedule: SSSchedule) {
+
         //get shift, if shift is nil return, if type is nil, set shift to nil
         guard let shift = schedule.shift, type = shift.type else {
-            print("setting shift to nil")
             schedule.shift = nil
             return
         }
@@ -27,10 +26,8 @@ class SSScheduleManager: SSScheduleManagerDelegate {
         shift.title = SSShiftType.shiftNames[type]
         shift.body = SSShiftType.shiftTimes[type]
         if let image = UIImage(named: type.description) {
-            print("setting image to \(image.description)")
             shift.image = image
         } else {
-            print("setting image to nil")
             shift.image = nil
         }
         
@@ -40,8 +37,14 @@ class SSScheduleManager: SSScheduleManagerDelegate {
     }
     
     //when any aspect of note changes, make appropriate changes in note, remove from array if nil
-    func didChangeNoteContents(schedule: SSSchedule) {
+    func didChangeNoteOrContents(schedule: SSSchedule) {
         print("note content changed")
+        
+        
+        //if notes is [], set to nil
+        if let notes = schedule.notes where notes.count == 0 {
+            schedule.notes = nil
+        }
         
         //check for shift or notes
         self.checkForShiftOrNotes(schedule)

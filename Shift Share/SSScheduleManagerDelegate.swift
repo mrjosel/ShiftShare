@@ -12,10 +12,10 @@ import Foundation
 protocol SSScheduleManagerDelegate {
     
     //perform when shift type changes
-    func didChangeShiftType(schedule: SSSchedule) -> Void
+    func didChangeShiftOrType(schedule: SSSchedule) -> Void
     
     //perform when any aspect of notes changes (title, body)
-    func didChangeNoteContents(schedule: SSSchedule) -> Void
+    func didChangeNoteOrContents(schedule: SSSchedule) -> Void
     
     //after the above are performed, invoke this method, intent is that if shift and [notes] are nil, manager should remove schedule from memory
     func checkForShiftOrNotes(schedule: SSSchedule) -> Void

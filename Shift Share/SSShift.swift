@@ -18,7 +18,7 @@ class SSShift : NSObject, SSTBCellData {
         didSet {
             
             //alert manager
-            self.schedule?.manager?.didChangeShiftType(self.schedule!)
+            self.schedule?.manager?.didChangeShiftOrType(self.schedule!)
         }
     }
     
@@ -75,10 +75,9 @@ class SSShift : NSObject, SSTBCellData {
     
     //increments shiftType rawValue by 1 and changes shiftType accordingly
     func cycleShift() {
-        print("cycling shift")
+
         //get rawValue of current shift, if no type exists, set to .DAY
         guard let type = self.type else {
-            print("type is nil, setting to DAY")
             self.type = SSShiftType.DAY
             return
         }
@@ -91,11 +90,10 @@ class SSShift : NSObject, SSTBCellData {
         
         //get shift at rawValue, if no image exists, set shit to nil
         guard let shiftType = SSShiftType(rawValue: newVal) else {
-            print("setting type to nil")
             self.type = nil
             return
         }
-        print("setting type to \(shiftType)")
+
         //shift exists for rawVal, set
         self.type = shiftType
     }

@@ -13,8 +13,18 @@ import UIKit
 class SSNote : SSTBCellData, CustomStringConvertible {
     
     //title, body, image for protocol conformance
-    var title : String?
-    var body : String?
+    var title : String? {
+        didSet {
+            //alert the delegate
+            self.schedule?.manager?.didChangeNoteOrContents(self.schedule!)
+        }
+    }
+    var body : String? {
+        didSet {
+            //alert the delegate
+            self.schedule?.manager?.didChangeNoteOrContents(self.schedule!)
+        }
+    }
     var image : UIImage? = UIImage(named: "Note")  //Note image is always of "Note"
     
     //schedule assiciated with note

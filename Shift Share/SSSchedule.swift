@@ -25,10 +25,20 @@ class SSSchedule {
     var user : AnyObject?   //TODO: MAKE USER NSMANAGEDOBJECT
     
     //shift for the day
-    var shift : SSShift?
+    var shift : SSShift? //{
+//        didSet {
+//            //alert the delegate
+//            self.manager?.didChangeShiftOrType(self)
+//        }
+//    }
     
     //notes for the day
-    var notes : [SSNote]?
+    var notes : [SSNote]? {
+        didSet {
+            //alert the delegate
+            self.manager?.didChangeNoteOrContents(self)
+        }
+    }
     
     //schedule manager
     var manager : SSScheduleManager?
