@@ -238,12 +238,14 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //Edit Button
         case .NEW :
             
-            //present editVC, if no date is selected then present for today's date
-            if let date = self.selectedDate {
-                self.presentNewScheduleVC(forDate: date)
-            } else {
-                self.presentNewScheduleVC(forDate: NSDate())
-            }
+            self.performSegueWithIdentifier("newVCsegue", sender: self.selectedDate)
+            
+//            //present editVC, if no date is selected then present for today's date
+//            if let date = self.selectedDate {
+//                self.presentNewScheduleVC(forDate: date)
+//            } else {
+//                self.presentNewScheduleVC(forDate: NSDate())
+//            }
             
         case .CANCEL :
             //discard changes in scheduleEdit mode
@@ -357,7 +359,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         let cellData = schedule.tableData[indexPath.row]
         
         //perform segue to editVC
-        self.performSegueWithIdentifier("editVCSegue", sender: cellData)
+        self.performSegueWithIdentifier("editVCSegueFromCal", sender: cellData)
     }
     
     //header for table view, displays selected date
@@ -421,15 +423,22 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //handles segues
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
-        if segue.identifier == "editVCSegue" {
+        if segue.identifier == "editVCSegueFromCal" {
 
-            //create VC for show presentation
+            //create VC to edit schedule
             let scheduleDetailVC : ScheduleEditViewController = segue.destinationViewController as! ScheduleEditViewController
             
             //set VC's date to selectedDate, and cast sender as SSTBCellData
             scheduleDetailVC.userSelectedData = sender as? SSTBCellData
             scheduleDetailVC.date = self.selectedDate
             
+        } else if segue.identifier == "newVCsegue" {
+            
+            //create VC to create new schedule
+            let newScheduleVC : NewScheduleViewController = segue.destinationViewController as! NewScheduleViewController
+            
+            //set VC's date accordingly
+            newScheduleVC.date = sender as? NSDate
         }
         
     }

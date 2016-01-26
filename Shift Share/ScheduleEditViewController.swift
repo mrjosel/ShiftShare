@@ -24,7 +24,7 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
     @IBOutlet weak var deleteButton: UIBarButtonItem!
     
     //data from cell selected in CalendarVC
-    var userSelectedData : SSTBCellData!    //set in calendarViewController
+    var userSelectedData : SSTBCellData!
     var schedule : SSSchedule?
     var dataIsShift : Bool = false          //default value
     var previousRect = CGRectZero
@@ -34,7 +34,7 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
     var touchGesture : UITapGestureRecognizer?
     
     //selected date
-    var date : NSDate!                      //set in calendarViewController
+    var date : NSDate!                      //set in other VCs
     
     //default shiftType
     var scratchShiftType : SSShiftType?
@@ -54,7 +54,11 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
         
         //get default shift
         if self.dataIsShift {
-            self.scratchShiftType = (self.userSelectedData as! SSShift).type
+            if let type = (self.userSelectedData as! SSShift).type {
+                self.scratchShiftType = type
+            } else {
+                self.scratchShiftType = SSShiftType.DAY
+            }
         }
         
         //setup views for all common/static behaviors
@@ -91,7 +95,6 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
     func imageViewTapped(sender: UITapGestureRecognizer) {
         
         //enable save button
-//        self.navigationItem.rightBarButtonItem?.enabled = true
         self.saveButton.enabled = true
         
         //check if data is shift or not
@@ -151,6 +154,9 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
     //update numLines everytime text changes, if word wrap occurs after maxLines reached, remove last char
     func textViewDidChange(textView: UITextView) {
         
+        //enable save button
+        self.saveButton.enabled = true
+        
         //update number of lines
         self.numLines = Int((self.dataBody.contentSize.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
         
@@ -166,6 +172,9 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
         if !self.dataIsShift {
             //TODO: HANDLE EDITING OF NOTE LABEL
+            
+            //enable save button
+            self.saveButton.enabled = true
             return true //for now
         } else {
             //data is a shift, hide caret and do not allow editing

@@ -24,6 +24,11 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
     @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var newScheduleTable: UITableView!
     
+    override func viewWillAppear(animated: Bool) {
+        //hide navBar
+//        self.navigationController?.navigationBar.hidden = true
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -66,7 +71,7 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
         
         //create table data based on edit mode or not
         let tableData = SSSchedule.newScheduleData(schedule)
-        
+
         //get cellData from tableData
         let cellData = tableData[indexPath.row]
         
@@ -82,13 +87,34 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
     //clicking cells launches VC to create shift
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        //check if seleted cell is shift or note
-        if self.schedule.tableData[indexPath.row] is SSShift {
-            print("adding new shift")
-        } else {
-            print("adding new note")
+        //get schedule for date corresponding to selected cell
+        guard let schedule = self.schedule else {
+            
+            //no schedule
+            return
         }
         
+        //get data for detailVC
+        let cellData = schedule.tableData[indexPath.row]
+        
+        //perform segue to editVC
+        self.performSegueWithIdentifier("editVCSegueFromNew", sender: cellData)
+        
+    }
+    
+    //segue to scheduleEditVC
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "editVCSegueFromNew" {
+            
+            //create VC for show presentation
+            let scheduleDetailVC : ScheduleEditViewController = segue.destinationViewController as! ScheduleEditViewController
+            
+            //set VC's date to selectedDate, and cast sender as SSTBCellData
+            scheduleDetailVC.userSelectedData = sender as? SSTBCellData
+            scheduleDetailVC.date = self.date
+            
+        }
     }
     
 
