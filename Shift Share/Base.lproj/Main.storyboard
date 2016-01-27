@@ -268,7 +268,7 @@
         <!--New Schedule View Controller-->
         <scene sceneID="YAa-Tt-AUO">
             <objects>
-                <viewController storyboardIdentifier="NewScheduleViewController" id="Lie-ba-gjf" customClass="NewScheduleViewController" customModule="Shift_Share" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NewScheduleViewController" automaticallyAdjustsScrollViewInsets="NO" id="Lie-ba-gjf" customClass="NewScheduleViewController" customModule="Shift_Share" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="69i-p8-Kfv"/>
                         <viewControllerLayoutGuide type="bottom" id="5Mb-Br-rbI"/>
@@ -283,7 +283,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SSTableViewCell" textLabel="tK9-Nv-4r0" detailTextLabel="COp-zH-9Mf" style="IBUITableViewCellStyleSubtitle" id="rcI-hh-1LI" customClass="SSTableViewCell" customModule="Shift_Share" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="28" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rcI-hh-1LI" id="QUu-nq-eqn">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>

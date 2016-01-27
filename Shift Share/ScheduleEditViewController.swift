@@ -66,8 +66,10 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
         if self.dataIsShift {
             if let type = (self.userSelectedData as! SSShift).type {
                 self.scratchShiftType = type
+                self.saveButton.enabled = false
             } else {
                 self.scratchShiftType = SSShiftType.DAY
+                self.saveButton.enabled = true
             }
         }
         
@@ -86,7 +88,6 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
         self.dataBody.delegate = self
         self.dataTitle.delegate = self
         self.saveButton.setTitle("Save", forState: UIControlState.Normal)
-        self.saveButton.enabled = false
         self.cancelButton.setTitle("Cancel", forState: UIControlState.Normal)
         self.menuBar.bringSubviewToFront(self.cancelButton)
         self.menuBar.bringSubviewToFront(self.saveButton)
