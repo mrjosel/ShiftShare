@@ -26,7 +26,7 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
     
     override func viewWillAppear(animated: Bool) {
         //hide navBar
-//        self.navigationController?.navigationBar.hidden = true
+        self.navigationController?.navigationBar.hidden = true
     }
     
     override func viewDidLoad() {
@@ -137,7 +137,8 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
     func cancelButtonPressed(sender: UIButton) {
         
         //dismiss viewController
-        self.dismissViewControllerAnimated(true, completion: nil)
+//        self.dismissViewControllerAnimated(true, completion: nil)
+        self.navigationController?.popToRootViewControllerAnimated(true)
     }
     
     //user presses done button, commit all changes to schedule

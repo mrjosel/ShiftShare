@@ -124,7 +124,7 @@
                         <outlet property="monthSelectorView" destination="KkR-sd-dBO" id="N59-SU-o5h"/>
                         <outlet property="rightSSButton" destination="dv3-wz-1tT" id="01r-U6-32h"/>
                         <segue destination="3pj-eg-jkr" kind="show" identifier="editVCSegueFromCal" id="fWd-yi-8Hw"/>
-                        <segue destination="Lie-ba-gjf" kind="show" identifier="newVCsegue" action="showDetailViewController:sender:" id="lXr-sn-ijD"/>
+                        <segue destination="Lie-ba-gjf" kind="show" identifier="newVCsegue" id="yrY-HW-oqN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
