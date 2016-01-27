@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import JTCalendar
 
 //presents shift or note in detail
 class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
@@ -20,8 +21,11 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
     @IBOutlet weak var dataTitle: UITextField!
     @IBOutlet weak var leftTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var rightTrailingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var saveButton: UIBarButtonItem!
+    @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var deleteButton: UIBarButtonItem!
+    @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var menuBar: JTCalendarMenuView!
+    @IBOutlet weak var dateLabel: UILabel!
     
     //data from cell selected in CalendarVC
     var userSelectedData : SSTBCellData!
@@ -38,6 +42,12 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
     
     //default shiftType
     var scratchShiftType : SSShiftType?
+    
+    override func viewWillAppear(animated: Bool) {
+        
+        //hide navBar
+        self.navigationController?.navigationBarHidden = true
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,7 +77,7 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
         self.rightTrailingConstraint.constant = trailingConstraint
         self.automaticallyAdjustsScrollViewInsets = false
         self.navigationController?.navigationBar.hidden = false
-        self.navigationController?.topViewController?.title = date.readableDate
+        self.dateLabel.text = date.readableDate
         self.dataTitle.borderStyle = .None
         self.dataTitle.textAlignment = NSTextAlignment.Center
         self.touchGesture = UITapGestureRecognizer(target: self, action: "imageViewTapped:")
@@ -75,12 +85,13 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
         self.dataBody.font = UIFont(name: "Helvetica", size: 14.0)
         self.dataBody.delegate = self
         self.dataTitle.delegate = self
-        self.saveButton.title = "Save"
+        self.saveButton.setTitle("Save", forState: UIControlState.Normal)
         self.saveButton.enabled = false
+        self.cancelButton.setTitle("Cancel", forState: UIControlState.Normal)
+        self.menuBar.bringSubviewToFront(self.cancelButton)
+        self.menuBar.bringSubviewToFront(self.saveButton)
         self.deleteButton.title = "Delete"
-        self.navigationItem.hidesBackButton = true
-        let cancelButton = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: "cancelButtonPressed")
-        self.navigationItem.leftBarButtonItem = cancelButton
+
         
         //configure UI elements for all dynamic behaviors (e.g. - if shift, or note changes)
         self.configUIForData()
@@ -206,14 +217,14 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
     }
     
     //return to calendar without changes
-    func cancelButtonPressed() {
-    
+//    func cancelButtonPressed() {
+    @IBAction func cancelButtonPressed(sender: UIButton) {
         //return back to calendar
         self.navigationController?.popViewControllerAnimated(true)
     }
     
     //return to calendar without changes
-    @IBAction func saveButtonPressed(sender: UIBarButtonItem) {
+    @IBAction func saveButtonPressed(sender: UIButton) {
 
         //make changes to shift/note
         if self.dataIsShift {

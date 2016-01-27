@@ -19,10 +19,11 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
     var date : NSDate!
     
     //outlets
-    @IBOutlet weak var topView: UIView!
+    @IBOutlet weak var menuBar: JTCalendarMenuView!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var newScheduleTable: UITableView!
+    @IBOutlet weak var dateLabel: UILabel!
     
     override func viewWillAppear(animated: Bool) {
         //hide navBar
@@ -43,6 +44,9 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
         self.doneButton.setTitle("Done", forState: UIControlState.Normal)
         self.cancelButton.addTarget(self, action: "cancelButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
         self.doneButton.addTarget(self, action: "doneButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.menuBar.bringSubviewToFront(self.cancelButton)
+        self.menuBar.bringSubviewToFront(self.doneButton)
+        self.dateLabel.text = self.date.readableDate
         
         //make schedule
         self.schedule = SSSchedule(forDate: self.date, withShift: nil, withNotes: nil, forUser: nil)
