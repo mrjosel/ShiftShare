@@ -15,7 +15,7 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
 
     
     //schedule that will be created for that date
-    var schedule : SSSchedule!
+    var schedule : SSSchedule?
     var date : NSDate!
     
     //outlets
@@ -47,9 +47,6 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
         self.menuBar.bringSubviewToFront(self.cancelButton)
         self.menuBar.bringSubviewToFront(self.doneButton)
         self.dateLabel.text = self.date.readableDate
-        
-        //make schedule
-        self.schedule = SSSchedule(forDate: self.date, withShift: nil, withNotes: nil, forUser: nil)
 
     }
     
@@ -73,8 +70,17 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
         //set date in cell (for bookkeeping, may be removed later)
         cell.date = date
         
-        //create table data based on edit mode or not
-        let tableData = SSSchedule.newScheduleData(schedule)
+        //tableData for cell population
+        var tableData : [SSTBCellData]!
+        
+        //create table data
+        if let _ = self.schedule?.shift {
+            //shift exists, set tableData
+            tableData = self.schedule?.tableData
+            //TODO: FIX NEWSCHEDULEDATA TO ALLOW SHIFT AND NEW NOTE CELL TO COEXIST (WITH OTHER NOTES)
+        } else {
+            tableData = SSSchedule.newScheduleData(schedule)
+        }
 
         //get cellData from tableData
         let cellData = tableData[indexPath.row]
@@ -91,15 +97,12 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
     //clicking cells launches VC to create shift
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        //get schedule for date corresponding to selected cell
-        guard let schedule = self.schedule else {
-            
-            //no schedule
+        //get data for detailVC
+        guard let cellData = self.schedule?.tableData[indexPath.row] else {
+            //no schedule, return
+            self.navigationController?.popToRootViewControllerAnimated(true)
             return
         }
-        
-        //get data for detailVC
-        let cellData = schedule.tableData[indexPath.row]
         
         //perform segue to editVC
         self.performSegueWithIdentifier("editVCSegueFromNew", sender: cellData)
@@ -112,11 +115,11 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
         if segue.identifier == "editVCSegueFromNew" {
             
             //create VC for show presentation
-            let scheduleDetailVC : ScheduleEditViewController = segue.destinationViewController as! ScheduleEditViewController
+            let scheduleEditVC : ScheduleEditViewController = segue.destinationViewController as! ScheduleEditViewController
             
             //set VC's date to selectedDate, and cast sender as SSTBCellData
-            scheduleDetailVC.userSelectedData = sender as? SSTBCellData
-            scheduleDetailVC.date = self.date
+            scheduleEditVC.userSelectedData = sender as? SSTBCellData
+            scheduleEditVC.date = self.date
             
         }
     }
@@ -140,15 +143,18 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
     //user presses cancel button
     func cancelButtonPressed(sender: UIButton) {
         
+        //clear out schedule
+        self.schedule = nil
+        
         //dismiss viewController
-//        self.dismissViewControllerAnimated(true, completion: nil)
         self.navigationController?.popToRootViewControllerAnimated(true)
     }
     
     //user presses done button, commit all changes to schedule
     func doneButtonPressed(sender: UIButton) {
         
-        //TODO : NEED TO IMPLEMENT
+        //add schedule to array
+        SSSchedule.sharedInstance().schedules[self.date.keyFromDate] = self.schedule
         
         //dismiss viewController
         self.dismissViewControllerAnimated(true, completion: nil)

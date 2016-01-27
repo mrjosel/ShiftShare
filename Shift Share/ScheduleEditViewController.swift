@@ -56,7 +56,11 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
         
         //get schedule for use in other methods
         if let schedule = SSSchedule.sharedInstance().schedules[date.keyFromDate] {
+            //schedule exists for date, editing schedule
             self.schedule = schedule
+        } else {
+            //schedule not present for date, creating new schedule
+            self.schedule = SSSchedule(forDate: self.date, withShift: nil, withNotes: nil, forUser: "Brian")
         }
         
         //determine if data is shift or note
@@ -218,7 +222,6 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
     }
     
     //return to calendar without changes
-//    func cancelButtonPressed() {
     @IBAction func cancelButtonPressed(sender: UIButton) {
         //return back to calendar
         self.navigationController?.popViewControllerAnimated(true)

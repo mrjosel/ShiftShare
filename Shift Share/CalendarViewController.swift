@@ -238,14 +238,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //Edit Button
         case .NEW :
             
+            //segue to VC to create schedule
             self.performSegueWithIdentifier("newVCsegue", sender: self.selectedDate)
-            
-//            //present editVC, if no date is selected then present for today's date
-//            if let date = self.selectedDate {
-//                self.presentNewScheduleVC(forDate: date)
-//            } else {
-//                self.presentNewScheduleVC(forDate: NSDate())
-//            }
             
         case .CANCEL :
             //discard changes in scheduleEdit mode
@@ -426,11 +420,11 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         if segue.identifier == "editVCSegueFromCal" {
 
             //create VC to edit schedule
-            let scheduleDetailVC : ScheduleEditViewController = segue.destinationViewController as! ScheduleEditViewController
+            let scheduleEditVC : ScheduleEditViewController = segue.destinationViewController as! ScheduleEditViewController
             
             //set VC's date to selectedDate, and cast sender as SSTBCellData
-            scheduleDetailVC.userSelectedData = sender as? SSTBCellData
-            scheduleDetailVC.date = self.selectedDate
+            scheduleEditVC.userSelectedData = sender as? SSTBCellData
+            scheduleEditVC.date = self.selectedDate
             
         } else if segue.identifier == "newVCsegue" {
             
@@ -439,6 +433,11 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             
             //set VC's date accordingly
             newScheduleVC.date = sender as? NSDate
+            
+            //create new schedule and pass on to VC (NOTE: schedule could be cleared in next VC if user cancels)
+            let schedule = SSSchedule(forDate: (sender as? NSDate), withShift: nil, withNotes: nil, forUser: "Brian")
+            schedule.manager = self.scheduleManager
+            newScheduleVC.schedule = schedule
         }
         
     }
