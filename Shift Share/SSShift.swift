@@ -16,9 +16,19 @@ class SSShift : NSObject, SSTBCellData {
     //shift type
     var type : SSShiftType? {
         didSet {
-            
+            print("type set")
             //alert manager
-            self.schedule?.manager?.didChangeShiftOrType(self.schedule!)
+            if let schedule = self.schedule {
+                print("got schedule")
+                if let manager = schedule.manager {
+                    print("alerting delegate")
+                    manager.didChangeShiftOrType(schedule)
+                } else {
+                    print("no manager")
+                }
+            } else {
+                print("no schedule")
+            }
         }
     }
     

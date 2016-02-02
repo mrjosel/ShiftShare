@@ -47,6 +47,7 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
         
         //hide navBar
         self.navigationController?.navigationBarHidden = true
+
     }
     
     override func viewDidLoad() {
@@ -54,13 +55,17 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
 
         // Do any additional setup after loading the view.
         
-        //get schedule for use in other methods
+        //if schedule exists for date, use it, otherwise use schedule set in other VC, if not set, create empty schedule for user
         if let schedule = SSSchedule.sharedInstance().schedules[date.keyFromDate] {
             //schedule exists for date, editing schedule
             self.schedule = schedule
-        } else {
-            //schedule not present for date, creating new schedule
+            print("schedule exists for \(self.date.readableDate)")
+        } else if self.schedule == nil {
+            //schedule not present for date, does not exist, creating new schedule
             self.schedule = SSSchedule(forDate: self.date, withShift: nil, withNotes: nil, forUser: "Brian")
+            print("creating empty schedule")
+        } else {
+            print(self.schedule)
         }
         
         //determine if data is shift or note

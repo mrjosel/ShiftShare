@@ -13,7 +13,7 @@ import CoreData
 
 //persisted object for a schedule for that day
 //TODO: MAKE OBJECT NSMANAGEDOBJECT
-class SSSchedule {
+class SSSchedule : NSObject {
     
     //schedules across application, used by singleton
     var schedules = [String : SSSchedule]()
@@ -25,16 +25,28 @@ class SSSchedule {
     var user : AnyObject?   //TODO: MAKE USER NSMANAGEDOBJECT
     
     //shift for the day
-    var shift : SSShift? //{
-//        didSet {
-//            //alert the delegate
-//            self.manager?.didChangeShiftOrType(self)
-//        }
-//    }
-    
+    var shift : SSShift? {
+        didSet {
+            //set schedule param of shift
+            if let shift = self.shift {
+                shift.schedule = self
+            }
+            
+            //alert the delegate
+            self.manager?.didChangeShiftOrType(self)
+        }
+    }
+
     //notes for the day
     var notes : [SSNote]? {
         didSet {
+            if let notes = self.notes {
+                for note in notes {
+                    note.schedule = self
+                }
+            }
+            
+            
             //alert the delegate
             self.manager?.didChangeNoteOrContents(self)
         }
@@ -67,27 +79,27 @@ class SSSchedule {
     }
     
     //initializers
-    init() {/*empty*/}
+    override init() {/*empty*/}
     
     //init with params
     init(forDate date: NSDate?, withShift shift: SSShift?, withNotes notes: [SSNote]?, forUser user: AnyObject?) {
-        
+        super.init()
         //set params to properties
         self.date = date
         self.shift = shift
         
-        //if shift is not nil, set shift's schedule to self
-        if let shift = self.shift {
-            shift.schedule = self
-        }
+//        //if shift is not nil, set shift's schedule to self
+//        if let shift = self.shift {
+//            shift.schedule = self
+//        }
         self.notes = notes
         
         //do the same thing for every note in notes
-        if let notes = self.notes {
-            for note in notes {
-                note.schedule = self
-            }
-        }
+//        if let notes = self.notes {
+//            for note in notes {
+//                note.schedule = self
+//            }
+//        }
         
         self.user = user as? String //TODO: FIX WHEN USER OBJECT IS IMPLEMENTED
 
@@ -125,17 +137,17 @@ class SSSchedule {
     //two cells are returned, "new shift" and "new note"
     //if a shift is made, "new shift" is replaced with the shift
     //if a note is made, its added, with "new note" remaining at the end of the stack
-    class func newScheduleData(schedule: SSSchedule?) -> [SSTBCellData] {
+    class func newScheduleData(schedule: SSSchedule?) {//-> [SSTBCellData] {
         
         //make dummy data
         let newShift = SSShift()
-        newShift.title = "Tap to Create New Shift"
+        newShift.title = "New Shift"
         let newNote = SSNote()
-        newNote.title = "Tap to Create New Note"
+        newNote.title = "New Note"
         
         //get schedule
         if let schedule = schedule {
-            
+        
             //schedule exists, check for shift and notes
             if schedule.shift == nil {
                 
@@ -147,10 +159,14 @@ class SSSchedule {
                 
                 //schedule exists, but no notes
                 schedule.notes = [newNote]
+            } else {
+                
+                //notes exist, append with newNote
+                schedule.notes?.append(newNote)
             }
-            
+        
             //return tableData
-            return schedule.tableData
+            //return [newShift, newNote] //schedule.tableData
             
         } else {
             
@@ -159,7 +175,7 @@ class SSSchedule {
             newSchedule.shift = newShift
             newSchedule.notes = [newNote]
             
-            return newSchedule.tableData
+            //return newSchedule.tableData
         }
     }
     

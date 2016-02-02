@@ -238,8 +238,13 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //Edit Button
         case .NEW :
             
-            //segue to VC to create schedule
-            self.performSegueWithIdentifier("newVCsegue", sender: self.selectedDate)
+            //if schedule exists, prompt for deletion, else segue to newVC
+            if let _ = SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate] {
+                print("delete schedule?")
+            } else {
+                //segue to VC to create schedule
+                self.performSegueWithIdentifier("newVCsegue", sender: self.selectedDate)
+            }
             
         case .CANCEL :
             //discard changes in scheduleEdit mode
@@ -438,6 +443,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             let schedule = SSSchedule(forDate: (sender as? NSDate), withShift: nil, withNotes: nil, forUser: "Brian")
             schedule.manager = self.scheduleManager
             newScheduleVC.schedule = schedule
+            
+            print(schedule)
+            
         }
         
     }

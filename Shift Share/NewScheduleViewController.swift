@@ -26,8 +26,18 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
     @IBOutlet weak var dateLabel: UILabel!
     
     override func viewWillAppear(animated: Bool) {
+
         //hide navBar
         self.navigationController?.navigationBar.hidden = true
+        
+        //generate new schedule data
+        SSSchedule.newScheduleData(self.schedule)
+        
+        print(self.schedule)
+        
+        //reload table
+        self.newScheduleTable.reloadData()
+        
     }
     
     override func viewDidLoad() {
@@ -52,38 +62,33 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
     
     //number of rows in the table, populate with new schedule data cells
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
-        return SSSchedule.newScheduleData(schedule).count
+        
+        //if no schedule, return
+        guard let schedule = self.schedule else {
+            self.navigationController?.popToRootViewControllerAnimated(true)
+            return 0
+        }
+        
+        return schedule.tableData.count
     }
-    
     
     //creates cells for the table
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         //create cell
         guard let cell = tableView.dequeueReusableCellWithIdentifier("SSTableViewCell") as? SSTableViewCell,
+            schedule = self.schedule,
             date = self.date else {
                 print("no cell made")
+                self.navigationController?.popToRootViewControllerAnimated(true)
                 return UITableViewCell()
         }
         
         //set date in cell (for bookkeeping, may be removed later)
         cell.date = date
-        
-        //tableData for cell population
-        var tableData : [SSTBCellData]!
-        
-        //create table data
-        if let _ = self.schedule?.shift {
-            //shift exists, set tableData
-            tableData = self.schedule?.tableData
-            //TODO: FIX NEWSCHEDULEDATA TO ALLOW SHIFT AND NEW NOTE CELL TO COEXIST (WITH OTHER NOTES)
-        } else {
-            tableData = SSSchedule.newScheduleData(schedule)
-        }
 
         //get cellData from tableData
-        let cellData = tableData[indexPath.row]
+        let cellData = schedule.tableData[indexPath.row]
         
         //set cell properties
         cell.imageView?.image = cellData.image
@@ -103,7 +108,7 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
             self.navigationController?.popToRootViewControllerAnimated(true)
             return
         }
-        
+        print(self.schedule)
         //perform segue to editVC
         self.performSegueWithIdentifier("editVCSegueFromNew", sender: cellData)
         
@@ -120,6 +125,9 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
             //set VC's date to selectedDate, and cast sender as SSTBCellData
             scheduleEditVC.userSelectedData = sender as? SSTBCellData
             scheduleEditVC.date = self.date
+            scheduleEditVC.schedule = self.schedule
+            
+            print(self.schedule)
             
         }
     }
@@ -157,7 +165,7 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
         SSSchedule.sharedInstance().schedules[self.date.keyFromDate] = self.schedule
         
         //dismiss viewController
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.navigationController?.popToRootViewControllerAnimated(true)
     }
 
 }
