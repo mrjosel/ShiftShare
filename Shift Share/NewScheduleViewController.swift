@@ -33,8 +33,6 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
         //generate new schedule data
         SSSchedule.newScheduleData(self.schedule)
         
-        print(self.schedule)
-        
         //reload table
         self.newScheduleTable.reloadData()
         
@@ -108,7 +106,7 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
             self.navigationController?.popToRootViewControllerAnimated(true)
             return
         }
-        print(self.schedule)
+
         //perform segue to editVC
         self.performSegueWithIdentifier("editVCSegueFromNew", sender: cellData)
         
@@ -126,9 +124,6 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
             scheduleEditVC.userSelectedData = sender as? SSTBCellData
             scheduleEditVC.date = self.date
             scheduleEditVC.schedule = self.schedule
-            
-            print(self.schedule)
-            
         }
     }
     

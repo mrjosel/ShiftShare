@@ -443,9 +443,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             let schedule = SSSchedule(forDate: (sender as? NSDate), withShift: nil, withNotes: nil, forUser: "Brian")
             schedule.manager = self.scheduleManager
             newScheduleVC.schedule = schedule
-            
-            print(schedule)
-            
+
         }
         
     }

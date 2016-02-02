@@ -59,13 +59,9 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
         if let schedule = SSSchedule.sharedInstance().schedules[date.keyFromDate] {
             //schedule exists for date, editing schedule
             self.schedule = schedule
-            print("schedule exists for \(self.date.readableDate)")
         } else if self.schedule == nil {
             //schedule not present for date, does not exist, creating new schedule
             self.schedule = SSSchedule(forDate: self.date, withShift: nil, withNotes: nil, forUser: "Brian")
-            print("creating empty schedule")
-        } else {
-            print(self.schedule)
         }
         
         //determine if data is shift or note
