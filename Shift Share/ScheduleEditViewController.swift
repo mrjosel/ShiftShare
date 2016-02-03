@@ -62,6 +62,8 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
         } else if self.schedule == nil {
             //schedule not present for date, does not exist, creating new schedule
             self.schedule = SSSchedule(forDate: self.date, withShift: nil, withNotes: nil, forUser: "Brian")
+        } else {
+            //schedule was set elsewhere (newScheduleVC)
         }
         
         //determine if data is shift or note
@@ -230,19 +232,30 @@ class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFi
     
     //return to calendar without changes
     @IBAction func saveButtonPressed(sender: UIButton) {
+        
+        //if schedule not set, set it
+        if self.userSelectedData.schedule == nil {
+            print("setting schedule")
+            self.userSelectedData.schedule = self.schedule
+            print(self.userSelectedData.schedule)
+        }
+        
 
         //make changes to shift/note
         if self.dataIsShift {
+            print("dataIsShift")
             let data = self.userSelectedData as! SSShift
             data.type = self.scratchShiftType
+            
         } else {
-            let data = self.userSelectedData as! SSNote
-            data.body = self.dataBody.text
-            data.title = self.dataTitle.text
+            var data = self.userSelectedData as? SSNote
+            data!.body = self.dataBody.text
+            data!.title = self.dataTitle.text
             
             //if body and title are "", delete
             if self.dataBody.text == "" && self.dataTitle.text == "" {
                 //delete note
+                data = nil
             }
         }
         

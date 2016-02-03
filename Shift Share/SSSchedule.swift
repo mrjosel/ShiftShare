@@ -142,31 +142,53 @@ class SSSchedule : NSObject {
         //make dummy data
         let newShift = SSShift()
         newShift.title = "New Shift"
-        let newNote = SSNote()
-        newNote.title = "New Note"
+        let newNote = SSNote(title: "New Note", body: "New Note Body")
         
         //get schedule
         if let schedule = schedule {
         
             //schedule exists, check for shift and notes
             if schedule.shift == nil {
-                
-                //schedule exists, but no shift
+                print("schedule is nil, setting to newShift")
+                //schedule exists, but no shift, remove shift link for purposes of creating new shifts
                 schedule.shift = newShift
+                schedule.shift?.schedule = nil
+                print("shift is \(schedule.shift)")
+            } else {
+                print("shift is \(schedule.shift)")
+                print(schedule.shift?.schedule)
             }
             
+            //if notes are nil, fill with [newNote[, if notes exist not equal 1, append with newNote, if count is 1, note is already newNote and do nothing
             if schedule.notes == nil {
-                
+                print("notes are nil, setting to [newNote]")
                 //schedule exists, but no notes
                 schedule.notes = [newNote]
-            } else {
+                for note in schedule.notes! {
+                    note.schedule = nil
+                }
                 
-                //notes exist, append with newNote
-                schedule.notes?.append(newNote)
+            } else {
+                //check for newNote present, if found do nothing, if not, append
+                print("looking for newNote")
+                var newNoteFound : Bool = false
+                
+                for note in schedule.notes! {
+                    if note.schedule == nil {
+                        //newNoteFound, set true and break loop
+                        newNoteFound = true
+                        break
+                    }
+                }
+                
+                //newNewNote not present append, else do nothing
+                if !newNoteFound {
+                    print("appending newNote")
+                    schedule.notes?.append(newNote)
+                } else {
+                    print("newNoteFound")
+                }
             }
-        
-            //return tableData
-            //return [newShift, newNote] //schedule.tableData
             
         } else {
             

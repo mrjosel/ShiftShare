@@ -36,6 +36,8 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
         //reload table
         self.newScheduleTable.reloadData()
         
+        print(self.schedule?.shift?.title)
+        
     }
     
     override func viewDidLoad() {
@@ -93,6 +95,9 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
         cell.textLabel?.text = cellData.title
         cell.detailTextLabel?.text = cellData.body
         
+        //hide detail label if its newNote (end of tableData)
+        cell.detailTextLabel?.hidden = (indexPath.row == schedule.tableData.count - 1) ? true : false
+        
         return cell
         
     }
@@ -105,6 +110,16 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
             //no schedule, return
             self.navigationController?.popToRootViewControllerAnimated(true)
             return
+        }
+        print(self.schedule)
+        if let schedule = self.schedule {
+            if let shift = schedule.shift {
+                print(shift.schedule)
+            }
+            
+            if let notes = schedule.notes {
+                print(notes[indexPath.row].schedule)
+            }
         }
 
         //perform segue to editVC
@@ -155,6 +170,19 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
     
     //user presses done button, commit all changes to schedule
     func doneButtonPressed(sender: UIButton) {
+        
+        //remove new schedule date
+        if self.schedule?.shift?.schedule == nil {
+            self.schedule?.shift = nil
+        }
+        
+        //remove new note data
+        if let notes = self.schedule?.notes {
+            if let index = notes.indexOf({$0.schedule == nil}) {
+                self.schedule!.notes?.removeAtIndex(index)
+            }
+
+        }
         
         //add schedule to array
         SSSchedule.sharedInstance().schedules[self.date.keyFromDate] = self.schedule
