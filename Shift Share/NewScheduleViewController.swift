@@ -111,16 +111,6 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
             self.navigationController?.popToRootViewControllerAnimated(true)
             return
         }
-        print(self.schedule)
-        if let schedule = self.schedule {
-            if let shift = schedule.shift {
-                print(shift.schedule)
-            }
-            
-            if let notes = schedule.notes {
-                print(notes[indexPath.row].schedule)
-            }
-        }
 
         //perform segue to editVC
         self.performSegueWithIdentifier("editVCSegueFromNew", sender: cellData)
@@ -178,8 +168,22 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
         
         //remove new note data
         if let notes = self.schedule?.notes {
-            if let index = notes.indexOf({$0.schedule == nil}) {
+            print("we have notes")
+            if let index = notes.indexOf({
+            if $0.schedule == nil {
+                print("newNoteFound")
+                return true
+            } else {
+                print("didn't find that shit")
+                return false
+                }
+            }) {
+                print("removing new note")
                 self.schedule!.notes?.removeAtIndex(index)
+            } else {
+                print("newnote not found")
+                //TODO:     FIX NEW NOTE NOT FOUND BUG
+                //          FIX BUG WHERE NOTES DON'T POPULATE RIGHT
             }
 
         }

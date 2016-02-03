@@ -175,16 +175,18 @@ class SSSchedule : NSObject {
                 
                 for note in schedule.notes! {
                     if note.schedule == nil {
+                        print("found DAT note")
                         //newNoteFound, set true and break loop
                         newNoteFound = true
                         break
                     }
                 }
                 
-                //newNewNote not present append, else do nothing
+                //newNewNote not present, append and clear out scheudle param, else do nothing
                 if !newNoteFound {
                     print("appending newNote")
                     schedule.notes?.append(newNote)
+                    schedule.notes?.last?.schedule = nil
                 } else {
                     print("newNoteFound")
                 }
