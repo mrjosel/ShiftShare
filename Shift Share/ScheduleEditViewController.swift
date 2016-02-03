@@ -1,5 +1,5 @@
 //
-//  NewScheduleViewController.swift
+//  ScheduleEditViewController.swift
 //  Shift Share
 //
 //  Created by Brian Josel on 12/10/15.
@@ -11,7 +11,7 @@ import JTCalendar
 import Parse
 
 //vc for creating/editing schedules
-class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     
     //schedule that will be created for that date

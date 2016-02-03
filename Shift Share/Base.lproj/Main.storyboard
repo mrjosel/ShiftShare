@@ -124,7 +124,7 @@
                         <outlet property="monthSelectorView" destination="KkR-sd-dBO" id="N59-SU-o5h"/>
                         <outlet property="rightSSButton" destination="dv3-wz-1tT" id="01r-U6-32h"/>
                         <segue destination="3pj-eg-jkr" kind="show" identifier="TBeditVCSegueFromCal" id="fWd-yi-8Hw"/>
-                        <segue destination="Lie-ba-gjf" kind="show" identifier="newVCsegue" id="yrY-HW-oqN"/>
+                        <segue destination="Lie-ba-gjf" kind="show" identifier="scheduleEditVCsegue" id="yrY-HW-oqN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -265,10 +265,10 @@
             </objects>
             <point key="canvasLocation" x="2211" y="628"/>
         </scene>
-        <!--New Schedule View Controller-->
+        <!--Schedule Edit View Controller-->
         <scene sceneID="YAa-Tt-AUO">
             <objects>
-                <viewController storyboardIdentifier="NewScheduleViewController" automaticallyAdjustsScrollViewInsets="NO" id="Lie-ba-gjf" customClass="NewScheduleViewController" customModule="Shift_Share" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NewScheduleViewController" automaticallyAdjustsScrollViewInsets="NO" id="Lie-ba-gjf" customClass="ScheduleEditViewController" customModule="Shift_Share" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="69i-p8-Kfv"/>
                         <viewControllerLayoutGuide type="bottom" id="5Mb-Br-rbI"/>
@@ -408,6 +408,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="fWd-yi-8Hw"/>
+        <segue reference="37i-gb-S2j"/>
     </inferredMetricsTieBreakers>
 </document>

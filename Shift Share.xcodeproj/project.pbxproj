@@ -27,7 +27,7 @@
 		B79A56F41C5151D9002F4E5C /* SSScheduleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79A56F31C5151D9002F4E5C /* SSScheduleManager.swift */; };
 		B7C7781F1C2210EC006213CA /* TBDataEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C7781E1C2210EC006213CA /* TBDataEditViewController.swift */; };
 		B7E6C1331C16657600A30682 /* SSShiftType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E6C1321C16657600A30682 /* SSShiftType.swift */; };
-		B7E6C1351C19F20800A30682 /* NewScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E6C1341C19F20800A30682 /* NewScheduleViewController.swift */; };
+		B7E6C1351C19F20800A30682 /* ScheduleEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E6C1341C19F20800A30682 /* ScheduleEditViewController.swift */; };
 		D737A387B0A4C4BDF7D71E54 /* Pods_Shift_Share.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 118FB04471BA827DDB631C39 /* Pods_Shift_Share.framework */; };
 /* End PBXBuildFile section */
 
@@ -78,7 +78,7 @@
 		B79A56F31C5151D9002F4E5C /* SSScheduleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSScheduleManager.swift; sourceTree = "<group>"; };
 		B7C7781E1C2210EC006213CA /* TBDataEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TBDataEditViewController.swift; sourceTree = "<group>"; };
 		B7E6C1321C16657600A30682 /* SSShiftType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSShiftType.swift; sourceTree = "<group>"; };
-		B7E6C1341C19F20800A30682 /* NewScheduleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewScheduleViewController.swift; sourceTree = "<group>"; };
+		B7E6C1341C19F20800A30682 /* ScheduleEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleEditViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,7 +198,7 @@
 			isa = PBXGroup;
 			children = (
 				B792748F1BF55E4400FFE21C /* CalendarViewController.swift */,
-				B7E6C1341C19F20800A30682 /* NewScheduleViewController.swift */,
+				B7E6C1341C19F20800A30682 /* ScheduleEditViewController.swift */,
 				B7C7781E1C2210EC006213CA /* TBDataEditViewController.swift */,
 			);
 			name = Controller;
@@ -415,7 +415,7 @@
 				B79A56EE1C4EF2FA002F4E5C /* SSScheduleManagerDelegate.swift in Sources */,
 				B75A946B1BFF96510075C2DA /* ExtensionsAndProtocols.swift in Sources */,
 				B75A946D1C0389070075C2DA /* SSButton.swift in Sources */,
-				B7E6C1351C19F20800A30682 /* NewScheduleViewController.swift in Sources */,
+				B7E6C1351C19F20800A30682 /* ScheduleEditViewController.swift in Sources */,
 				B75A94281BFE8F640075C2DA /* SSTableViewCell.swift in Sources */,
 				B75A946F1C062B640075C2DA /* SSSchedule.swift in Sources */,
 				B75A940D1BFA67220075C2DA /* SSDayView.swift in Sources */,

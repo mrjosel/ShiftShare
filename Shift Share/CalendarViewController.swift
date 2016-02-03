@@ -245,12 +245,11 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //Edit Button
         case .NEW :
             
-            //if schedule exists, prompt for deletion, else segue to newVC
-            if let _ = SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate] {
-                print("delete schedule?")
-            } else {
+            //segue to scheduleEditVC
+            if SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate] == nil {
+                
                 //segue to VC to create schedule
-                self.performSegueWithIdentifier("newVCsegue", sender: self.selectedDate)
+                self.performSegueWithIdentifier("scheduleEditVCsegue", sender: self.selectedDate)
             }
             
         case .EDIT :
@@ -436,25 +435,25 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             tbEditVC.userSelectedData = sender as? SSTBCellData
             tbEditVC.date = self.selectedDate
             
-        } else if segue.identifier == "newVCsegue" {
+        } else if segue.identifier == "scheduleEditVCsegue" {
             
             //create VC to create new schedule
-            let newScheduleVC : NewScheduleViewController = segue.destinationViewController as! NewScheduleViewController
+            let scheduleVC : ScheduleEditViewController = segue.destinationViewController as! ScheduleEditViewController
             
             //set VC's date accordingly
-            newScheduleVC.date = sender as? NSDate
+            scheduleVC.date = sender as? NSDate
             
             //create new schedule and pass on to VC (NOTE: schedule could be cleared in next VC if user cancels)
             let schedule = SSSchedule(forDate: (sender as? NSDate), withShift: nil, withNotes: nil, forUser: "Brian")
             schedule.manager = self.scheduleManager
-            newScheduleVC.schedule = schedule
+            scheduleVC.schedule = schedule
 
         }
         
     }
     
     //presents editVC
-    func presentNewScheduleVC(forDate date: NSDate) {
+    func presentScheduleEditVC(forDate date: NSDate) {
 
         if SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate] != nil {
             //TODO: ALERT FUNCTION TO DELETE SCHEDULE
@@ -463,13 +462,13 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         //create VC for modal presentation
-        let newScheduleVC = self.storyboard?.instantiateViewControllerWithIdentifier("NewScheduleViewController") as! NewScheduleViewController
+        let scheduleEditVC = self.storyboard?.instantiateViewControllerWithIdentifier("ScheduleEditViewController") as! ScheduleEditViewController
         
         //send date to new VC
-        newScheduleVC.date = self.selectedDate
+        scheduleEditVC.date = self.selectedDate
         
         //set VC's schedule to schedule, and present
-        self.presentViewController(newScheduleVC, animated: true, completion: nil)
+        self.presentViewController(scheduleEditVC, animated: true, completion: nil)
     }
     
     //toggles between week and month view
