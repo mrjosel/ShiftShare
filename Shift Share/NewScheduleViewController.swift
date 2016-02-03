@@ -113,22 +113,22 @@ class NewScheduleViewController: UIViewController, UITableViewDelegate, UITableV
         }
 
         //perform segue to editVC
-        self.performSegueWithIdentifier("editVCSegueFromNew", sender: cellData)
+        self.performSegueWithIdentifier("TBeditVCSegueFromNew", sender: cellData)
         
     }
     
     //segue to scheduleEditVC
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
-        if segue.identifier == "editVCSegueFromNew" {
+        if segue.identifier == "TBeditVCSegueFromNew" {
             
             //create VC for show presentation
-            let scheduleEditVC : ScheduleEditViewController = segue.destinationViewController as! ScheduleEditViewController
+            let tbDataEditVC : TBDataEditViewController = segue.destinationViewController as! TBDataEditViewController
             
             //set VC's date to selectedDate, and cast sender as SSTBCellData
-            scheduleEditVC.userSelectedData = sender as? SSTBCellData
-            scheduleEditVC.date = self.date
-            scheduleEditVC.schedule = self.schedule
+            tbDataEditVC.userSelectedData = sender as? SSTBCellData
+            tbDataEditVC.date = self.date
+            tbDataEditVC.schedule = self.schedule
         }
     }
     

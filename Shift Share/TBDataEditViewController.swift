@@ -1,5 +1,5 @@
 //
-//  ScheduleEditViewController.swift
+//  TBDataEditViewController.swift
 //  Shift Share
 //
 //  Created by Brian Josel on 12/16/15.
@@ -10,7 +10,7 @@ import UIKit
 import JTCalendar
 
 //presents shift or note in detail
-class ScheduleEditViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
+class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
 
     //TODO: CREATE SAVE BUTTON ON RIGHT THAT SAVES NOTE AND SEGUES BACK TO CALENDARVC
     //TODO: LIMIT CHARACTERS IN DATATITLE TEXTFIELD

@@ -363,7 +363,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         let cellData = schedule.tableData[indexPath.row]
         
         //perform segue to editVC
-        self.performSegueWithIdentifier("editVCSegueFromCal", sender: cellData)
+        self.performSegueWithIdentifier("TBeditVCSegueFromCal", sender: cellData)
     }
     
     //header for table view, displays selected date
@@ -427,14 +427,14 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //handles segues
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
-        if segue.identifier == "editVCSegueFromCal" {
+        if segue.identifier == "TBeditVCSegueFromCal" {
 
             //create VC to edit schedule
-            let scheduleEditVC : ScheduleEditViewController = segue.destinationViewController as! ScheduleEditViewController
+            let tbEditVC : TBDataEditViewController = segue.destinationViewController as! TBDataEditViewController
             
             //set VC's date to selectedDate, and cast sender as SSTBCellData
-            scheduleEditVC.userSelectedData = sender as? SSTBCellData
-            scheduleEditVC.date = self.selectedDate
+            tbEditVC.userSelectedData = sender as? SSTBCellData
+            tbEditVC.date = self.selectedDate
             
         } else if segue.identifier == "newVCsegue" {
             

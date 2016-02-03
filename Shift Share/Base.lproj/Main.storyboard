@@ -123,7 +123,7 @@
                         <outlet property="leftSSButton" destination="3lz-yx-ED6" id="IdB-ir-lsg"/>
                         <outlet property="monthSelectorView" destination="KkR-sd-dBO" id="N59-SU-o5h"/>
                         <outlet property="rightSSButton" destination="dv3-wz-1tT" id="01r-U6-32h"/>
-                        <segue destination="3pj-eg-jkr" kind="show" identifier="editVCSegueFromCal" id="fWd-yi-8Hw"/>
+                        <segue destination="3pj-eg-jkr" kind="show" identifier="TBeditVCSegueFromCal" id="fWd-yi-8Hw"/>
                         <segue destination="Lie-ba-gjf" kind="show" identifier="newVCsegue" id="yrY-HW-oqN"/>
                     </connections>
                 </viewController>
@@ -131,10 +131,10 @@
             </objects>
             <point key="canvasLocation" x="1316" y="349"/>
         </scene>
-        <!--Schedule Edit View Controller-->
+        <!--Data Edit View Controller-->
         <scene sceneID="nXN-l7-bXK">
             <objects>
-                <viewController storyboardIdentifier="ScheduleEditViewController" id="3pj-eg-jkr" customClass="ScheduleEditViewController" customModule="Shift_Share" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ScheduleEditViewController" id="3pj-eg-jkr" customClass="TBDataEditViewController" customModule="Shift_Share" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Owf-Dz-0vi"/>
                         <viewControllerLayoutGuide type="bottom" id="PPr-fe-bOu"/>
@@ -380,7 +380,7 @@
                         <outlet property="doneButton" destination="35H-Sk-qTU" id="c5k-gE-g9q"/>
                         <outlet property="menuBar" destination="MRa-rg-rXe" id="q2H-fP-WrR"/>
                         <outlet property="newScheduleTable" destination="3R8-Y7-rlx" id="N6g-9k-k7g"/>
-                        <segue destination="3pj-eg-jkr" kind="show" identifier="editVCSegueFromNew" id="37i-gb-S2j"/>
+                        <segue destination="3pj-eg-jkr" kind="show" identifier="TBeditVCSegueFromNew" id="37i-gb-S2j"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="O6B-v4-b0X" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -408,6 +408,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="37i-gb-S2j"/>
+        <segue reference="fWd-yi-8Hw"/>
     </inferredMetricsTieBreakers>
 </document>
