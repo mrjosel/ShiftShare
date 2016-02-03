@@ -201,6 +201,13 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             }
         }
         
+        //config button if schedule exists or not
+        if let _ = SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate] {
+            self.leftSSButton.ssButtonType = SSButtonType.EDIT
+        } else {
+            self.leftSSButton.ssButtonType = SSButtonType.NEW
+        }
+        
         //reload tableViews
         self.dayViewTableView.reloadData()
     }
@@ -246,12 +253,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 self.performSegueWithIdentifier("newVCsegue", sender: self.selectedDate)
             }
             
-        case .CANCEL :
-            //discard changes in scheduleEdit mode
-            //TODO: DISCARD ALL CHANGES
+        case .EDIT :
             
-            //go back to month view
-            self.weekViewEnabled(false)
+            //TODO: EDIT SCHEDULE
+            print("editing schedule")
             
         case .DONE :
             //commit changes

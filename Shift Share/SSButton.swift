@@ -10,10 +10,10 @@ import UIKit
 
 //enum for type of button
 enum SSButtonType : Int, CustomStringConvertible {
-    case CANCEL = 0, TODAY, DONE, NEW
+    case EDIT = 0, TODAY, DONE, NEW
     
     static let SSButtonTypes = [
-        CANCEL : "Cancel",
+        EDIT : "Edit",
         TODAY : "Today",
         DONE : "Done",
         NEW : "New"
@@ -49,9 +49,9 @@ class SSButton: UIButton {
         //configure button based on which type is set
         didSet {
             switch self.ssButtonType {
-            case .CANCEL :
+            case .EDIT :
                 //configure for cancel button
-                self.setTitle(SSButtonType.CANCEL.description, forState: UIControlState.Normal)
+                self.setTitle(SSButtonType.EDIT.description, forState: UIControlState.Normal)
                 //cancel and today button is never hidden
             case .TODAY :
                 self.setTitle(SSButtonType.TODAY.description, forState: UIControlState.Normal)
