@@ -243,21 +243,18 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             self.dayViewTableView.reloadData()
             
             //Edit Button
-        case .NEW :
+        case .NEW : //TODO:  CONSOLODATE???
             
-            //segue to scheduleEditVC
-            if SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate] == nil {
-                
-                //segue to VC to create schedule
-                self.performSegueWithIdentifier("scheduleEditVCsegue", sender: self.selectedDate)
-            }
+            //segue to scheduleEditVC only
+            self.performSegueWithIdentifier("scheduleEditVCsegue", sender: self.selectedDate)
+            
             
         case .EDIT :
             
-            //TODO: EDIT SCHEDULE
-            print("editing schedule")
+            //segue to VC to create schedule
+            self.performSegueWithIdentifier("scheduleEditVCsegue", sender: self.selectedDate)
             
-        case .DONE :
+        case .DONE :        //TODO: REMOVE???
             //commit changes
             //TODO: MAKE METHOD TO SAVE CHANGES
             
@@ -443,8 +440,16 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //set VC's date accordingly
             scheduleVC.date = sender as? NSDate
             
-            //create new schedule and pass on to VC (NOTE: schedule could be cleared in next VC if user cancels)
-            let schedule = SSSchedule(forDate: (sender as? NSDate), withShift: nil, withNotes: nil, forUser: "Brian")
+            //if no schedule exists for date create new schedule and pass on to VC (NOTE: schedule could be cleared in next VC if user cancels)
+            let schedule : SSSchedule
+            
+            if let scheduleToEdit = SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate] {
+                schedule = scheduleToEdit
+            } else {
+                schedule = SSSchedule(forDate: (sender as? NSDate), withShift: nil, withNotes: nil, forUser: "Brian")
+            }
+            
+            //set schedule manager, pass to next VC
             schedule.manager = self.scheduleManager
             scheduleVC.schedule = schedule
 
