@@ -117,6 +117,53 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         
     }
     
+    //disable editing of newShift and newNote
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        
+        //no scheudle, don't do anything
+        guard let schedule = self.schedule else {
+            return false
+        }
+        
+        //return true or false depending on whether scheudle param of tableData is nil or not
+        return (schedule.tableData[indexPath.row].schedule == nil) ? false : true
+    }
+    
+    //remove shift or note
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        //perform the following if deleting
+        if editingStyle == UITableViewCellEditingStyle.Delete {
+            
+            //get schedule
+            //let schedule = SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate]
+            
+            //get tableData
+            let data = self.schedule?.tableData[indexPath.row]
+            
+            //determine if data is shift or is note
+            if let _ = data as? SSShift {
+                
+                //data is shift, set shift in schedule to nil
+                schedule?.shift = nil
+                
+            } else if let _ = data as? SSNote {
+                
+                //data is note, remove from notes array (index has to be minus 1 if shift exists
+                if let _ = schedule?.shift {
+                    schedule?.notes?.removeAtIndex(indexPath.row - 1)
+                } else {
+                    schedule?.notes?.removeAtIndex(indexPath.row)
+                }
+            }
+            
+            //generate newSchedule dataif needed and reload table
+//            self.calendarManager.reload()
+            SSSchedule.newScheduleData(self.schedule)
+            self.newScheduleTable.reloadData()
+        }
+    }
+    
     //segue to scheduleEditVC
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
