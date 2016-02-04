@@ -73,12 +73,13 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         if self.dataIsShift {
             if let type = (self.userSelectedData as! SSShift).type {
                 self.scratchShiftType = type
-                self.saveButton.enabled = false
             } else {
                 self.scratchShiftType = SSShiftType.DAY
-                self.saveButton.enabled = true
             }
         }
+        
+        //save button disabled until something changes
+        self.saveButton.enabled = false
         
         //setup views for all common/static behaviors
         let trailingConstraint = self.view.frame.width / 16.0
@@ -185,6 +186,24 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
             self.numLines = Int((self.dataBody.contentSize.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
         }
         
+    }
+    
+    //cannot save notes unless textView or textField has been edited
+    func textViewDidBeginEditing(textView: UITextView) {
+        
+        //make sure its a note
+        if !self.dataIsShift {
+            self.saveButton.enabled = true
+        }
+    }
+    
+    //cannot save notes unless textView or textField has been edited
+    func textFieldDidBeginEditing(textField: UITextField) {
+        
+        //make sure its a note
+        if !self.dataIsShift {
+            self.saveButton.enabled = true
+        }
     }
     
     //manages text editing for dataTitle
