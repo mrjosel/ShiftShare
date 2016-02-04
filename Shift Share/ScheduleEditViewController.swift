@@ -124,7 +124,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         guard let schedule = self.schedule else {
             return false
         }
-        
+        print(schedule.tableData[indexPath.row].schedule == nil)
         //return true or false depending on whether scheudle param of tableData is nil or not
         return (schedule.tableData[indexPath.row].schedule == nil) ? false : true
     }

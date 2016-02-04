@@ -29,6 +29,7 @@ class SSSchedule : NSObject {
         didSet {
             //set schedule param of shift
             if let shift = self.shift {
+                print("setting schedule for shift")
                 shift.schedule = self
             }
             
@@ -42,6 +43,7 @@ class SSSchedule : NSObject {
         didSet {
             if let notes = self.notes {
                 for note in notes {
+                    print("setting schedule for note")
                     note.schedule = self
                 }
             }
@@ -88,18 +90,20 @@ class SSSchedule : NSObject {
         self.date = date
         self.shift = shift
         
-//        //if shift is not nil, set shift's schedule to self
-//        if let shift = self.shift {
-//            shift.schedule = self
-//        }
+        //if shift is not nil, set shift's schedule to self
+        //this has to be called for didSet and for the initializer
+        if let shift = self.shift {
+            shift.schedule = self
+        }
+        
         self.notes = notes
         
         //do the same thing for every note in notes
-//        if let notes = self.notes {
-//            for note in notes {
-//                note.schedule = self
-//            }
-//        }
+        if let notes = self.notes {
+            for note in notes {
+                note.schedule = self
+            }
+        }
         
         self.user = user as? String //TODO: FIX WHEN USER OBJECT IS IMPLEMENTED
 
