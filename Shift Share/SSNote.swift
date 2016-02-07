@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 //notes to populate SSDayViews
-class SSNote : SSTBCellData, CustomStringConvertible {
+class SSNote : NSObject, SSTBCellData{//, CustomStringConvertible {
     
     //title, body, image for protocol conformance
     var title : String? {
@@ -31,7 +31,7 @@ class SSNote : SSTBCellData, CustomStringConvertible {
     var schedule : SSSchedule?
     
     //description for CustomStringConvertible conformance
-    var description : String {
+    override var description : String {
         get {
             //if no title, return String of self
             guard let title = self.title else {
@@ -49,7 +49,7 @@ class SSNote : SSTBCellData, CustomStringConvertible {
     }
     
     //empty initializer
-    init() {
+    override init() {
         self.title = nil
         self.body = nil
     }

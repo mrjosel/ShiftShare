@@ -56,30 +56,30 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         // Do any additional setup after loading the view.
         
         //if schedule exists for date, use it, otherwise use schedule set in other VC, if not set, create empty schedule for user
-        if let schedule = SSSchedule.sharedInstance().schedules[date.keyFromDate] {
-            //schedule exists for date, editing schedule
-            self.schedule = schedule
-        } else if self.schedule == nil {
+        if self.schedule == nil {
+
             //schedule not present for date, does not exist, creating new schedule
             self.schedule = SSSchedule(forDate: self.date, withShift: nil, withNotes: nil, forUser: "Brian")
-        } else {
-            //schedule was set elsewhere (newScheduleVC)
         }
         
         //determine if data is shift or note
         self.dataIsShift = self.userSelectedData is SSShift
         
-        //get default shift
+        //get default shift, setup saveButton behavior
         if self.dataIsShift {
             if let type = (self.userSelectedData as! SSShift).type {
+                //type is set implying its an existing schedule, don't allow saving until user taps image
                 self.scratchShiftType = type
+                self.saveButton.enabled = false
             } else {
+                //type is not set so its a new schedule, allow saving
                 self.scratchShiftType = SSShiftType.DAY
+                self.saveButton.enabled = true
             }
+        } else {
+            //data is a note, don't allow saving unitl user edits the textField or textView
+            self.saveButton.enabled = false
         }
-        
-        //save button disabled until something changes
-        self.saveButton.enabled = false
         
         //setup views for all common/static behaviors
         let trailingConstraint = self.view.frame.width / 16.0
@@ -119,7 +119,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         
         //check if data is shift or not
         if !self.dataIsShift {
-            print("data is not shift")
+            //do nothing
         } else {
             
             //cycle shift
@@ -254,15 +254,11 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         
         //if schedule not set, set it
         if self.userSelectedData.schedule == nil {
-            print("setting schedule")
             self.userSelectedData.schedule = self.schedule
-            print(self.userSelectedData.schedule)
         }
-        
 
         //make changes to shift/note
         if self.dataIsShift {
-            print("dataIsShift")
             let data = self.userSelectedData as! SSShift
             data.type = self.scratchShiftType
             

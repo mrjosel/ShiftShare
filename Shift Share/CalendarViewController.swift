@@ -69,7 +69,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //create random events for testability
         //TODO: DELETE THIS
-        self.createRandomEvents()
+//        self.createRandomEvents()
 //        self.createSetEvents()
         
         //setup views
@@ -96,7 +96,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     
     //delegate method to prepare day view
     func calendar(calendar: JTCalendarManager!, prepareDayView dayView: UIView!) {
-
+        
         //cast dayView to ShiftShareDayView
         guard let dayView = dayView as? SSDayView else {
             //failed to cast, abort
@@ -140,7 +140,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             dayView.dotView.backgroundColor = UIColor.redColor()
             dayView.textLabel.textColor = UIColor.blackColor()
         }
-    
+        
         //set image and dotViews accordingly if shift or notes exist
         guard let schedule = SSSchedule.sharedInstance().schedules[dayView.date.keyFromDate] else {
             //no schedule, keep defaults
@@ -210,6 +210,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //reload tableViews
         self.dayViewTableView.reloadData()
+
     }
     
     //handles double taps of dayViews
@@ -444,7 +445,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             let schedule : SSSchedule
             
             if let scheduleToEdit = SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate] {
-                schedule = scheduleToEdit
+                schedule = SSSchedule.makeScratchSchedule(scheduleToEdit)
             } else {
                 schedule = SSSchedule(forDate: (sender as? NSDate), withShift: nil, withNotes: nil, forUser: "Brian")
             }

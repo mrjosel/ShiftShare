@@ -35,9 +35,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         
         //reload table
         self.newScheduleTable.reloadData()
-        
-        print(self.schedule?.shift?.title)
-        
+                
     }
     
     override func viewDidLoad() {
@@ -57,7 +55,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         self.menuBar.bringSubviewToFront(self.cancelButton)
         self.menuBar.bringSubviewToFront(self.doneButton)
         self.dateLabel.text = self.date.readableDate
-
+        
     }
     
     //number of rows in the table, populate with new schedule data cells
@@ -111,7 +109,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
             self.navigationController?.popToRootViewControllerAnimated(true)
             return
         }
-
+        
         //perform segue to editVC
         self.performSegueWithIdentifier("TBeditVCSegueFromNew", sender: cellData)
         
@@ -124,7 +122,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         guard let schedule = self.schedule else {
             return false
         }
-        print(schedule.tableData[indexPath.row].schedule == nil)
+
         //return true or false depending on whether scheudle param of tableData is nil or not
         return (schedule.tableData[indexPath.row].schedule == nil) ? false : true
     }
@@ -134,9 +132,6 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         
         //perform the following if deleting
         if editingStyle == UITableViewCellEditingStyle.Delete {
-            
-            //get schedule
-            //let schedule = SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate]
             
             //get tableData
             let data = self.schedule?.tableData[indexPath.row]
@@ -150,15 +145,11 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
             } else if let _ = data as? SSNote {
                 
                 //data is note, remove from notes array (index has to be minus 1 if shift exists
-                if let _ = schedule?.shift {
-                    schedule?.notes?.removeAtIndex(indexPath.row - 1)
-                } else {
-                    schedule?.notes?.removeAtIndex(indexPath.row)
-                }
+                self.schedule?.notes?.removeAtIndex(indexPath.row - 1)
+
             }
             
             //generate newSchedule dataif needed and reload table
-//            self.calendarManager.reload()
             SSSchedule.newScheduleData(self.schedule)
             self.newScheduleTable.reloadData()
         }
@@ -197,8 +188,8 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     
     //user presses cancel button
     func cancelButtonPressed(sender: UIButton) {
-        
-        //clear out schedule
+
+        //clear schedule from VC
         self.schedule = nil
         
         //dismiss viewController
@@ -208,31 +199,14 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     //user presses done button, commit all changes to schedule
     func doneButtonPressed(sender: UIButton) {
         
-        //remove new schedule date
+        //remove new schedule if it exists
         if self.schedule?.shift?.schedule == nil {
             self.schedule?.shift = nil
         }
         
-        //remove new note data
-        if let notes = self.schedule?.notes {
-            print("we have notes")
-            if let index = notes.indexOf({
-            if $0.schedule == nil {
-                print("newNoteFound")
-                return true
-            } else {
-                print("didn't find that shit")
-                return false
-                }
-            }) {
-                print("removing new note")
-                self.schedule!.notes?.removeAtIndex(index)
-            } else {
-                print("newnote not found")
-                //TODO:     FIX NEW NOTE NOT FOUND BUG
-                //          FIX BUG WHERE NOTES DON'T POPULATE RIGHT
-            }
-
+        //remove newNote if it exists
+        if self.schedule?.notes?.last?.schedule == nil {
+            self.schedule?.notes?.popLast()
         }
         
         //add schedule to array

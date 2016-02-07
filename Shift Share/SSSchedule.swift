@@ -29,7 +29,6 @@ class SSSchedule : NSObject {
         didSet {
             //set schedule param of shift
             if let shift = self.shift {
-                print("setting schedule for shift")
                 shift.schedule = self
             }
             
@@ -41,14 +40,22 @@ class SSSchedule : NSObject {
     //notes for the day
     var notes : [SSNote]? {
         didSet {
-            if let notes = self.notes {
-                for note in notes {
-                    print("setting schedule for note")
-                    note.schedule = self
+    
+            //check if notes were added/created
+            if let oldNotes = oldValue, newNotes = self.notes {
+                
+                //if oldNotes is less than newNotes, then notes were added, set schedule to added note
+                if oldNotes.count < newNotes.count {
+                    newNotes.last?.schedule = self
+                }
+            } else {
+                //new array set, set schedule for all notes
+                if let notes = self.notes {
+                    for note in notes {
+                        note.schedule = self
+                    }
                 }
             }
-            
-            
             //alert the delegate
             self.manager?.didChangeNoteOrContents(self)
         }
@@ -142,7 +149,7 @@ class SSSchedule : NSObject {
     //if a shift is made, "new shift" is replaced with the shift
     //if a note is made, its added, with "new note" remaining at the end of the stack
     class func newScheduleData(schedule: SSSchedule?) {//-> [SSTBCellData] {
-        
+
         //make dummy data
         let newShift = SSShift()
         newShift.title = "New Shift"
@@ -153,47 +160,27 @@ class SSSchedule : NSObject {
         
             //schedule exists, check for shift and notes
             if schedule.shift == nil {
-                print("schedule is nil, setting to newShift")
+
                 //schedule exists, but no shift, remove shift link for purposes of creating new shifts
                 schedule.shift = newShift
                 schedule.shift?.schedule = nil
-                print("shift is \(schedule.shift)")
-            } else {
-                print("shift is \(schedule.shift)")
-                print(schedule.shift?.schedule)
+
             }
             
             //if notes are nil, fill with [newNote[, if notes exist not equal 1, append with newNote, if count is 1, note is already newNote and do nothing
-            if schedule.notes == nil {
-                print("notes are nil, setting to [newNote]")
-                //schedule exists, but no notes
-                schedule.notes = [newNote]
-                for note in schedule.notes! {
-                    note.schedule = nil
-                }
+            if schedule.notes != nil {
                 
+                //if last element in notes is not newNote (schedule == nil), append with newNote
+                if let _ = schedule.notes!.last?.schedule {
+                    
+                    //last element has a schedule, therefore not newNote, append newNote
+                    schedule.notes!.append(newNote)
+                    schedule.notes!.last?.schedule = nil
+                }
             } else {
-                //check for newNote present, if found do nothing, if not, append
-                print("looking for newNote")
-                var newNoteFound : Bool = false
-                
-                for note in schedule.notes! {
-                    if note.schedule == nil {
-                        print("found DAT note")
-                        //newNoteFound, set true and break loop
-                        newNoteFound = true
-                        break
-                    }
-                }
-                
-                //newNewNote not present, append and clear out scheudle param, else do nothing
-                if !newNoteFound {
-                    print("appending newNote")
-                    schedule.notes?.append(newNote)
-                    schedule.notes?.last?.schedule = nil
-                } else {
-                    print("newNoteFound")
-                }
+                //no notes, create notes array with newNote
+                schedule.notes = [newNote]
+                schedule.notes?.last?.schedule = nil
             }
             
         } else {
@@ -204,6 +191,35 @@ class SSSchedule : NSObject {
             newSchedule.notes = [newNote]
             
             //return newSchedule.tableData
+        }
+    }
+    
+    //make temporary schedule so as not to blow away schedules when canceling edit
+    //TODO:  REMOVE LATER AND USE COREDATA
+    class func makeScratchSchedule(schedule: SSSchedule) -> SSSchedule {
+        
+        //scratch shift and notes
+        var scratchShift : SSShift?
+        var scratchNotes : [SSNote] = []
+        
+        //make scratch shift
+        if let type = schedule.shift?.type {
+            scratchShift = SSShift(type: type)
+        }
+        
+        //make scratch notes
+        if let notes = schedule.notes {
+            for note in notes {
+                let newNote = SSNote(title: note.title, body: note.body)
+                scratchNotes.append(newNote)
+            }
+        }
+        
+        //if scratch notes is empty, use nil for making new shift
+        if !scratchNotes.isEmpty {
+            return SSSchedule(forDate: schedule.date, withShift: scratchShift, withNotes: scratchNotes, forUser: schedule.user)
+        } else {
+            return SSSchedule(forDate: schedule.date, withShift: scratchShift, withNotes: nil, forUser: schedule.user)
         }
     }
     

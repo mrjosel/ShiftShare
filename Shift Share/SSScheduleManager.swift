@@ -15,7 +15,7 @@ class SSScheduleManager: SSScheduleManagerDelegate {
     
     //when shift type changes, make all necessary changes in shift parameters
     func didChangeShiftOrType(schedule: SSSchedule) {
-        print("manager called")
+
         //get shift, if shift is nil return, if type is nil, set shift to nil
         guard let shift = schedule.shift, type = shift.type else {
             return
@@ -37,7 +37,7 @@ class SSScheduleManager: SSScheduleManagerDelegate {
     
     //when any aspect of note changes, make appropriate changes in note, remove from array if nil
     func didChangeNoteOrContents(schedule: SSSchedule) {
-        
+
         //if notes is [], set to nil
         if let notes = schedule.notes where notes.count == 0 {
             schedule.notes = nil
