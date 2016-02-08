@@ -12,7 +12,6 @@ import JTCalendar
 //presents shift or note in detail
 class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
 
-    //TODO: CREATE SAVE BUTTON ON RIGHT THAT SAVES NOTE AND SEGUES BACK TO CALENDARVC
     //TODO: LIMIT CHARACTERS IN DATATITLE TEXTFIELD
     
     //outlets

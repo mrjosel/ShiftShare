@@ -76,7 +76,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //create random events for testability
         //TODO: DELETE THIS
-        self.createRandomEvents()
+//        self.createRandomEvents()
 //        self.createSetEvents()
         
         //setup views
