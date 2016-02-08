@@ -45,6 +45,13 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.calendarManager.reload()
         self.calendarView.reloadInputViews()
         self.dayViewTableView.reloadData()
+
+        //config button
+        if let _ = SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate] {
+            self.leftSSButton.ssButtonType = SSButtonType.EDIT
+        } else {
+            self.leftSSButton.ssButtonType = SSButtonType.NEW
+        }
         
     }
 
@@ -69,7 +76,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //create random events for testability
         //TODO: DELETE THIS
-//        self.createRandomEvents()
+        self.createRandomEvents()
 //        self.createSetEvents()
         
         //setup views
@@ -96,7 +103,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     
     //delegate method to prepare day view
     func calendar(calendar: JTCalendarManager!, prepareDayView dayView: UIView!) {
-        
+
         //cast dayView to ShiftShareDayView
         guard let dayView = dayView as? SSDayView else {
             //failed to cast, abort
@@ -121,6 +128,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             dayView.backgroundColor = UIColor.lightGrayColor()
             dayView.dotView.backgroundColor = UIColor.whiteColor()
             dayView.textLabel.textColor = UIColor.blackColor()
+            
         
         //other month
         } else if !calendar.dateHelper.date(self.calendarView.date, isTheSameMonthThan: dayView.date) {

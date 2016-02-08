@@ -199,18 +199,28 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     //user presses done button, commit all changes to schedule
     func doneButtonPressed(sender: UIButton) {
         
-        //remove new schedule if it exists
-        if self.schedule?.shift?.schedule == nil {
+        //if no schedule, return
+        guard let schedule = self.schedule else {
+            self.navigationController?.popToRootViewControllerAnimated(true)
+            return
+        }
+        
+        //remove newSchedule if it exists
+        if schedule.shift?.schedule == nil {
             self.schedule?.shift = nil
         }
         
         //remove newNote if it exists
-        if self.schedule?.notes?.last?.schedule == nil {
+        if schedule.notes?.last?.schedule == nil {
             self.schedule?.notes?.popLast()
         }
         
-        //add schedule to array
-        SSSchedule.sharedInstance().schedules[self.date.keyFromDate] = self.schedule
+        //if notes or scheudle exist, save schedule, otherwise alert the delegate
+        if schedule.shift != nil || schedule.notes != nil {
+            SSSchedule.sharedInstance().schedules[self.date.keyFromDate] = schedule
+        } else {
+            schedule.manager?.checkForShiftOrNotes(schedule)
+        }
         
         //dismiss viewController
         self.navigationController?.popToRootViewControllerAnimated(true)
