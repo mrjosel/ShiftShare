@@ -8,19 +8,29 @@
 
 import Foundation
 import UIKit
-
+import CoreData
 
 //class for actual shift
-class SSShift : NSObject, SSTBCellData {
+class SSShift : NSManagedObject, SSTBCellData {
     
     //shift type
     var type : SSShiftType? {
-        didSet {
-
-            //alert manager
-            if let schedule = self.schedule, manager = schedule.manager {
-                manager.didChangeShiftOrType(schedule)
-            }
+        set {
+            //TODO: REFACTOR TO GET SHIFTTYPE ENUM NO LONGER ENUM????
+            // checkout - http://stackoverflow.com/questions/26900302/swift-storing-states-in-coredata-with-enums
+            self.willChangeValueForKey("type")
+            self.setPrimitiveValue(newValue, forKey: "type")
+            self.didChangeValueForKey("type")
+            
+            //alert the delegate
+            self.schedule?.manager?.didChangeShiftOrType(self.schedule!)
+        }
+        
+        get {
+            self.willAccessValueForKey("type")
+            let _type = self.primitiveValueForKey("type") as? SSShiftType
+            self.didAccessValueForKey("type")
+            return _type
         }
     }
     
@@ -32,18 +42,28 @@ class SSShift : NSObject, SSTBCellData {
     //schedule associated with shift
     var schedule : SSSchedule?
     
-    //initializer
-    init(type: SSShiftType) {
+    //initializers
+    
+    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    }
+    
+    init(type: SSShiftType, context: NSManagedObjectContext) {
         
-            //type was set properly
-            self.type = type
-            self.title = SSShiftType.shiftNames[type]
-            self.body = SSShiftType.shiftTimes[type]
-            self.image = UIImage(named: SSShiftType.shiftNames[type]!)
+        //coreData
+        let entity = NSEntityDescription.entityForName("SSShift", inManagedObjectContext: context)
+        super.init(entity: entity!, insertIntoManagedObjectContext: context)
+        
+        //type was set properly
+        self.type = type
+        self.title = SSShiftType.shiftNames[type]
+        self.body = SSShiftType.shiftTimes[type]
+        self.image = UIImage(named: SSShiftType.shiftNames[type]!)
+
     }
     
     //empty initializer
-    override init() {
+    init() {
         
         //no type specified
         self.type = nil

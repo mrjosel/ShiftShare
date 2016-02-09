@@ -15,6 +15,78 @@ private let SQLITE_FILE_NAME = "ShiftShare.sqlite"
 //manager for all coreData activities
 class CoreDataStackManager {
     
+    //applications documents directory
+    lazy var applicationsDocumentsDirectory : NSURL  = {
+       
+        //get urls at path
+        let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+        
+        //return last url in array
+        return urls.last! as NSURL
+    }()
+    
+    //managed object model
+    lazy var managedObjectModel : NSManagedObjectModel = {
+       
+        //get the url for the model file
+        let modelURL = NSBundle.mainBundle().URLForResource("ShiftShareModel", withExtension: "momd")!
+        return NSManagedObjectModel(contentsOfURL: modelURL)!
+    }()
+    
+    //persistent store coordinatoer
+    lazy var persistentStoreCoordinator : NSPersistentStoreCoordinator? = {
+       
+        //coordinator to be returned
+        var coorindator : NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
+        
+        //url to sqlite file (append documents directory with sqlite file)
+        let url = self.applicationsDocumentsDirectory.URLByAppendingPathComponent(SQLITE_FILE_NAME)
+        
+        //error if persistent store coordinator fails to be created
+        var failureReason = "The was an error creating or loading the application's saved data"
+        
+        do {
+            try coorindator?.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
+        } catch {
+            //report error if thrown
+            var dict = [String: AnyObject]()
+            dict[NSLocalizedDescriptionKey] = "Failed to initialize object's saved data"
+            dict[NSLocalizedFailureReasonErrorKey] = failureReason
+            dict[NSUnderlyingErrorKey] = error as NSError
+            let wrappedError = NSError(domain: "persistentStoreCoordinator", code: 9999, userInfo: dict)
+            NSLog("Unresolved error, \(wrappedError)", "\(wrappedError.userInfo)")
+            
+        }
+        //return coordinator if error not thrown
+        return coorindator
+    }()
+    
+    
+    //managed object context
+    lazy var managedObjectContext : NSManagedObjectContext = {
+       
+        //coordinator
+        let coordinator = self.persistentStoreCoordinator
+        
+        //contect to be returned
+        var context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+        context.persistentStoreCoordinator = coordinator
+        return context
+        
+    }()
+    
+    //method call to save context
+    func saveContext() {
+        if self.managedObjectContext.hasChanges {
+            do {
+                try self.managedObjectContext.save()
+            } catch {
+                let nserror = error as NSError
+                NSLog("Unresolved error, \(nserror)", "\(nserror.userInfo)")
+            }
+        }
+    }
+    
     //singleton
     class func sharedInstance() -> CoreDataStackManager {
         

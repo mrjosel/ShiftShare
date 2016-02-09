@@ -12,20 +12,50 @@ import JTCalendar
 import CoreData
 
 //persisted object for a schedule for that day
-//TODO: MAKE OBJECT NSMANAGEDOBJECT
-class SSSchedule : NSObject {
+class SSSchedule : NSManagedObject {
+    //set and get commands for use in coreData to allow using property observers, which @NSManged var prohibits
     
     //schedules across application, used by singleton
     var schedules = [String : SSSchedule]()
     
     //date for the object
-    var date : NSDate?
+    var date : NSDate? {
+        set {
+            
+            self.willChangeValueForKey("date")
+            self.setPrimitiveValue(newValue, forKey: "date")
+            self.didChangeValueForKey("date")
+            
+        }
+        
+        get {
+            self.willAccessValueForKey("date")
+            let _date = self.primitiveValueForKey("date") as? NSDate
+            self.didAccessValueForKey("date")
+            return _date
+        }
+    }
     
     //user associated with schedule
-    var user : AnyObject?   //TODO: MAKE USER NSMANAGEDOBJECT
+    var user : String? {
+        set {
+            
+            self.willChangeValueForKey("user")
+            self.setPrimitiveValue(newValue, forKey: "user")
+            self.didChangeValueForKey("user")
+            
+        }
+        
+        get {
+            self.willAccessValueForKey("user")
+            let _user = self.primitiveValueForKey("user") as? String
+            self.didAccessValueForKey("user")
+            return _user
+        }
+    }
     
     //shift for the day
-    var shift : SSShift? {
+    @NSManaged var shift : SSShift? {
         didSet {
             //set schedule param of shift
             if let shift = self.shift {
@@ -39,10 +69,15 @@ class SSSchedule : NSObject {
 
     //notes for the day
     var notes : [SSNote]? {
-        didSet {
+        
+        set {
+            
+            self.willChangeValueForKey("notes")
+            self.setPrimitiveValue(newValue, forKey: "notes")
+            self.didChangeValueForKey("notes")
     
             //check if notes were added/created
-            if let oldNotes = oldValue, newNotes = self.notes {
+            if let oldNotes = self.notes, newNotes = newValue {
                 
                 //if oldNotes is less than newNotes, then notes were added, set schedule to added note
                 if oldNotes.count < newNotes.count {
@@ -59,6 +94,13 @@ class SSSchedule : NSObject {
             //alert the delegate
             self.manager?.didChangeNoteOrContents(self)
         }
+        get {
+            self.willAccessValueForKey("notes")
+            let _notes = self.primitiveValueForKey("notes") as? [SSNote]
+            self.didAccessValueForKey("notes")
+            return _notes
+        }
+
     }
     
     //schedule manager
@@ -88,11 +130,17 @@ class SSSchedule : NSObject {
     }
     
     //initializers
-    override init() {/*empty*/}
+    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    }
     
     //init with params
-    init(forDate date: NSDate?, withShift shift: SSShift?, withNotes notes: [SSNote]?, forUser user: AnyObject?) {
-        super.init()
+    init(forDate date: NSDate?, withShift shift: SSShift?, withNotes notes: [SSNote]?, forUser user: AnyObject?, context: NSManagedObjectContext) {
+        
+        //coredata
+        let entity = NSEntityDescription.entityForName("SSSchedule", inManagedObjectContext: context)
+        super.init(entity: entity!, insertIntoManagedObjectContext: context)
+        
         //set params to properties
         self.date = date
         self.shift = shift

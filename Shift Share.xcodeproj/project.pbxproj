@@ -17,6 +17,7 @@
 		B75A946D1C0389070075C2DA /* SSButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75A946C1C0389070075C2DA /* SSButton.swift */; };
 		B75A946F1C062B640075C2DA /* SSSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75A946E1C062B640075C2DA /* SSSchedule.swift */; };
 		B78675E41C690F6D0028663A /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B78675E31C690F6D0028663A /* CoreDataStackManager.swift */; };
+		B78676241C697B420028663A /* ShiftShareModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B78676221C697B420028663A /* ShiftShareModel.xcdatamodeld */; };
 		B792748E1BF55E4400FFE21C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B792748D1BF55E4400FFE21C /* AppDelegate.swift */; };
 		B79274901BF55E4400FFE21C /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B792748F1BF55E4400FFE21C /* CalendarViewController.swift */; };
 		B79274931BF55E4400FFE21C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B79274911BF55E4400FFE21C /* Main.storyboard */; };
@@ -63,6 +64,7 @@
 		B75A946C1C0389070075C2DA /* SSButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSButton.swift; sourceTree = "<group>"; };
 		B75A946E1C062B640075C2DA /* SSSchedule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSSchedule.swift; sourceTree = "<group>"; };
 		B78675E31C690F6D0028663A /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
+		B78676231C697B420028663A /* ShiftShareModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ShiftShareModel.xcdatamodel; sourceTree = "<group>"; };
 		B792748A1BF55E4400FFE21C /* Shift Share.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Shift Share.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B792748D1BF55E4400FFE21C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B792748F1BF55E4400FFE21C /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 				B792748D1BF55E4400FFE21C /* AppDelegate.swift */,
 				B75A946A1BFF96510075C2DA /* ExtensionsAndProtocols.swift */,
 				B78675E31C690F6D0028663A /* CoreDataStackManager.swift */,
+				B78676221C697B420028663A /* ShiftShareModel.xcdatamodeld */,
 				B75A942F1BFEB1DC0075C2DA /* Model */,
 				B75A940B1BFA66EA0075C2DA /* View */,
 				B79274BB1BF5600800FFE21C /* Controller */,
@@ -427,6 +430,7 @@
 				B7E6C1331C16657600A30682 /* SSShiftType.swift in Sources */,
 				B792748E1BF55E4400FFE21C /* AppDelegate.swift in Sources */,
 				B749323B1C35946D004F04A1 /* SSDoubleTapCell.swift in Sources */,
+				B78676241C697B420028663A /* ShiftShareModel.xcdatamodeld in Sources */,
 				B74932371C2B1BB3004F04A1 /* SSCalendarDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -675,6 +679,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		B78676221C697B420028663A /* ShiftShareModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				B78676231C697B420028663A /* ShiftShareModel.xcdatamodel */,
+			);
+			currentVersion = B78676231C697B420028663A /* ShiftShareModel.xcdatamodel */;
+			path = ShiftShareModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = B79274821BF55E4400FFE21C /* Project object */;
 }
