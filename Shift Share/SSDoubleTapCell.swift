@@ -17,7 +17,7 @@ enum SSScheduleDoubleTapCellType {
 class SSScheduleDoubleTapCell: SSTBCellData {
     
     //vars for protocol conformance
-    var image : UIImage?
+    var imageName : String?//UIImage?
     var title : String?
     var body : String?
     
@@ -38,7 +38,7 @@ class SSScheduleDoubleTapCell: SSTBCellData {
     
     init(type: SSScheduleDoubleTapCellType) {
         self.type = type
-        self.image = nil
+        self.imageName = nil
         self.body = nil
         switch type {
         case .EXPAND:
@@ -51,7 +51,7 @@ class SSScheduleDoubleTapCell: SSTBCellData {
     //empty initializer
     init() {
         self.type = .EXPAND //default is expand
-        self.image = nil
+        self.imageName = nil
         self.body = nil
         self.title = nil
     }

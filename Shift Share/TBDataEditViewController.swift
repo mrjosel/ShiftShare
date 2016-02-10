@@ -58,7 +58,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         if self.schedule == nil {
 
             //schedule not present for date, does not exist, creating new schedule
-            self.schedule = SSSchedule(forDate: self.date, withShift: nil, withNotes: nil, forUser: "Brian")
+            self.schedule = SSSchedule(forDate: self.date, withShift: nil, withNotes: nil, forUser: "Brian", context: CoreDataStackManager.sharedInstance().managedObjectContext)
         }
         
         //determine if data is shift or note
@@ -225,7 +225,11 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         
         //UI Outlet setup depending on whether shift or data
         if !self.dataIsShift {
-            self.dataImageView.image = self.userSelectedData.image
+            if let imageName = self.userSelectedData.imageName {
+                self.dataImageView.image = UIImage(named: imageName)
+            } else {
+                self.dataImageView.image = nil
+            }
             self.dataBody.text = self.userSelectedData.body
             self.dataTitle.text = self.userSelectedData.title
         } else {

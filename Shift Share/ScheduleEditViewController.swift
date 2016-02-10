@@ -89,7 +89,11 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         let cellData = schedule.tableData[indexPath.row]
         
         //set cell properties
-        cell.imageView?.image = cellData.image
+        if let imageName = cellData.imageName {
+            cell.imageView?.image = UIImage(named: imageName)
+        } else {
+            cell.imageView?.image = nil
+        }
         cell.textLabel?.text = cellData.title
         cell.detailTextLabel?.text = cellData.body
         
@@ -217,7 +221,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         
         //if notes or scheudle exist, save schedule, otherwise alert the delegate
         if schedule.shift != nil || schedule.notes != nil {
-            SSSchedule.sharedInstance().schedules[self.date.keyFromDate] = schedule
+//            SSSchedule.sharedInstance().schedules[self.date.keyFromDate] = schedule
         } else {
             schedule.manager?.checkForShiftOrNotes(schedule)
         }

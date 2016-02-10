@@ -93,7 +93,7 @@ extension JTCalendarDelegateManager {
 protocol SSTBCellData : AnyObject {
     
     //image for shift
-    var image : UIImage? {get set}
+    var imageName : String?/*UIImage?*/ {get set}
     
     //string for title (shift, note title, etc)
     var title : String? {get set}

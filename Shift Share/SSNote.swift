@@ -51,25 +51,25 @@ class SSNote : NSManagedObject, SSTBCellData {
             return text
         }
     }
-    var image : UIImage? = UIImage(named: "Note")  //Note image is always of "Note"
+    @NSManaged var imageName : String?// = /*UIImage? = UIImage(named:*/ "Note"//)  //Note image is always of "Note"
     
     //schedule assiciated with note
-    var schedule : SSSchedule? {
-        set {
-            
-            self.willChangeValueForKey("schedule")
-            self.setPrimitiveValue(newValue, forKey: "schedule")
-            self.didChangeValueForKey("schedule")
-
-        }
-        
-        get {
-            self.willAccessValueForKey("schedule")
-            let _schedule = self.primitiveValueForKey("schedule") as? SSSchedule
-            self.didAccessValueForKey("schedule")
-            return _schedule
-        }
-    }
+    @NSManaged var schedule : SSSchedule? //{
+//        set {
+//            
+//            self.willChangeValueForKey("schedule")
+//            self.setPrimitiveValue(newValue, forKey: "schedule")
+//            self.didChangeValueForKey("schedule")
+//
+//        }
+//        
+//        get {
+//            self.willAccessValueForKey("schedule")
+//            let _schedule = self.primitiveValueForKey("schedule") as? SSSchedule
+//            self.didAccessValueForKey("schedule")
+//            return _schedule
+//        }
+//    }
     
     //description for CustomStringConvertible conformance
     override var description : String {
@@ -104,6 +104,7 @@ class SSNote : NSManagedObject, SSTBCellData {
         //set properties to params
         self.title = title
         self.body = body
+        self.imageName = "Note" //is always "Note"
         
     }
 }

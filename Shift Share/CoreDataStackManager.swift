@@ -52,7 +52,7 @@ class CoreDataStackManager {
             var dict = [String: AnyObject]()
             dict[NSLocalizedDescriptionKey] = "Failed to initialize object's saved data"
             dict[NSLocalizedFailureReasonErrorKey] = failureReason
-            dict[NSUnderlyingErrorKey] = error as NSError
+            dict[NSUnderlyingErrorKey] = error as! NSError
             let wrappedError = NSError(domain: "persistentStoreCoordinator", code: 9999, userInfo: dict)
             NSLog("Unresolved error, \(wrappedError)", "\(wrappedError.userInfo)")
             
@@ -62,7 +62,7 @@ class CoreDataStackManager {
     }()
     
     
-    //managed object context
+    //managed object context - USE THIS CONTEXT WHEN CREATING OBJECTS THAT ARE INTENDED TO BE SAVED
     lazy var managedObjectContext : NSManagedObjectContext = {
        
         //coordinator
@@ -73,6 +73,18 @@ class CoreDataStackManager {
         context.persistentStoreCoordinator = coordinator
         return context
         
+    }()
+    
+    //scratch context - USE THIS CONTEXT FOR OBJECTS THAT ARE "SCRATCH" OBJECTS
+    lazy var scratchContext : NSManagedObjectContext = {
+        
+        //coordinator
+        let coordinator = self.persistentStoreCoordinator
+        
+        //contect to be returned
+        var context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+        context.persistentStoreCoordinator = coordinator
+        return context
     }()
     
     //method call to save context

@@ -24,11 +24,12 @@ class SSScheduleManager: SSScheduleManagerDelegate {
         //type is valid, set title, image, body apprropriately
         shift.title = SSShiftType.shiftNames[type]
         shift.body = SSShiftType.shiftTimes[type]
-        if let image = UIImage(named: type.description) {
-            shift.image = image
-        } else {
-            shift.image = nil
-        }
+        shift.imageName = SSShiftType.shiftNames[type]
+//        if let image = UIImage(named: type.description) {
+//            shift.image = image
+//        } else {
+//            shift.image = nil
+//        }
         
         //check for shift or notes
         self.checkForShiftOrNotes(schedule)
@@ -60,7 +61,8 @@ class SSScheduleManager: SSScheduleManagerDelegate {
             }
             
             //remove schedule
-            SSSchedule.sharedInstance().schedules[date.keyFromDate] = nil
+            //TODO: IMPLEMENT DELETE METHOD
+//            SSSchedule.sharedInstance().schedules[date.keyFromDate] = nil
         }
     }
 }

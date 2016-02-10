@@ -19,44 +19,49 @@ class SSSchedule : NSManagedObject {
     var schedules = [String : SSSchedule]()
     
     //date for the object
-    var date : NSDate? {
-        set {
-            
-            self.willChangeValueForKey("date")
-            self.setPrimitiveValue(newValue, forKey: "date")
-            self.didChangeValueForKey("date")
-            
-        }
-        
-        get {
-            self.willAccessValueForKey("date")
-            let _date = self.primitiveValueForKey("date") as? NSDate
-            self.didAccessValueForKey("date")
-            return _date
-        }
-    }
+    @NSManaged var date : NSDate? //{
+//        set {
+//            
+//            self.willChangeValueForKey("date")
+//            self.setPrimitiveValue(newValue, forKey: "date")
+//            self.didChangeValueForKey("date")
+//            
+//        }
+//        
+//        get {
+//            self.willAccessValueForKey("date")
+//            let _date = self.primitiveValueForKey("date") as? NSDate
+//            self.didAccessValueForKey("date")
+//            return _date
+//        }
+//    }
     
     //user associated with schedule
-    var user : String? {
-        set {
-            
-            self.willChangeValueForKey("user")
-            self.setPrimitiveValue(newValue, forKey: "user")
-            self.didChangeValueForKey("user")
-            
-        }
-        
-        get {
-            self.willAccessValueForKey("user")
-            let _user = self.primitiveValueForKey("user") as? String
-            self.didAccessValueForKey("user")
-            return _user
-        }
-    }
+    @NSManaged var user : String? //{
+//        set {
+//            
+//            self.willChangeValueForKey("user")
+//            self.setPrimitiveValue(newValue, forKey: "user")
+//            self.didChangeValueForKey("user")
+//            
+//        }
+//        
+//        get {
+//            self.willAccessValueForKey("user")
+//            let _user = self.primitiveValueForKey("user") as? String
+//            self.didAccessValueForKey("user")
+//            return _user
+//        }
+//    }
     
     //shift for the day
-    @NSManaged var shift : SSShift? {
-        didSet {
+    /*@NSManaged*/ var shift : SSShift? {
+        set {
+            
+            self.willChangeValueForKey("shift")
+            self.setPrimitiveValue(newValue, forKey: "shift")
+            self.didChangeValueForKey("shift")
+            
             //set schedule param of shift
             if let shift = self.shift {
                 shift.schedule = self
@@ -64,6 +69,13 @@ class SSSchedule : NSManagedObject {
             
             //alert the delegate
             self.manager?.didChangeShiftOrType(self)
+        }
+        
+        get {
+            self.willAccessValueForKey("shift")
+            let _shift = self.primitiveValueForKey("shift") as? SSShift
+            self.didAccessValueForKey("shift")
+            return _shift
         }
     }
 
@@ -138,8 +150,8 @@ class SSSchedule : NSManagedObject {
     init(forDate date: NSDate?, withShift shift: SSShift?, withNotes notes: [SSNote]?, forUser user: AnyObject?, context: NSManagedObjectContext) {
         
         //coredata
-        let entity = NSEntityDescription.entityForName("SSSchedule", inManagedObjectContext: context)
-        super.init(entity: entity!, insertIntoManagedObjectContext: context)
+        let entity = NSEntityDescription.entityForName("SSSchedule", inManagedObjectContext: context)!
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
         
         //set params to properties
         self.date = date
@@ -187,7 +199,7 @@ class SSSchedule : NSManagedObject {
     class func emptyTableData() -> [SSTBCellData] {
         
         //create dummy data from SSShift class
-        let emptyData = SSShift()
+        let emptyData = SSShift(type: nil, context: CoreDataStackManager.sharedInstance().scratchContext)
         emptyData.title = "No Schedule"
         return [emptyData]
     }
@@ -197,11 +209,11 @@ class SSSchedule : NSManagedObject {
     //if a shift is made, "new shift" is replaced with the shift
     //if a note is made, its added, with "new note" remaining at the end of the stack
     class func newScheduleData(schedule: SSSchedule?) {//-> [SSTBCellData] {
-
+        
         //make dummy data
-        let newShift = SSShift()
+        let newShift = SSShift(type: nil, context: CoreDataStackManager.sharedInstance().scratchContext)
         newShift.title = "New Shift"
-        let newNote = SSNote(title: "New Note", body: "New Note Body")
+        let newNote = SSNote(title: "New Note", body: "New Body", context: CoreDataStackManager.sharedInstance().scratchContext)
         
         //get schedule
         if let schedule = schedule {
@@ -252,29 +264,30 @@ class SSSchedule : NSManagedObject {
         
         //make scratch shift
         if let type = schedule.shift?.type {
-            scratchShift = SSShift(type: type)
+            scratchShift = SSShift(type: type, context: CoreDataStackManager.sharedInstance().scratchContext)
         }
         
         //make scratch notes
         if let notes = schedule.notes {
             for note in notes {
-                let newNote = SSNote(title: note.title, body: note.body)
+                let newNote = SSNote(title: note.title, body: note.body, context: CoreDataStackManager.sharedInstance().scratchContext)
                 scratchNotes.append(newNote)
             }
         }
         
         //if scratch notes is empty, use nil for making new shift
         if !scratchNotes.isEmpty {
-            return SSSchedule(forDate: schedule.date, withShift: scratchShift, withNotes: scratchNotes, forUser: schedule.user)
+            return SSSchedule(forDate: schedule.date, withShift: scratchShift, withNotes: scratchNotes, forUser: schedule.user, context: CoreDataStackManager.sharedInstance().scratchContext)
         } else {
-            return SSSchedule(forDate: schedule.date, withShift: scratchShift, withNotes: nil, forUser: schedule.user)
+            return SSSchedule(forDate: schedule.date, withShift: scratchShift, withNotes: nil, forUser: schedule.user, context: CoreDataStackManager.sharedInstance().scratchContext)
         }
     }
     
-    class func  sharedInstance() -> SSSchedule {
-        struct Singleton {
-            static let instance = SSSchedule()
-        }
-        return Singleton.instance
-    }
+//    class func  sharedInstance() -> SSSchedule {
+//        struct Singleton {
+//            static let entity = NSEntityDescription.entityForName("SSSchedule", inManagedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext)!
+//            static let instance = SSSchedule(entity: entity, insertIntoManagedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext)
+//        }
+//        return Singleton.instance
+//    }
 }

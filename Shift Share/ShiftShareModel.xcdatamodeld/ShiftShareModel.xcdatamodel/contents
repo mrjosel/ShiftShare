@@ -2,6 +2,7 @@
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9057" systemVersion="15D21" minimumToolsVersion="Xcode 7.0">
     <entity name="SSNote" syncable="YES">
         <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="schedule" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SSSchedule" inverseName="notes" inverseEntity="SSSchedule" syncable="YES"/>
     </entity>
@@ -12,12 +13,15 @@
         <relationship name="shift" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SSShift" inverseName="schedule" inverseEntity="SSShift" syncable="YES"/>
     </entity>
     <entity name="SSShift" syncable="YES">
-        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="persistedType" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="schedule" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SSSchedule" inverseName="shift" inverseEntity="SSSchedule" syncable="YES"/>
     </entity>
     <elements>
+        <element name="SSNote" positionX="-18" positionY="63" width="128" height="105"/>
         <element name="SSSchedule" positionX="-54" positionY="18" width="128" height="105"/>
-        <element name="SSShift" positionX="-36" positionY="45" width="128" height="75"/>
-        <element name="SSNote" positionX="-18" positionY="63" width="128" height="90"/>
+        <element name="SSShift" positionX="-36" positionY="45" width="128" height="120"/>
     </elements>
 </model>
