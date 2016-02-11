@@ -58,7 +58,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         if self.schedule == nil {
 
             //schedule not present for date, does not exist, creating new schedule
-            self.schedule = SSSchedule(forDate: self.date, withShift: nil, withNotes: nil, forUser: "Brian", context: CoreDataStackManager.sharedInstance().managedObjectContext)
+            self.schedule = SSSchedule(forDate: self.date, /*withShift: nil, withNotes: nil,*/ forUser: "Brian", context: CoreDataStackManager.sharedInstance().managedObjectContext)
         }
         
         //determine if data is shift or note
@@ -264,7 +264,6 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         if self.dataIsShift {
             let data = self.userSelectedData as! SSShift
             data.type = self.scratchShiftType
-            
         } else {
             var data = self.userSelectedData as? SSNote
             data!.body = self.dataBody.text
@@ -277,13 +276,15 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
             }
         }
         
+        //save context
+        do {
+            try CoreDataStackManager.sharedInstance().managedObjectContext.save()
+        } catch {
+            //TODO: HANDLE ERROR
+        }
+        
         //return back to calendar
         self.navigationController?.popViewControllerAnimated(true)
-        
-        
-        //TODO: SAVE CONTEXT IN CORE DATA
-
-    
     }
     
     //delete shift or note

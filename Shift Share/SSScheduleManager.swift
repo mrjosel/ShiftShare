@@ -54,7 +54,7 @@ class SSScheduleManager: SSScheduleManagerDelegate {
         if (schedule.shift == nil && (schedule.notes == nil || schedule.notes!.count == 0)) {
             
             //shift is nil, notes are nil or empty, remove schedule from memory
-            guard let date = schedule.date else {
+            guard let _ = schedule.date else {
                 
                 //no date is an error, return
                 return
@@ -63,6 +63,12 @@ class SSScheduleManager: SSScheduleManagerDelegate {
             //remove schedule
             //TODO: IMPLEMENT DELETE METHOD
 //            SSSchedule.sharedInstance().schedules[date.keyFromDate] = nil
+            CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(schedule)
+            do {
+                try CoreDataStackManager.sharedInstance().managedObjectContext.save()
+            } catch {
+                //TODO: HANDLE ERROR
+            }
         }
     }
 }

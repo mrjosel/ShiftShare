@@ -4,7 +4,6 @@ platform :ios, '8.0'
 use_frameworks!
 
 target 'Shift Share' do
-pod 'Parse'
 pod 'JTCalendar'
 end
 

@@ -222,6 +222,11 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //if notes or scheudle exist, save schedule, otherwise alert the delegate
         if schedule.shift != nil || schedule.notes != nil {
 //            SSSchedule.sharedInstance().schedules[self.date.keyFromDate] = schedule
+            do {
+                try CoreDataStackManager.sharedInstance().managedObjectContext.save()
+            } catch {
+                //TODO: HANDLE ERROR
+            }
         } else {
             schedule.manager?.checkForShiftOrNotes(schedule)
         }

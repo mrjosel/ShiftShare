@@ -84,12 +84,8 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "Pods-Shift Share/Bolts.framework"
   install_framework "Pods-Shift Share/JTCalendar.framework"
-  install_framework "Pods-Shift Share/Parse.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "Pods-Shift Share/Bolts.framework"
   install_framework "Pods-Shift Share/JTCalendar.framework"
-  install_framework "Pods-Shift Share/Parse.framework"
 fi

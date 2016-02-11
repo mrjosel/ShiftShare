@@ -62,14 +62,16 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.calendarView.reloadInputViews()
         self.dayViewTableView.reloadData()
 
-        //config button
-        //TODO: IMPELEMENT WITH FETCH
-        
-//        if let _ = SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate] {
-//            self.leftSSButton.ssButtonType = SSButtonType.EDIT
-//        } else {
-//            self.leftSSButton.ssButtonType = SSButtonType.NEW
+        //config button, if schedule exists for date, make button .EDIT, else .NEW
+//        //first configure predicate
+//        self.fetchResultsController?.fetchRequest.predicate = NSPredicate(format: "date == %@", self.selectedDate)
+//        do {
+//            try self.fetchResultsController?.performFetch()
+//        } catch {
+//            //TODO: HANDLE ERROR
 //        }
+        
+        
         
     }
 
@@ -178,8 +180,16 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             dayView.textLabel.textColor = UIColor.blackColor()
         }
         
+        //first configure predicate
+        self.fetchResultsController?.fetchRequest.predicate = NSPredicate(format: "date == %@", dayView.date)
+            do {
+                try self.fetchResultsController?.performFetch()
+            } catch {
+                //TODO: HANDLE ERROR
+        }
+        
         //set image and dotViews accordingly if shift or notes exist
-        guard let /*schedule = SSSchedule.sharedInstance().schedules[dayView.date.keyFromDate]*/ schedule = "HELLO" as? SSSchedule else {
+        guard let schedule = self.fetchResultsController?.fetchedObjects?.first as? SSSchedule else {
             //no schedule, keep defaults
             //NOTE: This is likely redundant (the following two params are hidden by default,
             //      but it fixes a bug in the JTCalendar Framework where dayViews without schedules have shift images
@@ -315,7 +325,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         //get dayView and schedule if they exist, return 1 or 2 otherwise
-        guard let /*schedule = SSSchedule.sharedInstance().schedules[dayView.date.keyFromDate]*/ schedule = "HELLO" as? SSSchedule else {
+        guard let schedule = self.fetchResultsController?.fetchedObjects?.first as? SSSchedule else {
             
             //scroll and cell selection based
             tableView.userInteractionEnabled = false
@@ -341,7 +351,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         
         //check if schedule exists for date
-        if let /*schedule = SSSchedule.sharedInstance().schedules[dayView.date.keyFromDate]*/ _ = "HELLO" as? SSSchedule  {
+        if let _ = self.fetchResultsController?.fetchedObjects?.first as? SSSchedule {
             //schedule exists, full color
             cell.alpha = 1.0
         } else {
@@ -366,17 +376,19 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //get data to populate cells
         var tableData : [SSTBCellData] = []
         
-        if let /*schedule = SSSchedule.sharedInstance().schedules[dayView.date.keyFromDate]*/ schedule = "HELLO" as? SSSchedule  {
+        guard let schedule = self.fetchResultsController?.fetchedObjects?.first as? SSSchedule else {
             
+            //empty cells for no schedule
+            cell.textLabel?.text = "No Schedule"
+            cell.detailTextLabel?.text = nil
+            cell.imageView?.image = nil
+            
+            return cell
+        }
+        
             //get tableData
             tableData = schedule.tableData
             
-        } else {
-            
-            //create table data based on edit mode or not
-            tableData = SSSchedule.emptyTableData()
-            
-        }
         
         //get cellData from tableData
         let cellData = tableData[indexPath.row]
@@ -397,7 +409,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         //get schedule for date corresponding to selected cell
-        guard let /*schedule = SSSchedule.sharedInstance().schedules[dayView.date.keyFromDate]*/ schedule = "HELLO" as? SSSchedule else {
+        guard let schedule = self.fetchResultsController?.fetchedObjects?.first as? SSSchedule else {
             
             //no schedule, add shifts, notes
             return
@@ -441,7 +453,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         if editingStyle == UITableViewCellEditingStyle.Delete {
             
             //get schedule
-            let /*schedule = SSSchedule.sharedInstance().schedules[dayView.date.keyFromDate]*/ schedule = "HELLO" as? SSSchedule
+            let schedule = self.fetchResultsController?.fetchedObjects?.first as? SSSchedule
             
             //get tableData
             let data = schedule?.tableData[indexPath.row]
@@ -489,16 +501,17 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             scheduleVC.date = sender as? NSDate
             
             //if no schedule exists for date create new schedule and pass on to VC (NOTE: schedule could be cleared in next VC if user cancels)
-            let schedule : SSSchedule
+            var schedule : SSSchedule!
             
-            if let /*schedule = SSSchedule.sharedInstance().schedules[dayView.date.keyFromDate]*/ scheduleToEdit = "HELLO" as? SSSchedule  {
-                schedule = SSSchedule.makeScratchSchedule(scheduleToEdit)
+            if let scheduleToEdit = self.fetchResultsController?.fetchedObjects?.first as? SSSchedule where scheduleToEdit.date == self.selectedDate  {
+                schedule = scheduleToEdit
             } else {
-                schedule = SSSchedule(forDate: (sender as? NSDate), withShift: nil, withNotes: nil, forUser: "Brian", context: CoreDataStackManager.sharedInstance().managedObjectContext)
+                schedule = SSSchedule(forDate: (sender as? NSDate), /*withShift: nil, withNotes: nil,*/ forUser: "Brian", context: CoreDataStackManager.sharedInstance().managedObjectContext)
             }
-            
+            print(schedule)
             //set schedule manager, pass to next VC
             schedule.manager = self.scheduleManager
+            //TODO: CONSIDER REMOVING SCHEDULE MANAGER, MAY NOT BE NEEDED ANYMORE
             scheduleVC.schedule = schedule
 
         }

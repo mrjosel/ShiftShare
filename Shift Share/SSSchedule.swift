@@ -16,8 +16,10 @@ class SSSchedule : NSManagedObject {
     //set and get commands for use in coreData to allow using property observers, which @NSManged var prohibits
     
     //schedules across application, used by singleton
-    var schedules = [String : SSSchedule]()
-    
+//    var schedules = [String : SSSchedule]()
+    override func awakeFromFetch() {
+
+    }
     //date for the object
     @NSManaged var date : NSDate? //{
 //        set {
@@ -147,7 +149,7 @@ class SSSchedule : NSManagedObject {
     }
     
     //init with params
-    init(forDate date: NSDate?, withShift shift: SSShift?, withNotes notes: [SSNote]?, forUser user: AnyObject?, context: NSManagedObjectContext) {
+    init(forDate date: NSDate?, /*withShift shift: SSShift?, withNotes notes: [SSNote]?,*/ forUser user: AnyObject?, context: NSManagedObjectContext) {
         
         //coredata
         let entity = NSEntityDescription.entityForName("SSSchedule", inManagedObjectContext: context)!
@@ -155,22 +157,22 @@ class SSSchedule : NSManagedObject {
         
         //set params to properties
         self.date = date
-        self.shift = shift
-        
-        //if shift is not nil, set shift's schedule to self
-        //this has to be called for didSet and for the initializer
-        if let shift = self.shift {
-            shift.schedule = self
-        }
-        
-        self.notes = notes
-        
-        //do the same thing for every note in notes
-        if let notes = self.notes {
-            for note in notes {
-                note.schedule = self
-            }
-        }
+//        self.shift = shift
+//        
+//        //if shift is not nil, set shift's schedule to self
+//        //this has to be called for didSet and for the initializer
+//        if let shift = self.shift {
+//            shift.schedule = self
+//        }
+//        
+//        self.notes = notes
+//        
+//        //do the same thing for every note in notes
+//        if let notes = self.notes {
+//            for note in notes {
+//                note.schedule = self
+//            }
+//        }
         
         self.user = user as? String //TODO: FIX WHEN USER OBJECT IS IMPLEMENTED
 
@@ -199,8 +201,8 @@ class SSSchedule : NSManagedObject {
     class func emptyTableData() -> [SSTBCellData] {
         
         //create dummy data from SSShift class
-        let emptyData = SSShift(type: nil, context: CoreDataStackManager.sharedInstance().scratchContext)
-        emptyData.title = "No Schedule"
+        let emptyData = SSNote(title: "No Schedule", body: nil, context: CoreDataStackManager.sharedInstance().scratchContext)
+//        emptyData.title = "No Schedule"
         return [emptyData]
     }
     
@@ -254,34 +256,34 @@ class SSSchedule : NSManagedObject {
         }
     }
     
-    //make temporary schedule so as not to blow away schedules when canceling edit
-    //TODO:  REMOVE LATER AND USE COREDATA
-    class func makeScratchSchedule(schedule: SSSchedule) -> SSSchedule {
-        
-        //scratch shift and notes
-        var scratchShift : SSShift?
-        var scratchNotes : [SSNote] = []
-        
-        //make scratch shift
-        if let type = schedule.shift?.type {
-            scratchShift = SSShift(type: type, context: CoreDataStackManager.sharedInstance().scratchContext)
-        }
-        
-        //make scratch notes
-        if let notes = schedule.notes {
-            for note in notes {
-                let newNote = SSNote(title: note.title, body: note.body, context: CoreDataStackManager.sharedInstance().scratchContext)
-                scratchNotes.append(newNote)
-            }
-        }
-        
-        //if scratch notes is empty, use nil for making new shift
-        if !scratchNotes.isEmpty {
-            return SSSchedule(forDate: schedule.date, withShift: scratchShift, withNotes: scratchNotes, forUser: schedule.user, context: CoreDataStackManager.sharedInstance().scratchContext)
-        } else {
-            return SSSchedule(forDate: schedule.date, withShift: scratchShift, withNotes: nil, forUser: schedule.user, context: CoreDataStackManager.sharedInstance().scratchContext)
-        }
-    }
+//    //make temporary schedule so as not to blow away schedules when canceling edit
+//    //TODO:  REMOVE LATER AND USE COREDATA
+//    class func makeScratchSchedule(schedule: SSSchedule) -> SSSchedule {
+//        
+//        //scratch shift and notes
+//        var scratchShift : SSShift?
+//        var scratchNotes : [SSNote] = []
+//        
+//        //make scratch shift
+//        if let type = schedule.shift?.type {
+//            scratchShift = SSShift(type: type, context: CoreDataStackManager.sharedInstance().scratchContext)
+//        }
+//        
+//        //make scratch notes
+//        if let notes = schedule.notes {
+//            for note in notes {
+//                let newNote = SSNote(title: note.title, body: note.body, context: CoreDataStackManager.sharedInstance().scratchContext)
+//                scratchNotes.append(newNote)
+//            }
+//        }
+//        
+//        //if scratch notes is empty, use nil for making new shift
+//        if !scratchNotes.isEmpty {
+//            return SSSchedule(forDate: schedule.date, withShift: scratchShift, withNotes: scratchNotes, forUser: schedule.user, context: CoreDataStackManager.sharedInstance().scratchContext)
+//        } else {
+//            return SSSchedule(forDate: schedule.date, withShift: scratchShift, withNotes: nil, forUser: schedule.user, context: CoreDataStackManager.sharedInstance().scratchContext)
+//        }
+//    }
     
 //    class func  sharedInstance() -> SSSchedule {
 //        struct Singleton {

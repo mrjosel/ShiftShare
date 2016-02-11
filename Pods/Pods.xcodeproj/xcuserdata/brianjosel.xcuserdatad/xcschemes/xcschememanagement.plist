@@ -4,17 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Bolts.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>JTCalendar.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>Parse.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -32,17 +22,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>708E01B006A9F88B3C13711562282B5E</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>8332CF806C396E643F35F9CBA1F750F8</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>B8A759F57254B6094CF99273E5ECEE8B</key>
+		<key>45EFEA789EFE89DD0F6058866C41195E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
