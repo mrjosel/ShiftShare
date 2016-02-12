@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import UIKit
-import JTCalendar
 import CoreData
+
+@objc(SSSchedule)
 
 //persisted object for a schedule for that day
 class SSSchedule : NSManagedObject {
@@ -17,108 +17,18 @@ class SSSchedule : NSManagedObject {
     
     //schedules across application, used by singleton
 //    var schedules = [String : SSSchedule]()
-    override func awakeFromFetch() {
 
-    }
     //date for the object
-    @NSManaged var date : NSDate? //{
-//        set {
-//            
-//            self.willChangeValueForKey("date")
-//            self.setPrimitiveValue(newValue, forKey: "date")
-//            self.didChangeValueForKey("date")
-//            
-//        }
-//        
-//        get {
-//            self.willAccessValueForKey("date")
-//            let _date = self.primitiveValueForKey("date") as? NSDate
-//            self.didAccessValueForKey("date")
-//            return _date
-//        }
-//    }
+    @NSManaged var date : NSDate?
     
     //user associated with schedule
-    @NSManaged var user : String? //{
-//        set {
-//            
-//            self.willChangeValueForKey("user")
-//            self.setPrimitiveValue(newValue, forKey: "user")
-//            self.didChangeValueForKey("user")
-//            
-//        }
-//        
-//        get {
-//            self.willAccessValueForKey("user")
-//            let _user = self.primitiveValueForKey("user") as? String
-//            self.didAccessValueForKey("user")
-//            return _user
-//        }
-//    }
+    @NSManaged var user : String?
     
     //shift for the day
-    /*@NSManaged*/ var shift : SSShift? {
-        set {
-            
-            self.willChangeValueForKey("shift")
-            self.setPrimitiveValue(newValue, forKey: "shift")
-            self.didChangeValueForKey("shift")
-            
-            //set schedule param of shift
-            if let shift = self.shift {
-                shift.schedule = self
-            }
-            
-            //alert the delegate
-            self.manager?.didChangeShiftOrType(self)
-        }
-        
-        get {
-            self.willAccessValueForKey("shift")
-            let _shift = self.primitiveValueForKey("shift") as? SSShift
-            self.didAccessValueForKey("shift")
-            return _shift
-        }
-    }
+    @NSManaged var shift : SSShift?
 
     //notes for the day
-    var notes : [SSNote]? {
-        
-        set {
-            
-            self.willChangeValueForKey("notes")
-            self.setPrimitiveValue(newValue, forKey: "notes")
-            self.didChangeValueForKey("notes")
-    
-            //check if notes were added/created
-            if let oldNotes = self.notes, newNotes = newValue {
-                
-                //if oldNotes is less than newNotes, then notes were added, set schedule to added note
-                if oldNotes.count < newNotes.count {
-                    newNotes.last?.schedule = self
-                }
-            } else {
-                //new array set, set schedule for all notes
-                if let notes = self.notes {
-                    for note in notes {
-                        note.schedule = self
-                    }
-                }
-            }
-            //alert the delegate
-            self.manager?.didChangeNoteOrContents(self)
-        }
-        get {
-            self.willAccessValueForKey("notes")
-            let _notes = self.primitiveValueForKey("notes") as? [SSNote]
-            self.didAccessValueForKey("notes")
-            return _notes
-        }
-
-    }
-    
-    //schedule manager
-    var manager : SSScheduleManager?
+    @NSManaged var notes : [SSNote]?
     
     //array for populating tableView
     var tableData : [SSTBCellData] {
@@ -135,9 +45,6 @@ class SSSchedule : NSManagedObject {
             if let shift = self.shift {
                 output.insert(shift, atIndex: 0)
             }
-            //TODO: IMPLELEMENT DOUBLETAP CELL IF SWIPE FAILS
-//            //append with expland/collapse cell (expand by default)
-//            output.append(SSScheduleDoubleTapCell())
             
             return output
         }
@@ -149,7 +56,7 @@ class SSSchedule : NSManagedObject {
     }
     
     //init with params
-    init(forDate date: NSDate?, /*withShift shift: SSShift?, withNotes notes: [SSNote]?,*/ forUser user: AnyObject?, context: NSManagedObjectContext) {
+    init(forDate date: NSDate?, forUser user: AnyObject?, context: NSManagedObjectContext) {
         
         //coredata
         let entity = NSEntityDescription.entityForName("SSSchedule", inManagedObjectContext: context)!
@@ -157,52 +64,15 @@ class SSSchedule : NSManagedObject {
         
         //set params to properties
         self.date = date
-//        self.shift = shift
-//        
-//        //if shift is not nil, set shift's schedule to self
-//        //this has to be called for didSet and for the initializer
-//        if let shift = self.shift {
-//            shift.schedule = self
-//        }
-//        
-//        self.notes = notes
-//        
-//        //do the same thing for every note in notes
-//        if let notes = self.notes {
-//            for note in notes {
-//                note.schedule = self
-//            }
-//        }
-        
         self.user = user as? String //TODO: FIX WHEN USER OBJECT IS IMPLEMENTED
 
     }
-    
-//    //cell that instructs user to double tap expand/collapse table/month views. Cell is of typse SSNote arbitrarily
-//    class func doubleTapCell(expandOrCollapse: SSScheduleDoubleTapCellType) -> SSTBCellData {
-//        
-//        //output cell
-//        let outputCell = SSNote()
-//        outputCell.image = nil   //force image nil
-//        
-//        //check string value for expandOrCollapse
-//        switch expandOrCollapse {
-//        case .EXPAND :
-//            outputCell.title = "Double Tap Day to Expand"
-//        case .COLLAPSE :
-//            outputCell.title = "Double Tap Day to Collapse"
-//        }
-//        
-//        return outputCell
-//    }
-//
     
     //class func to return "schedule" to populate table when there is no schedule for that date
     class func emptyTableData() -> [SSTBCellData] {
         
         //create dummy data from SSShift class
         let emptyData = SSNote(title: "No Schedule", body: nil, context: CoreDataStackManager.sharedInstance().scratchContext)
-//        emptyData.title = "No Schedule"
         return [emptyData]
     }
     
@@ -255,41 +125,4 @@ class SSSchedule : NSManagedObject {
             //return newSchedule.tableData
         }
     }
-    
-//    //make temporary schedule so as not to blow away schedules when canceling edit
-//    //TODO:  REMOVE LATER AND USE COREDATA
-//    class func makeScratchSchedule(schedule: SSSchedule) -> SSSchedule {
-//        
-//        //scratch shift and notes
-//        var scratchShift : SSShift?
-//        var scratchNotes : [SSNote] = []
-//        
-//        //make scratch shift
-//        if let type = schedule.shift?.type {
-//            scratchShift = SSShift(type: type, context: CoreDataStackManager.sharedInstance().scratchContext)
-//        }
-//        
-//        //make scratch notes
-//        if let notes = schedule.notes {
-//            for note in notes {
-//                let newNote = SSNote(title: note.title, body: note.body, context: CoreDataStackManager.sharedInstance().scratchContext)
-//                scratchNotes.append(newNote)
-//            }
-//        }
-//        
-//        //if scratch notes is empty, use nil for making new shift
-//        if !scratchNotes.isEmpty {
-//            return SSSchedule(forDate: schedule.date, withShift: scratchShift, withNotes: scratchNotes, forUser: schedule.user, context: CoreDataStackManager.sharedInstance().scratchContext)
-//        } else {
-//            return SSSchedule(forDate: schedule.date, withShift: scratchShift, withNotes: nil, forUser: schedule.user, context: CoreDataStackManager.sharedInstance().scratchContext)
-//        }
-//    }
-    
-//    class func  sharedInstance() -> SSSchedule {
-//        struct Singleton {
-//            static let entity = NSEntityDescription.entityForName("SSSchedule", inManagedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext)!
-//            static let instance = SSSchedule(entity: entity, insertIntoManagedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext)
-//        }
-//        return Singleton.instance
-//    }
 }

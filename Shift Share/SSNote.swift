@@ -7,69 +7,24 @@
 //
 
 import Foundation
-import UIKit
 import CoreData
+
+@objc(SSNote)
 
 //notes to populate SSDayViews
 class SSNote : NSManagedObject, SSTBCellData {
     
     //title, body, image for protocol conformance
     //set and get commands for use in coreData to allow using property observers, which @NSManged var prohibits
-    var title : String? {
-        set {
-            
-            self.willChangeValueForKey("title")
-            self.setPrimitiveValue(newValue, forKey: "title")
-            self.didChangeValueForKey("title")
-            
-            //alert the delegate
-            self.schedule?.manager?.didChangeNoteOrContents(self.schedule!)
-        }
-
-        get {
-            self.willAccessValueForKey("title")
-            let text = self.primitiveValueForKey("title") as? String
-            self.didAccessValueForKey("title")
-            return text
-        }
-    }
-    var body : String? {
-        set {
-
-            self.willChangeValueForKey("body")
-            self.setPrimitiveValue(newValue, forKey: "body")
-            self.didChangeValueForKey("body")
-
-            //alert the delegate
-            self.schedule?.manager?.didChangeNoteOrContents(self.schedule!)
-        }
-        
-        get {
-            self.willAccessValueForKey("body")
-            let text = self.primitiveValueForKey("body") as? String
-            self.didAccessValueForKey("body")
-            return text
-        }
-    }
-    @NSManaged var imageName : String?// = /*UIImage? = UIImage(named:*/ "Note"//)  //Note image is always of "Note"
+    @NSManaged var title : String?
+    @NSManaged var body : String?
+    @NSManaged var dateCreated : NSDate!
     
     //schedule assiciated with note
-    @NSManaged var schedule : SSSchedule? //{
-//        set {
-//            
-//            self.willChangeValueForKey("schedule")
-//            self.setPrimitiveValue(newValue, forKey: "schedule")
-//            self.didChangeValueForKey("schedule")
-//
-//        }
-//        
-//        get {
-//            self.willAccessValueForKey("schedule")
-//            let _schedule = self.primitiveValueForKey("schedule") as? SSSchedule
-//            self.didAccessValueForKey("schedule")
-//            return _schedule
-//        }
-//    }
+    @NSManaged var schedule : SSSchedule?
+    
+    //imageName var
+    @NSManaged var imageName : String?
     
     //description for CustomStringConvertible conformance
     override var description : String {
@@ -104,7 +59,8 @@ class SSNote : NSManagedObject, SSTBCellData {
         //set properties to params
         self.title = title
         self.body = body
-        self.imageName = "Note" //is always "Note"
+        self.imageName = "Note"
+        self.dateCreated = NSDate() //set date created to current time
         
     }
 }

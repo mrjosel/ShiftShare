@@ -112,14 +112,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.monthSelectorView.bringSubviewToFront(self.rightSSButton)
         self.dayViewTableView.allowsMultipleSelectionDuringEditing = false
         
-        //perform fetch
-        do {
-            try self.fetchResultsController?.performFetch()
-        } catch {
-            print("fetch error")
-            //TODO: IMPLEMENT ERROR HANDLER
-        }
-        
         //fetchedResultsControllerDelegate
         self.fetchResultsController?.delegate = self
         
@@ -506,12 +498,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             if let scheduleToEdit = self.fetchResultsController?.fetchedObjects?.first as? SSSchedule where scheduleToEdit.date == self.selectedDate  {
                 schedule = scheduleToEdit
             } else {
-                schedule = SSSchedule(forDate: (sender as? NSDate), /*withShift: nil, withNotes: nil,*/ forUser: "Brian", context: CoreDataStackManager.sharedInstance().managedObjectContext)
+                schedule = SSSchedule(forDate: (sender as? NSDate), forUser: "Brian", context: CoreDataStackManager.sharedInstance().managedObjectContext)
             }
-            print(schedule)
-            //set schedule manager, pass to next VC
-            schedule.manager = self.scheduleManager
-            //TODO: CONSIDER REMOVING SCHEDULE MANAGER, MAY NOT BE NEEDED ANYMORE
+            
+            //pass to next VC
             scheduleVC.schedule = schedule
 
         }

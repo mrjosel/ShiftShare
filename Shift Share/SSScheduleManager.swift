@@ -24,7 +24,7 @@ class SSScheduleManager: SSScheduleManagerDelegate {
         //type is valid, set title, image, body apprropriately
         shift.title = SSShiftType.shiftNames[type]
         shift.body = SSShiftType.shiftTimes[type]
-        shift.imageName = SSShiftType.shiftNames[type]
+//        shift.imageName = SSShiftType.shiftNames[type]
 //        if let image = UIImage(named: type.description) {
 //            shift.image = image
 //        } else {

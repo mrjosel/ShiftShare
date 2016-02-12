@@ -7,8 +7,9 @@
 //
 
 import Foundation
-import UIKit
 import CoreData
+
+@objc(SSShift)
 
 //class for actual shift
 class SSShift : NSManagedObject, SSTBCellData {
@@ -16,37 +17,23 @@ class SSShift : NSManagedObject, SSTBCellData {
     //shift type
     var type : SSShiftType? {
         didSet {
-//            //TODO: REFACTOR TO GET SHIFTTYPE ENUM NO LONGER ENUM????
-//            // checkout - http://stackoverflow.com/questions/26900302/swift-storing-states-in-coredata-with-enums
-//            self.willChangeValueForKey("type")
-//            self.setPrimitiveValue(newValue, forKey: "type")
-//            self.didChangeValueForKey("type")
             
             //set persisted type
             self.persistedType = self.type?.rawValue
             
-            //alert the delegate
-            self.schedule?.manager?.didChangeShiftOrType(self.schedule!)
         }
-        
-//        get {
-//            self.willAccessValueForKey("type")
-//            let _type = self.primitiveValueForKey("type") as? SSShiftType
-//            self.didAccessValueForKey("type")
-//            return _type
-//        }
     }
     
     //persisted type, since enums not easily persisted in Swift 2.0
     @NSManaged var persistedType : NSNumber?
     
     //protocol values set when type is set
-    @NSManaged var imageName : String?
     @NSManaged var title : String?
     @NSManaged var body: String?
+    @NSManaged var imageName : String?
     
     //schedule associated with shift
-    var schedule : SSSchedule?
+    @NSManaged var schedule : SSSchedule?
     
     //initializers
     
@@ -64,27 +51,18 @@ class SSShift : NSManagedObject, SSTBCellData {
         if let type = type {
             //type was set properly
             self.type = type
+            self.imageName = SSShiftType.shiftNames[type]
             self.title = SSShiftType.shiftNames[type]
             self.body = SSShiftType.shiftTimes[type]
-            self.imageName = /*UIImage(named: */SSShiftType.shiftNames[type]//!)
             self.persistedType = type.rawValue
+            
         } else {
             //no type specified
             self.type = nil
             self.title = "No Shift"
             self.body = nil
-            self.imageName = nil
             self.persistedType = nil
+            self.imageName = nil
         }
     }
-    
-//    //empty initializer
-//    init() {
-//        
-//        //no type specified
-//        self.type = nil
-//        self.title = "No Shift"
-//        self.body = nil
-//        self.image = nil
-//    }
 }

@@ -11,6 +11,7 @@
 import Foundation
 import UIKit
 import JTCalendar
+import CoreData
 
 //extending UITableView to allow for deselecting all cells
 extension UITableView {
@@ -90,10 +91,10 @@ extension JTCalendarDelegateManager {
 }
 
 //allows for easy population of tableCell data
-protocol SSTBCellData : AnyObject {
+protocol SSTBCellData : NSObjectProtocol {
     
     //image for shift
-    var imageName : String?/*UIImage?*/ {get set}
+    var imageName : String? {get}
     
     //string for title (shift, note title, etc)
     var title : String? {get set}
