@@ -12,7 +12,7 @@ import CoreData
 @objc(SSNote)
 
 //notes to populate SSDayViews
-class SSNote : NSManagedObject, SSTBCellData {
+class SSNote : NSManagedObject, SSScheduleItem {
     
     //title, body, image for protocol conformance
     //set and get commands for use in coreData to allow using property observers, which @NSManged var prohibits

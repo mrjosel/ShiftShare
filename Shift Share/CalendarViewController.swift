@@ -366,7 +366,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         cell.date = date
         
         //get data to populate cells
-        var tableData : [SSTBCellData] = []
+        var tableData : [SSScheduleItem] = []
         
         guard let schedule = self.fetchResultsController?.fetchedObjects?.first as? SSSchedule else {
             
@@ -481,7 +481,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             let tbEditVC : TBDataEditViewController = segue.destinationViewController as! TBDataEditViewController
             
             //set VC's date to selectedDate, and cast sender as SSTBCellData
-            tbEditVC.userSelectedData = sender as? SSTBCellData
+            tbEditVC.scheduleItem = sender as? SSScheduleItem
             tbEditVC.date = self.selectedDate
             
         } else if segue.identifier == "scheduleEditVCsegue" {

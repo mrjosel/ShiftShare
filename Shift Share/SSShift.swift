@@ -12,7 +12,7 @@ import CoreData
 @objc(SSShift)
 
 //class for actual shift
-class SSShift : NSManagedObject, SSTBCellData {
+class SSShift : NSManagedObject, SSScheduleItem {
     
     //shift type
     var type : SSShiftType? {

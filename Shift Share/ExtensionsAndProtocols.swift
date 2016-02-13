@@ -91,7 +91,7 @@ extension JTCalendarDelegateManager {
 }
 
 //allows for easy population of tableCell data
-protocol SSTBCellData : AnyObject {
+protocol SSScheduleItem : AnyObject {
     
     //image for shift
     var imageName : String? {get}

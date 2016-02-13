@@ -31,10 +31,10 @@ class SSSchedule : NSManagedObject {
     @NSManaged var notes : [SSNote]?
     
     //array for populating tableView
-    var tableData : [SSTBCellData] {
+    var tableData : [SSScheduleItem] {
         get {
             
-            var output = [SSTBCellData]()
+            var output = [SSScheduleItem]()
             
             if let notes = self.notes {
                 for note in notes.reverse() {
@@ -69,7 +69,7 @@ class SSSchedule : NSManagedObject {
     }
     
     //class func to return "schedule" to populate table when there is no schedule for that date
-    class func emptyTableData() -> [SSTBCellData] {
+    class func emptyTableData() -> [SSScheduleItem] {
         
         //create dummy data from SSShift class
         let emptyData = SSNote(title: "No Schedule", body: nil, context: CoreDataStackManager.sharedInstance().scratchContext)

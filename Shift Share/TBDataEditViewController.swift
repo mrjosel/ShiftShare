@@ -28,7 +28,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
     @IBOutlet weak var dateLabel: UILabel!
     
     //data from cell selected in CalendarVC
-    var userSelectedData : SSTBCellData?
+    var scheduleItem : SSScheduleItem?
     var schedule : SSSchedule?
     var dataIsShift : Bool = false          //default value
     var previousRect = CGRectZero
@@ -42,6 +42,8 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
     
     //default shiftType
     var scratchShiftType : SSShiftType?
+    
+    var selectedIndexPath : NSIndexPath!
     
     override func viewWillAppear(animated: Bool) {
         
@@ -61,13 +63,13 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
             //schedule not present for date, does not exist, creating new schedule
             self.schedule = SSSchedule(forDate: self.date, forUser: "Brian", context: CoreDataStackManager.sharedInstance().managedObjectContext)
         }
-        print(self.userSelectedData)
+        
         //determine if data is shift or note
-        self.dataIsShift = self.userSelectedData is SSShift
+        self.dataIsShift = self.scheduleItem is SSShift
         
         //get default shift, setup saveButton behavior
         if self.dataIsShift {
-            if let type = (self.userSelectedData as! SSShift).type {
+            if let type = (self.scheduleItem as! SSShift).type {
                 //type is set implying its an existing schedule, don't allow saving until user taps image
                 self.scratchShiftType = type
                 self.saveButton.enabled = false
@@ -226,13 +228,13 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
 //        
 //        //UI Outlet setup depending on whether shift or data
 //        if !self.dataIsShift {
-//            if let imageName = self.userSelectedData.imageName {
+//            if let imageName = self.scheduleItem.imageName {
 //                self.dataImageView.image = UIImage(named: imageName)
 //            } else {
 //                self.dataImageView.image = nil
 //            }
-//            self.dataBody.text = self.userSelectedData.body
-//            self.dataTitle.text = self.userSelectedData.title
+//            self.dataBody.text = self.scheduleItem.body
+//            self.dataTitle.text = self.scheduleItem.title
 //        } else {
 //            self.dataImageView.image = UIImage(named: SSShiftType.shiftNames[self.scratchShiftType!]!)
 //            self.dataBody.text = SSShiftType.shiftTimes[self.scratchShiftType!]
@@ -257,16 +259,16 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
 //    @IBAction func saveButtonPressed(sender: UIButton) {
 //        
 //        //if schedule not set, set it
-//        if self.userSelectedData.schedule == nil {
-//            self.userSelectedData.schedule = self.schedule
+//        if self.scheduleItem.schedule == nil {
+//            self.scheduleItem.schedule = self.schedule
 //        }
 //
 //        //make changes to shift/note
 //        if self.dataIsShift {
-//            let data = self.userSelectedData as! SSShift
+//            let data = self.scheduleItem as! SSShift
 //            data.type = self.scratchShiftType
 //        } else {
-//            var data = self.userSelectedData as? SSNote
+//            var data = self.scheduleItem as? SSNote
 //            data!.body = self.dataBody.text
 //            data!.title = self.dataTitle.text
 //            
@@ -297,7 +299,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
             self.schedule?.shift = nil
         } else {
             //data is note, remove from notes index, forst case data to note object
-            let note = self.userSelectedData as! SSNote
+            let note = self.scheduleItem as! SSNote
             
             //get index and remove
             if let index = self.schedule?.notes?.indexOf({$0.body == note.body && $0.title == note.title}) {
@@ -311,7 +313,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
     
     //make all values nil
     override func viewWillDisappear(animated: Bool) {
-        self.userSelectedData = nil
+        self.scheduleItem = nil
         self.numLines = nil
     }
     
