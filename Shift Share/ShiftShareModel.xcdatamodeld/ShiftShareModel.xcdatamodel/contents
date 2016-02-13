@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9057" systemVersion="15D21" minimumToolsVersion="Xcode 7.0">
-    <entity name="SSNote" syncable="YES">
+    <entity name="SSNote" representedClassName="SSNote" syncable="YES">
         <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dateCreated" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="imageName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="schedule" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SSSchedule" inverseName="notes" inverseEntity="SSSchedule" syncable="YES"/>
     </entity>
-    <entity name="SSSchedule" syncable="YES">
+    <entity name="SSSchedule" representedClassName="SSSchedule" syncable="YES">
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="user" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="notes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SSNote" inverseName="schedule" inverseEntity="SSNote" syncable="YES"/>
         <relationship name="shift" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SSShift" inverseName="schedule" inverseEntity="SSShift" syncable="YES"/>
     </entity>
-    <entity name="SSShift" syncable="YES">
+    <entity name="SSShift" representedClassName="SSShift" syncable="YES">
         <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imageName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="persistedType" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>

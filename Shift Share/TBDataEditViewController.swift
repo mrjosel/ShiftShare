@@ -12,8 +12,6 @@ import CoreData
 
 //presents shift or note in detail
 class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
-
-    //TODO: LIMIT CHARACTERS IN DATATITLE TEXTFIELD
     
     //outlets
     @IBOutlet weak var dataImageView: UIImageView!
@@ -28,7 +26,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
     @IBOutlet weak var dateLabel: UILabel!
     
     //data from cell selected in CalendarVC
-    var scheduleItem : SSScheduleItem?
+    var scheduleItem : SSScheduleItem!
     var schedule : SSSchedule?
     var dataIsShift : Bool = false          //default value
     var previousRect = CGRectZero
@@ -36,14 +34,42 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
     var numLines : Int?
     var maxLines : Int!
     var touchGesture : UITapGestureRecognizer?
+    var selectedIndexPath : NSIndexPath!
     
     //selected date
-    var date : NSDate!                      //set in other VCs
+    var date : NSDate!
+
     
     //default shiftType
     var scratchShiftType : SSShiftType?
     
-    var selectedIndexPath : NSIndexPath!
+    //notes fetch results controller
+    lazy var notesFetchResultsController : NSFetchedResultsController = {
+        
+        //create fetch
+        let fetchRequest = NSFetchRequest(entityName: "SSNote")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "dateCreated", ascending: true)]
+        fetchRequest.predicate = NSPredicate(format: "schedule == %@", self.schedule!)
+        
+        //create and return controller
+        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        return fetchResultsController
+        
+    }()
+    
+    //shift fetch results controller
+    lazy var shiftFetchResultsController : NSFetchedResultsController = {
+        
+        //create fetch
+        let fetchRequest = NSFetchRequest(entityName: "SSShift")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        fetchRequest.predicate = NSPredicate(format: "schedule == %@", self.schedule!)
+        
+        //create and return controller
+        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        return fetchResultsController
+    }()
+
     
     override func viewWillAppear(animated: Bool) {
         
@@ -64,8 +90,10 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
             self.schedule = SSSchedule(forDate: self.date, forUser: "Brian", context: CoreDataStackManager.sharedInstance().managedObjectContext)
         }
         
-        //determine if data is shift or note
-        self.dataIsShift = self.scheduleItem is SSShift
+        //get item from store
+        self.getItemFromStore(atIndexPath: self.selectedIndexPath)
+        print(self.scheduleItem)
+        print(self.dataIsShift)
         
         //get default shift, setup saveButton behavior
         if self.dataIsShift {
@@ -105,7 +133,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
 
         
         //configure UI elements for all dynamic behaviors (e.g. - if shift, or note changes)
-//        self.configUIForData()
+        self.configUIForData()
 
         //get numLines and maxLines
         self.maxLines = Int((self.dataBody.frame.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
@@ -113,26 +141,26 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         
     }
     
-//    //cycle shift when image tapped, ignore for notes
-//    func imageViewTapped(sender: UITapGestureRecognizer) {
-//        
-//        //enable save button
-//        self.saveButton.enabled = true
-//        
-//        //check if data is shift or not
-//        if !self.dataIsShift {
-//            //do nothing
-//        } else {
-//            
-//            //cycle shift
-//            self.scratchShiftType!.cycleShift()
-//            
-//            //config UI
-//            dispatch_async(dispatch_get_main_queue(), {
-//                self.configUIForData()
-//            })
-//        }
-//    }
+    //cycle shift when image tapped, ignore for notes
+    func imageViewTapped(sender: UITapGestureRecognizer) {
+        
+        //enable save button
+        self.saveButton.enabled = true
+        
+        //check if data is shift or not
+        if !self.dataIsShift {
+            //do nothing
+        } else {
+            
+            //cycle shift
+            self.scratchShiftType!.cycleShift()
+            
+            //config UI
+            dispatch_async(dispatch_get_main_queue(), {
+                self.configUIForData()
+            })
+        }
+    }
     
     //TODO: DEBUG, REMOVE
     func textBody(lineCount: Int) -> String {
@@ -224,30 +252,30 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
     }
     
     //using shift type or note configure all UI elements
-//    func configUIForData() {
-//        
-//        //UI Outlet setup depending on whether shift or data
-//        if !self.dataIsShift {
-//            if let imageName = self.scheduleItem.imageName {
-//                self.dataImageView.image = UIImage(named: imageName)
-//            } else {
-//                self.dataImageView.image = nil
-//            }
-//            self.dataBody.text = self.scheduleItem.body
-//            self.dataTitle.text = self.scheduleItem.title
-//        } else {
-//            self.dataImageView.image = UIImage(named: SSShiftType.shiftNames[self.scratchShiftType!]!)
-//            self.dataBody.text = SSShiftType.shiftTimes[self.scratchShiftType!]
-//            self.dataTitle.text = SSShiftType.shiftNames[self.scratchShiftType!]
-//        }
-//        
-//        //Outlet configuration depending if data is a shift or a note
-//        self.dataBody.textAlignment = self.dataIsShift ? NSTextAlignment.Center : NSTextAlignment.Left
-//        self.dataBody.userInteractionEnabled = !self.dataIsShift
-//        self.dataTitle.userInteractionEnabled = !self.dataIsShift
-//        self.dataTitle.selected = !self.dataIsShift
-//        self.dataImageView.userInteractionEnabled = self.dataIsShift
-//    }
+    func configUIForData() {
+        
+        //UI Outlet setup depending on whether shift or data
+        if !self.dataIsShift {
+            if let imageName = self.scheduleItem.imageName {
+                self.dataImageView.image = UIImage(named: imageName)
+            } else {
+                self.dataImageView.image = nil
+            }
+            self.dataBody.text = self.scheduleItem.body
+            self.dataTitle.text = self.scheduleItem.title
+        } else {
+            self.dataImageView.image = UIImage(named: SSShiftType.shiftNames[self.scratchShiftType!]!)
+            self.dataBody.text = SSShiftType.shiftTimes[self.scratchShiftType!]
+            self.dataTitle.text = SSShiftType.shiftNames[self.scratchShiftType!]
+        }
+        
+        //Outlet configuration depending if data is a shift or a note
+        self.dataBody.textAlignment = self.dataIsShift ? NSTextAlignment.Center : NSTextAlignment.Left
+        self.dataBody.userInteractionEnabled = !self.dataIsShift
+        self.dataTitle.userInteractionEnabled = !self.dataIsShift
+        self.dataTitle.selected = !self.dataIsShift
+        self.dataImageView.userInteractionEnabled = self.dataIsShift
+    }
     
     //return to calendar without changes
     @IBAction func cancelButtonPressed(sender: UIButton) {
@@ -255,40 +283,40 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         self.navigationController?.popViewControllerAnimated(true)
     }
     
-//    //return to calendar without changes
-//    @IBAction func saveButtonPressed(sender: UIButton) {
-//        
-//        //if schedule not set, set it
-//        if self.scheduleItem.schedule == nil {
-//            self.scheduleItem.schedule = self.schedule
-//        }
-//
-//        //make changes to shift/note
-//        if self.dataIsShift {
-//            let data = self.scheduleItem as! SSShift
-//            data.type = self.scratchShiftType
-//        } else {
-//            var data = self.scheduleItem as? SSNote
-//            data!.body = self.dataBody.text
-//            data!.title = self.dataTitle.text
-//            
-//            //if body and title are "", delete
-//            if self.dataBody.text == "" && self.dataTitle.text == "" {
-//                //delete note
-//                data = nil
-//            }
-//        }
-//        
-//        //save context
-//        do {
-//            try CoreDataStackManager.sharedInstance().managedObjectContext.save()
-//        } catch {
-//            //TODO: HANDLE ERROR
-//        }
-//        
-//        //return back to calendar
-//        self.navigationController?.popViewControllerAnimated(true)
-//    }
+    //return to calendar without changes
+    @IBAction func saveButtonPressed(sender: UIButton) {
+        
+        //if schedule not set, set it
+        if self.scheduleItem.schedule == nil {
+            self.scheduleItem.schedule = self.schedule
+        }
+
+        //make changes to shift/note
+        if self.dataIsShift {
+            let data = self.scheduleItem as! SSShift
+            data.type = self.scratchShiftType
+        } else {
+            var data = self.scheduleItem as? SSNote
+            data!.body = self.dataBody.text
+            data!.title = self.dataTitle.text
+            
+            //if body and title are "", delete
+            if self.dataBody.text == "" && self.dataTitle.text == "" {
+                //delete note
+                data = nil
+            }
+        }
+        
+        //save context
+        do {
+            try CoreDataStackManager.sharedInstance().managedObjectContext.save()
+        } catch {
+            //TODO: HANDLE ERROR
+        }
+        
+        //return back to calendar
+        self.navigationController?.popViewControllerAnimated(true)
+    }
     
     //delete shift or note
     @IBAction func deleteButtonPressed(sender: UIBarButtonItem) {
@@ -309,6 +337,33 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         
         //return back to calendar
         self.navigationController?.popViewControllerAnimated(true)
+    }
+    
+    //method to get item to be used in schedule editing
+    func getItemFromStore(atIndexPath indexPath: NSIndexPath) {
+        
+        //check section
+        if indexPath.section == 0 {
+            //item is a shift
+            self.dataIsShift = true
+            if let shifts = self.shiftFetchResultsController.fetchedObjects where shifts.count != 0 {
+                //shift exists in store
+                self.scheduleItem = shifts[indexPath.row] as! SSShift
+            } else {
+                //no shift in store, make new shift to edit
+                scheduleItem = SSShift(type: SSShiftType.DAY, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+            }
+        } else {
+            //item is a note
+            self.dataIsShift = false
+            if let notes = self.notesFetchResultsController.fetchedObjects where notes.count != 0 {
+                //note exists in store
+                self.scheduleItem = notes[indexPath.row] as! SSNote
+            } else {
+                //no note in store, make new note
+                self.scheduleItem = SSNote(title: "New Note", body: "Your note content", context: CoreDataStackManager.sharedInstance().managedObjectContext)
+            }
+        }
     }
     
     //make all values nil
