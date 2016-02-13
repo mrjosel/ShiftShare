@@ -181,15 +181,24 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         
         //editing mode for shift
         if indexPath.section == 0 {
-            //TODO: FIX INDEXING AT BAD INDEXES
-            if let _ = self.shiftFetchResultsController.objectAtIndexPath(indexPath) as? SSShift {
+            if let shifts = self.shiftFetchResultsController.fetchedObjects where shifts.count != 0 {
                 //shift exists in fetch, can be edited
                 return true
             }
         } else {
-            if let _ = self.notesFetchResultsController.objectAtIndexPath(indexPath) as? SSNote {
-                //notes exist in fetch, can be edited
-                return true
+            if let notes = self.notesFetchResultsController.fetchedObjects where notes.count != 0 {
+                
+                //notes exist in fetch, can be edited except for newNote item
+                if indexPath.row != indexPath.length - 1 {
+                    return true
+                }
+//                for note in notes {
+//                    if let _ = note.schedule {
+//                        return true
+//                    } else {
+//                        return false
+//                    }
+//                }
             }
         }
         //no item at the index (indicates newShift or newNote), cannot be edited

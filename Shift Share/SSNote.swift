@@ -18,7 +18,7 @@ class SSNote : NSManagedObject, SSTBCellData {
     //set and get commands for use in coreData to allow using property observers, which @NSManged var prohibits
     @NSManaged var title : String?
     @NSManaged var body : String?
-    @NSManaged var dateCreated : NSDate!
+    @NSManaged var dateCreated : NSDate
     
     //schedule assiciated with note
     @NSManaged var schedule : SSSchedule?
