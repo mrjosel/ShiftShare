@@ -263,14 +263,14 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     */
     
     //user presses cancel button
-//    func cancelButtonPressed(sender: UIButton) {
-//
-//        //clear schedule from VC
+    func cancelButtonPressed(sender: UIButton) {
+
+        //clear schedule from VC
 //        self.schedule = nil
-//        
-//        //dismiss viewController
-//        self.navigationController?.popToRootViewControllerAnimated(true)
-//    }
+        
+        //dismiss viewController
+        self.navigationController?.popToRootViewControllerAnimated(true)
+    }
     
     //user presses done button, commit all changes to schedule
 //    func doneButtonPressed(sender: UIButton) {

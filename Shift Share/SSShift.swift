@@ -56,13 +56,6 @@ class SSShift : NSManagedObject, SSTBCellData {
             self.body = SSShiftType.shiftTimes[type]
             self.persistedType = type.rawValue
             
-        } else {
-            //no type specified
-            self.type = nil
-            self.title = "No Shift"
-            self.body = nil
-            self.persistedType = nil
-            self.imageName = nil
         }
     }
 }
