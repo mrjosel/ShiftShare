@@ -92,8 +92,6 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         
         //get item from store
         self.getItemFromStore(atIndexPath: self.selectedIndexPath)
-        print(self.scheduleItem)
-        print(self.dataIsShift)
         
         //get default shift, setup saveButton behavior
         if self.dataIsShift {
@@ -105,6 +103,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
                 //type is not set so its a new schedule, allow saving
                 self.scratchShiftType = SSShiftType.DAY
                 self.saveButton.enabled = true
+                self.deleteButton.enabled = false
             }
         } else {
             //data is a note, don't allow saving unitl user edits the textField or textView
@@ -351,7 +350,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
                 self.scheduleItem = shifts[indexPath.row] as! SSShift
             } else {
                 //no shift in store, make new shift to edit
-                scheduleItem = SSShift(type: SSShiftType.DAY, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+                scheduleItem = SSShift(type: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
             }
         } else {
             //item is a note

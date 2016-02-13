@@ -17,9 +17,13 @@ class SSShift : NSManagedObject, SSScheduleItem {
     //shift type
     var type : SSShiftType? {
         didSet {
-            
-            //set persisted type
-            self.persistedType = self.type?.rawValue
+            if let type = self.type {
+                //set persisted type
+                self.imageName = SSShiftType.shiftNames[type]
+                self.title = SSShiftType.shiftNames[type]
+                self.body = SSShiftType.shiftTimes[type]
+                self.persistedType = type.rawValue
+            }
             
         }
     }
@@ -46,16 +50,8 @@ class SSShift : NSManagedObject, SSScheduleItem {
         //coreData
         let entity = NSEntityDescription.entityForName("SSShift", inManagedObjectContext: context)!
         super.init(entity: entity, insertIntoManagedObjectContext: context)
-        
-        
-        if let type = type {
-            //type was set properly
-            self.type = type
-            self.imageName = SSShiftType.shiftNames[type]
-            self.title = SSShiftType.shiftNames[type]
-            self.body = SSShiftType.shiftTimes[type]
-            self.persistedType = type.rawValue
-            
-        }
+    
+        //set type
+        self.type = type
     }
 }

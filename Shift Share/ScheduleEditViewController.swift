@@ -58,6 +58,21 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //hide navBar
         self.navigationController?.navigationBar.hidden = true
         
+        //perform fetches
+        do {
+            try self.shiftFetchResultsController.performFetch()
+        } catch {
+            print("failed to fetch shifts")
+            //TODO: HANDLE ERROR
+        }
+        
+        do {
+            try self.notesFetchResultsController.performFetch()
+        } catch {
+            print("failed to fetch notes")
+            //TODO: HANDLE ERROR
+        }
+        
         //reload table
         self.newScheduleTable.reloadData()
                 
@@ -84,21 +99,6 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //fetch controllers
         self.notesFetchResultsController.delegate = self
         self.shiftFetchResultsController.delegate = self
-        
-        //perform fetches
-        do {
-            try self.shiftFetchResultsController.performFetch()
-        } catch {
-            print("failed to fetch shifts")
-            //TODO: HANDLE ERROR
-        }
-        
-        do {
-            try self.notesFetchResultsController.performFetch()
-        } catch {
-            print("failed to fetch notes")
-            //TODO: HANDLE ERROR
-        }
         
     }
     
@@ -141,6 +141,12 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         
         if indexPath.section == 0 {
             if let shifts = self.shiftFetchResultsController.fetchedObjects where shifts.count != 0, let shift = shifts[indexPath.row] as? SSShift {
+                print(shift)
+                print(shift.type)
+                print(shift.persistedType)
+                print(shift.imageName)
+                print(shift.title)
+                print(shift.body)
                 self.configureCell(cell, withItem: shift)
             } else {
                 //create scratch shift
