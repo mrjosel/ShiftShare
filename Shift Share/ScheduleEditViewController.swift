@@ -161,20 +161,42 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         
     }
     
-//    //clicking cells launches VC to create shift
-//    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-//        
-//        //get data for detailVC
-//        guard let cellData = self.schedule?.tableData[indexPath.row] else {
-//            //no schedule, return
-//            self.navigationController?.popToRootViewControllerAnimated(true)
-//            return
-//        }
-//        
-//        //perform segue to editVC
+    //clicking cells launches VC to create shift
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        //determine if shift or note clicked
+        if indexPath.section == 0 {
+            //shift clicked
+            var shift : SSShift
+            if let shifts = self.shiftFetchResultsController.fetchedObjects where shifts.count != 0 {
+                shift = shifts[indexPath.row] as! SSShift
+            } else {
+                shift = SSShift(type: SSShiftType.DAY, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+            }
+            print(shift is SSShift)
+            self.performSegueWithIdentifier("TBeditVCSegueFromNew", sender: shift)
+        } else {
+            //note selected, if last note (newNote) is selected, proceed to new VC with newNote, else proceed with note from fetch if it exists
+            var note : SSNote
+            if let notes = self.notesFetchResultsController.fetchedObjects where notes.count != 0 {
+                if indexPath.row != indexPath.length - 1 {
+                    //notes exist and last note (newNote)  not selected, pass note onto next VC for editing
+                    note = notes[indexPath.row] as! SSNote
+                } else {
+                    //newNote picked, create note and pass on
+                    note = SSNote(title: "New Note", body: "New Body", context: CoreDataStackManager.sharedInstance().managedObjectContext)
+                }
+            } else {
+                //no notes, newNote selected, create note and pass on
+                note = SSNote(title: "New Note", body: "New Body", context: CoreDataStackManager.sharedInstance().managedObjectContext)
+            }
+            self.performSegueWithIdentifier("TBeditVCSegueFromNew", sender: note)
+        }
+        //perform segue to editVC
+//        print(cellData)
 //        self.performSegueWithIdentifier("TBeditVCSegueFromNew", sender: cellData)
-//        
-//    }
+        
+    }
     
     //disable editing of newShift and newNote
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -231,20 +253,20 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         }
     }
     
-//    //segue to scheduleEditVC
-//    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        
-//        if segue.identifier == "TBeditVCSegueFromNew" {
-//            
-//            //create VC for show presentation
-//            let tbDataEditVC : TBDataEditViewController = segue.destinationViewController as! TBDataEditViewController
-//            
-//            //set VC's date to selectedDate, and cast sender as SSTBCellData
-//            tbDataEditVC.userSelectedData = sender as? SSTBCellData
-//            tbDataEditVC.date = self.date
-//            tbDataEditVC.schedule = self.schedule
-//        }
-//    }
+    //segue to scheduleEditVC
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "TBeditVCSegueFromNew" {
+            print(sender)
+            //create VC for show presentation
+            let tbDataEditVC : TBDataEditViewController = segue.destinationViewController as! TBDataEditViewController
+            //set VC's date to selectedDate, and cast sender as SSTBCellData
+            tbDataEditVC.userSelectedData = sender as? SSTBCellData
+            tbDataEditVC.date = self.date
+            tbDataEditVC.schedule = self.schedule
+
+        }
+    }
     
 
     override func didReceiveMemoryWarning() {
@@ -309,7 +331,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     
     //configures cell in tableView with item (either shift or note)
     func configureCell(cell: UITableViewCell, withItem item: SSTBCellData) {
-        
+
         //cast cell
         let cell = cell as! SSTableViewCell
         

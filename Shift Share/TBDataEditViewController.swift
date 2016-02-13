@@ -8,6 +8,7 @@
 
 import UIKit
 import JTCalendar
+import CoreData
 
 //presents shift or note in detail
 class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
@@ -27,7 +28,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
     @IBOutlet weak var dateLabel: UILabel!
     
     //data from cell selected in CalendarVC
-    var userSelectedData : SSTBCellData!
+    var userSelectedData : SSTBCellData?
     var schedule : SSSchedule?
     var dataIsShift : Bool = false          //default value
     var previousRect = CGRectZero
@@ -58,9 +59,9 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         if self.schedule == nil {
 
             //schedule not present for date, does not exist, creating new schedule
-            self.schedule = SSSchedule(forDate: self.date, /*withShift: nil, withNotes: nil,*/ forUser: "Brian", context: CoreDataStackManager.sharedInstance().managedObjectContext)
+            self.schedule = SSSchedule(forDate: self.date, forUser: "Brian", context: CoreDataStackManager.sharedInstance().managedObjectContext)
         }
-        
+        print(self.userSelectedData)
         //determine if data is shift or note
         self.dataIsShift = self.userSelectedData is SSShift
         
@@ -102,7 +103,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
 
         
         //configure UI elements for all dynamic behaviors (e.g. - if shift, or note changes)
-        self.configUIForData()
+//        self.configUIForData()
 
         //get numLines and maxLines
         self.maxLines = Int((self.dataBody.frame.height - self.dataBody.textContainerInset.top - self.dataBody.textContainerInset.bottom) / self.dataBody.font!.lineHeight)
@@ -110,26 +111,26 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         
     }
     
-    //cycle shift when image tapped, ignore for notes
-    func imageViewTapped(sender: UITapGestureRecognizer) {
-        
-        //enable save button
-        self.saveButton.enabled = true
-        
-        //check if data is shift or not
-        if !self.dataIsShift {
-            //do nothing
-        } else {
-            
-            //cycle shift
-            self.scratchShiftType!.cycleShift()
-            
-            //config UI
-            dispatch_async(dispatch_get_main_queue(), {
-                self.configUIForData()
-            })
-        }
-    }
+//    //cycle shift when image tapped, ignore for notes
+//    func imageViewTapped(sender: UITapGestureRecognizer) {
+//        
+//        //enable save button
+//        self.saveButton.enabled = true
+//        
+//        //check if data is shift or not
+//        if !self.dataIsShift {
+//            //do nothing
+//        } else {
+//            
+//            //cycle shift
+//            self.scratchShiftType!.cycleShift()
+//            
+//            //config UI
+//            dispatch_async(dispatch_get_main_queue(), {
+//                self.configUIForData()
+//            })
+//        }
+//    }
     
     //TODO: DEBUG, REMOVE
     func textBody(lineCount: Int) -> String {
@@ -221,30 +222,30 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
     }
     
     //using shift type or note configure all UI elements
-    func configUIForData() {
-        
-        //UI Outlet setup depending on whether shift or data
-        if !self.dataIsShift {
-            if let imageName = self.userSelectedData.imageName {
-                self.dataImageView.image = UIImage(named: imageName)
-            } else {
-                self.dataImageView.image = nil
-            }
-            self.dataBody.text = self.userSelectedData.body
-            self.dataTitle.text = self.userSelectedData.title
-        } else {
-            self.dataImageView.image = UIImage(named: SSShiftType.shiftNames[self.scratchShiftType!]!)
-            self.dataBody.text = SSShiftType.shiftTimes[self.scratchShiftType!]
-            self.dataTitle.text = SSShiftType.shiftNames[self.scratchShiftType!]
-        }
-        
-        //Outlet configuration depending if data is a shift or a note
-        self.dataBody.textAlignment = self.dataIsShift ? NSTextAlignment.Center : NSTextAlignment.Left
-        self.dataBody.userInteractionEnabled = !self.dataIsShift
-        self.dataTitle.userInteractionEnabled = !self.dataIsShift
-        self.dataTitle.selected = !self.dataIsShift
-        self.dataImageView.userInteractionEnabled = self.dataIsShift
-    }
+//    func configUIForData() {
+//        
+//        //UI Outlet setup depending on whether shift or data
+//        if !self.dataIsShift {
+//            if let imageName = self.userSelectedData.imageName {
+//                self.dataImageView.image = UIImage(named: imageName)
+//            } else {
+//                self.dataImageView.image = nil
+//            }
+//            self.dataBody.text = self.userSelectedData.body
+//            self.dataTitle.text = self.userSelectedData.title
+//        } else {
+//            self.dataImageView.image = UIImage(named: SSShiftType.shiftNames[self.scratchShiftType!]!)
+//            self.dataBody.text = SSShiftType.shiftTimes[self.scratchShiftType!]
+//            self.dataTitle.text = SSShiftType.shiftNames[self.scratchShiftType!]
+//        }
+//        
+//        //Outlet configuration depending if data is a shift or a note
+//        self.dataBody.textAlignment = self.dataIsShift ? NSTextAlignment.Center : NSTextAlignment.Left
+//        self.dataBody.userInteractionEnabled = !self.dataIsShift
+//        self.dataTitle.userInteractionEnabled = !self.dataIsShift
+//        self.dataTitle.selected = !self.dataIsShift
+//        self.dataImageView.userInteractionEnabled = self.dataIsShift
+//    }
     
     //return to calendar without changes
     @IBAction func cancelButtonPressed(sender: UIButton) {
@@ -252,40 +253,40 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         self.navigationController?.popViewControllerAnimated(true)
     }
     
-    //return to calendar without changes
-    @IBAction func saveButtonPressed(sender: UIButton) {
-        
-        //if schedule not set, set it
-        if self.userSelectedData.schedule == nil {
-            self.userSelectedData.schedule = self.schedule
-        }
-
-        //make changes to shift/note
-        if self.dataIsShift {
-            let data = self.userSelectedData as! SSShift
-            data.type = self.scratchShiftType
-        } else {
-            var data = self.userSelectedData as? SSNote
-            data!.body = self.dataBody.text
-            data!.title = self.dataTitle.text
-            
-            //if body and title are "", delete
-            if self.dataBody.text == "" && self.dataTitle.text == "" {
-                //delete note
-                data = nil
-            }
-        }
-        
-        //save context
-        do {
-            try CoreDataStackManager.sharedInstance().managedObjectContext.save()
-        } catch {
-            //TODO: HANDLE ERROR
-        }
-        
-        //return back to calendar
-        self.navigationController?.popViewControllerAnimated(true)
-    }
+//    //return to calendar without changes
+//    @IBAction func saveButtonPressed(sender: UIButton) {
+//        
+//        //if schedule not set, set it
+//        if self.userSelectedData.schedule == nil {
+//            self.userSelectedData.schedule = self.schedule
+//        }
+//
+//        //make changes to shift/note
+//        if self.dataIsShift {
+//            let data = self.userSelectedData as! SSShift
+//            data.type = self.scratchShiftType
+//        } else {
+//            var data = self.userSelectedData as? SSNote
+//            data!.body = self.dataBody.text
+//            data!.title = self.dataTitle.text
+//            
+//            //if body and title are "", delete
+//            if self.dataBody.text == "" && self.dataTitle.text == "" {
+//                //delete note
+//                data = nil
+//            }
+//        }
+//        
+//        //save context
+//        do {
+//            try CoreDataStackManager.sharedInstance().managedObjectContext.save()
+//        } catch {
+//            //TODO: HANDLE ERROR
+//        }
+//        
+//        //return back to calendar
+//        self.navigationController?.popViewControllerAnimated(true)
+//    }
     
     //delete shift or note
     @IBAction func deleteButtonPressed(sender: UIBarButtonItem) {
