@@ -26,24 +26,6 @@ class SSNote : NSManagedObject, SSScheduleItem {
     //imageName var
     @NSManaged var imageName : String?
     
-    //description for CustomStringConvertible conformance
-    override var description : String {
-        get {
-            //if no title, return String of self
-            guard let title = self.title else {
-                return "\(self)"
-            }
-            
-            //title exists, check for body
-            guard let body = self.body else {
-                return title
-            }
-            
-            //title and body both exist
-            return "\(title) (body: \(body))"
-        }
-    }
-    
     //initializers
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)

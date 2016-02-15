@@ -223,6 +223,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         //make sure its a note
         if !self.dataIsShift {
             self.saveButton.enabled = true
+            textView.text = self.scheduleItem.body
         }
     }
     
@@ -232,6 +233,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         //make sure its a note
         if !self.dataIsShift {
             self.saveButton.enabled = true
+            textField.text = self.scheduleItem.title
         }
     }
     
@@ -260,8 +262,18 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
             } else {
                 self.dataImageView.image = nil
             }
-            self.dataBody.text = self.scheduleItem.body
-            self.dataTitle.text = self.scheduleItem.title
+            if let title = self.scheduleItem.title {
+                self.dataTitle.text = title
+            } else {
+                self.dataTitle.text = "Your Note Title"
+            }
+            if let body = self.scheduleItem.body {
+                self.dataBody.text = body
+            } else {
+                self.dataBody.text = "Your Note Body"
+            }
+            
+            
         } else {
             self.dataImageView.image = UIImage(named: SSShiftType.shiftNames[self.scratchShiftType!]!)
             self.dataBody.text = SSShiftType.shiftTimes[self.scratchShiftType!]
@@ -292,7 +304,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         if self.scheduleItem.schedule == nil {
             self.scheduleItem.schedule = self.schedule
         }
-print(self.scheduleItem)
+    print(self.scheduleItem)
         //make changes to shift/note
         if self.dataIsShift {
             let data = self.scheduleItem as! SSShift
@@ -310,7 +322,7 @@ print(self.scheduleItem)
         }
         print(self.scheduleItem)
         //save context
-//        CoreDataStackManager.sharedInstance().saveContext()
+        CoreDataStackManager.sharedInstance().saveContext()
         
         //return back to calendar
         self.navigationController?.popViewControllerAnimated(true)
@@ -320,21 +332,21 @@ print(self.scheduleItem)
     @IBAction func deleteButtonPressed(sender: UIBarButtonItem) {
         
         //determine shit or not
-        if self.dataIsShift {
-            //data is shift, set to nil
-            self.schedule?.shift = nil
-        } else {
-            //data is note, remove from notes index, forst case data to note object
-            let note = self.scheduleItem as! SSNote
-            
-            //get index and remove
-            if let index = self.schedule?.notes?.indexOf({$0.body == note.body && $0.title == note.title}) {
-                self.schedule?.notes?.removeAtIndex(index)
+        if self.selectedIndexPath.section == 1 || self.selectedIndexPath.section == 2 {
+            if self.dataIsShift {
+                let shift = self.shiftFetchResultsController.fetchedObjects![self.selectedIndexPath.row] as! SSShift
+                CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(shift)
+            } else {
+                let note = self.notesFetchResultsController.fetchedObjects![self.selectedIndexPath.row] as! SSNote
+                CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(note)
             }
+            
+            //save context
+            CoreDataStackManager.sharedInstance().saveContext()
+            
+            //return back to calendar
+            self.navigationController?.popViewControllerAnimated(true)
         }
-        
-        //return back to calendar
-        self.navigationController?.popViewControllerAnimated(true)
     }
     
     //method to get item to be used in schedule editing
@@ -354,27 +366,27 @@ print(self.scheduleItem)
             print("failed to fetch notes")
         }
         
+        //section and row
+        let section = indexPath.section
+        let index = indexPath.row
+        
         //check section
-        if indexPath.section == 0 {
-            //item is a shift
+        if section == 0 {
+            //item is a newShift
             self.dataIsShift = true
-            if let shifts = self.shiftFetchResultsController.fetchedObjects where shifts.count != 0 {
-                //shift exists in store
-                self.scheduleItem = shifts[indexPath.row] as! SSShift
-            } else {
-                //no shift in store, make new shift to edit
-                scheduleItem = SSShift(type: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
-            }
-        } else if indexPath.section == 1 {
-            //item is a note that exists from store since indexPath.section is 1
+            self.scheduleItem = SSShift(type: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+        } else if section == 1 {
+            //item is shift from the store
+            self.dataIsShift = true
+            self.scheduleItem = self.shiftFetchResultsController.fetchedObjects![index] as! SSShift
+        } else if section == 2 {
+            //item is a note from store
             self.dataIsShift = false
-            let notes = self.notesFetchResultsController.fetchedObjects!
-            //note exists in store
-            self.scheduleItem = notes[indexPath.row] as! SSNote
+            self.scheduleItem = self.notesFetchResultsController.fetchedObjects![index] as! SSNote
         } else {
-            //seciton 3 implies newNote
-            //no note in store, make new note
-            self.scheduleItem = SSNote(title: "New Note", body: "Your note content", context: CoreDataStackManager.sharedInstance().managedObjectContext)
+            //item is a newNote
+            self.dataIsShift = false
+            self.scheduleItem = SSNote(title: nil, body: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
         }
     }
     
