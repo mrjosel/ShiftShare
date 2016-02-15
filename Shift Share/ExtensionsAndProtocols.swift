@@ -67,7 +67,7 @@ extension NSDate {
     //TODO: MAKE PRINTOUT DIFFERENT BY COUNTRY?
     var readableDate : String  {
         get {
-            return self.month + ", " + self.day + " " + self.year
+            return self.month + " " + self.day + ", " + self.year
         }
     }
 }

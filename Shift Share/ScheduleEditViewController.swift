@@ -98,6 +98,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         
         //fetch controllers
         self.notesFetchResultsController.delegate = self
+        self.notesFetchResultsController.sectionNameKeyPath
         self.shiftFetchResultsController.delegate = self
         
     }
@@ -106,8 +107,8 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     //two sections if notes and shift exist, one if only one exists
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
-        //return 2, one for shift, one for section
-        return 2
+        //return 3, one for shift, a second for notes (if they exist) and a third for newNote
+        return 3
     }
     
     //number of rows in the table, populate with new schedule data cells
@@ -117,13 +118,16 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //section 0 is shift, either a newShift or the actual shift
         if section == 0 {
             return 1
-        } else {
-            //outside of section 0 is notes, return note count + 1 if notes exist, else 1 (for newNote)
+        } else if section == 1 {
+            //section one is notes, if notes exist its count, else 0
             if let notes = self.notesFetchResultsController.fetchedObjects where notes.count != 0 {
-                return notes.count + 1
+                return notes.count
             } else {
-                return 1
+                return 0
             }
+        } else {
+            //last section is for newNote
+            return 1
         }
     }
 
@@ -139,14 +143,9 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
                 return UITableViewCell()
         }
         
+        //configure cells for each section
         if indexPath.section == 0 {
             if let shifts = self.shiftFetchResultsController.fetchedObjects where shifts.count != 0, let shift = shifts[indexPath.row] as? SSShift {
-                print(shift)
-                print(shift.type)
-                print(shift.persistedType)
-                print(shift.imageName)
-                print(shift.title)
-                print(shift.body)
                 self.configureCell(cell, withItem: shift)
             } else {
                 //create scratch shift
@@ -154,13 +153,16 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
                 newShift.title = "New Shift"
                 self.configureCell(cell, withItem: newShift)
             }
-        } else {
+        } else if indexPath.section == 1 {
             if let notes = self.notesFetchResultsController.fetchedObjects where notes.count != 0, let note = notes[indexPath.row] as? SSNote {
                 self.configureCell(cell, withItem: note)
             } else {
-                let newNote = SSNote(title: "New Note", body: nil, context: CoreDataStackManager.sharedInstance().scratchContext)
-                self.configureCell(cell, withItem: newNote)
+                print("aborting")
+                abort()
             }
+        } else {
+            let newNote = SSNote(title: "New Note", body: nil, context: CoreDataStackManager.sharedInstance().scratchContext)
+            self.configureCell(cell, withItem: newNote)
         }
         
         return cell
@@ -184,23 +186,11 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
                 //shift exists in fetch, can be edited
                 return true
             }
-        } else {
-            if let notes = self.notesFetchResultsController.fetchedObjects where notes.count != 0 {
-                
-                //notes exist in fetch, can be edited except for newNote item
-                if indexPath.row != indexPath.length - 1 {
-                    return true
-                }
-//                for note in notes {
-//                    if let _ = note.schedule {
-//                        return true
-//                    } else {
-//                        return false
-//                    }
-//                }
-            }
+        } else if indexPath.section == 1 {
+            //section 1 only populated if notes exist, can be deletec
+            return true
         }
-        //no item at the index (indicates newShift or newNote), cannot be edited
+        //either in section 2 or no shift exists in section 0
         return false
     }
     
@@ -212,21 +202,16 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
             
             //handle shift or notes depending on section
             if indexPath.section == 0 {
-                if let shift = self.shiftFetchResultsController.objectAtIndexPath(indexPath) as? SSShift {
-                    CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(shift)
-                }
-            } else {
-                if let note = self.notesFetchResultsController.objectAtIndexPath(indexPath) as? SSNote {
-                    CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(note)
-                }
+                //if row can be deleted, shift must exist, using implicitly unwrapped optionals
+                let shift = self.shiftFetchResultsController.fetchedObjects![indexPath.row] as! SSShift
+                CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(shift)
+            } else if indexPath.section == 1 {
+                //get note and delete (no need to check for section 1, just being safe)
+                let note = self.notesFetchResultsController.fetchedObjects![indexPath.row] as! SSNote
+                CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(note)
             }
             //save context
-            do {
-                try CoreDataStackManager.sharedInstance().managedObjectContext.save()
-            } catch {
-                print("failed to delete shift or note object")
-                //TODO: HANDLE ERROR
-            }
+            CoreDataStackManager.sharedInstance().saveContext()
         }
     }
     
@@ -271,39 +256,14 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     //user presses done button, commit all changes to schedule
-//    func doneButtonPressed(sender: UIButton) {
-//        
-//        //if no schedule, return
-//        guard let schedule = self.schedule else {
-//            self.navigationController?.popToRootViewControllerAnimated(true)
-//            return
-//        }
-//        
-//        //remove newSchedule if it exists
-//        if schedule.shift?.schedule == nil {
-//            self.schedule?.shift = nil
-//        }
-//        
-//        //remove newNote if it exists
-//        if schedule.notes?.last?.schedule == nil {
-//            self.schedule?.notes?.popLast()
-//        }
-//        
-//        //if notes or scheudle exist, save schedule, otherwise alert the delegate
-//        if schedule.shift != nil || schedule.notes != nil {
-////            SSSchedule.sharedInstance().schedules[self.date.keyFromDate] = schedule
-//            do {
-//                try CoreDataStackManager.sharedInstance().managedObjectContext.save()
-//            } catch {
-//                //TODO: HANDLE ERROR
-//            }
-//        } else {
-////            schedule.manager?.checkForShiftOrNotes(schedule)
-//        }
-//        
-//        //dismiss viewController
-//        self.navigationController?.popToRootViewControllerAnimated(true)
-//    }
+    func doneButtonPressed(sender: UIButton) {
+        
+        //save context
+        CoreDataStackManager.sharedInstance().saveContext()
+        
+        //dismiss viewController
+        self.navigationController?.popToRootViewControllerAnimated(true)
+    }
     
     //configures cell in tableView with item (either shift or note)
     func configureCell(cell: UITableViewCell, withItem item: SSScheduleItem) {
@@ -325,6 +285,73 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         
         //hide detail label if its newNote (end of tableData)
         cell.detailTextLabel?.hidden = item.schedule == nil ? true : false
+    }
+    
+    //called when controller will change the content
+    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        self.newScheduleTable.beginUpdates()
+    }
+    
+    //called when an object is changed
+    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        print("changing \(anObject)")
+        
+        //create different indexPaths so handling tableView is easier considering that the fetchResultsControllers have one section each
+        let oldIndexPath : NSIndexPath? = {
+            var path : NSIndexPath?
+            if let indexPath = indexPath {
+                if controller == self.shiftFetchResultsController {
+                    path = NSIndexPath(forRow: indexPath.row, inSection: 0)
+                } else {
+                    path = NSIndexPath(forRow: indexPath.row, inSection: 1)
+                }
+            }
+            return path
+        }()
+        
+        let newerIndexPath : NSIndexPath? = {
+            var path : NSIndexPath?
+            if let newIndexPath = newIndexPath {
+                if controller == self.shiftFetchResultsController {
+                    path = NSIndexPath(forRow: newIndexPath.row, inSection: 0)
+                } else {
+                    path = NSIndexPath(forRow: newIndexPath.row, inSection: 1)
+                }
+            }
+            return path
+        }()
+        
+
+        
+        //make changes to table depending on changeType
+        switch type {
+        case .Insert :
+            self.newScheduleTable.insertRowsAtIndexPaths([newerIndexPath!], withRowAnimation: .Fade)
+        case .Delete :
+            self.newScheduleTable.deleteRowsAtIndexPaths([oldIndexPath!], withRowAnimation: .Fade)
+        case .Update :
+            var scheduleItem : SSScheduleItem
+            if controller == self.shiftFetchResultsController {
+                scheduleItem = controller.objectAtIndexPath(oldIndexPath!) as! SSShift
+            } else {
+                scheduleItem = controller.fetchedObjects![oldIndexPath!.row] as! SSNote
+            }
+            let cell = self.newScheduleTable.cellForRowAtIndexPath(oldIndexPath!) as! SSTableViewCell
+            self.configureCell(cell, withItem: scheduleItem)
+        case .Move :
+            self.newScheduleTable.deleteRowsAtIndexPaths([oldIndexPath!], withRowAnimation: .Fade)
+            self.newScheduleTable.insertRowsAtIndexPaths([newerIndexPath!], withRowAnimation: .Fade)
+        }
+    }
+    
+    //called when a section is changed
+    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+        print("changing \(sectionInfo)")
+    }
+    
+    //called when controller finishes changing content
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        self.newScheduleTable.endUpdates()
     }
 
 }

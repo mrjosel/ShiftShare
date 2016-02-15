@@ -64,11 +64,7 @@ class SSScheduleManager: SSScheduleManagerDelegate {
             //TODO: IMPLEMENT DELETE METHOD
 //            SSSchedule.sharedInstance().schedules[date.keyFromDate] = nil
             CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(schedule)
-            do {
-                try CoreDataStackManager.sharedInstance().managedObjectContext.save()
-            } catch {
-                //TODO: HANDLE ERROR
-            }
+            CoreDataStackManager.sharedInstance().saveContext()
         }
     }
 }

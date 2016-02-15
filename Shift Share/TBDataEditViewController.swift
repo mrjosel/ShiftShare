@@ -27,7 +27,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
     
     //data from cell selected in CalendarVC
     var scheduleItem : SSScheduleItem!
-    var schedule : SSSchedule?
+    var schedule : SSSchedule!
     var dataIsShift : Bool = false          //default value
     var previousRect = CGRectZero
     var newLineCount = 0
@@ -93,23 +93,6 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         //get item from store
         self.getItemFromStore(atIndexPath: self.selectedIndexPath)
         
-        //get default shift, setup saveButton behavior
-        if self.dataIsShift {
-            if let type = (self.scheduleItem as! SSShift).type {
-                //type is set implying its an existing schedule, don't allow saving until user taps image
-                self.scratchShiftType = type
-                self.saveButton.enabled = false
-            } else {
-                //type is not set so its a new schedule, allow saving
-                self.scratchShiftType = SSShiftType.DAY
-                self.saveButton.enabled = true
-                self.deleteButton.enabled = false
-            }
-        } else {
-            //data is a note, don't allow saving unitl user edits the textField or textView
-            self.saveButton.enabled = false
-        }
-        
         //setup views for all common/static behaviors
         let trailingConstraint = self.view.frame.width / 16.0
         self.leftTrailingConstraint.constant = trailingConstraint
@@ -129,6 +112,23 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         self.menuBar.bringSubviewToFront(self.cancelButton)
         self.menuBar.bringSubviewToFront(self.saveButton)
         self.deleteButton.title = "Delete"
+
+        
+        //get default shift, setup saveButton behavior
+        if self.dataIsShift {
+            if let type = (self.scheduleItem as! SSShift).type {
+                //type is set implying its an existing schedule, don't allow saving until user taps image
+                self.scratchShiftType = type
+                self.saveButton.enabled = false
+            } else {
+                //type is not set so its a new schedule, allow saving
+                self.scratchShiftType = SSShiftType.DAY
+                self.saveButton.enabled = true
+            }
+        } else {
+            //data is a note, don't allow saving unitl user edits the textField or textView
+            self.saveButton.enabled = false
+        }
 
         
         //configure UI elements for all dynamic behaviors (e.g. - if shift, or note changes)
@@ -274,6 +274,9 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         self.dataTitle.userInteractionEnabled = !self.dataIsShift
         self.dataTitle.selected = !self.dataIsShift
         self.dataImageView.userInteractionEnabled = self.dataIsShift
+        
+        //delete button only on if schedule is set (implying item is from a store and not a new item)
+        self.deleteButton.enabled = self.scheduleItem.schedule != nil ? true : false
     }
     
     //return to calendar without changes
@@ -289,7 +292,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         if self.scheduleItem.schedule == nil {
             self.scheduleItem.schedule = self.schedule
         }
-
+print(self.scheduleItem)
         //make changes to shift/note
         if self.dataIsShift {
             let data = self.scheduleItem as! SSShift
@@ -298,20 +301,16 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
             var data = self.scheduleItem as? SSNote
             data!.body = self.dataBody.text
             data!.title = self.dataTitle.text
-            
+                
             //if body and title are "", delete
             if self.dataBody.text == "" && self.dataTitle.text == "" {
                 //delete note
                 data = nil
             }
         }
-        
+        print(self.scheduleItem)
         //save context
-        do {
-            try CoreDataStackManager.sharedInstance().managedObjectContext.save()
-        } catch {
-            //TODO: HANDLE ERROR
-        }
+//        CoreDataStackManager.sharedInstance().saveContext()
         
         //return back to calendar
         self.navigationController?.popViewControllerAnimated(true)
@@ -341,6 +340,20 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
     //method to get item to be used in schedule editing
     func getItemFromStore(atIndexPath indexPath: NSIndexPath) {
         
+        do {
+            try self.shiftFetchResultsController.performFetch()
+        } catch {
+            //TODO: HANDLE ERROR
+            print("failed to fetch shifts")
+        }
+        
+        do {
+            try self.notesFetchResultsController.performFetch()
+        } catch {
+            //TODO: HANDLE ERROR
+            print("failed to fetch notes")
+        }
+        
         //check section
         if indexPath.section == 0 {
             //item is a shift
@@ -352,16 +365,16 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
                 //no shift in store, make new shift to edit
                 scheduleItem = SSShift(type: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
             }
-        } else {
-            //item is a note
+        } else if indexPath.section == 1 {
+            //item is a note that exists from store since indexPath.section is 1
             self.dataIsShift = false
-            if let notes = self.notesFetchResultsController.fetchedObjects where notes.count != 0 {
-                //note exists in store
-                self.scheduleItem = notes[indexPath.row] as! SSNote
-            } else {
-                //no note in store, make new note
-                self.scheduleItem = SSNote(title: "New Note", body: "Your note content", context: CoreDataStackManager.sharedInstance().managedObjectContext)
-            }
+            let notes = self.notesFetchResultsController.fetchedObjects!
+            //note exists in store
+            self.scheduleItem = notes[indexPath.row] as! SSNote
+        } else {
+            //seciton 3 implies newNote
+            //no note in store, make new note
+            self.scheduleItem = SSNote(title: "New Note", body: "Your note content", context: CoreDataStackManager.sharedInstance().managedObjectContext)
         }
     }
     
