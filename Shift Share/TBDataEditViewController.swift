@@ -273,7 +273,6 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
                 self.dataBody.text = "Your Note Body"
             }
             
-            
         } else {
             self.dataImageView.image = UIImage(named: SSShiftType.shiftNames[self.scratchShiftType!]!)
             self.dataBody.text = SSShiftType.shiftTimes[self.scratchShiftType!]
@@ -332,9 +331,9 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
                 data = nil
             }
         }
-        print(self.scheduleItem)
+
         //save context
-        CoreDataStackManager.sharedInstance().saveContext()
+//        CoreDataStackManager.sharedInstance().saveContext()
         
         //return back to calendar
         self.navigationController?.popViewControllerAnimated(true)
@@ -353,7 +352,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         }
         
         //save context
-        CoreDataStackManager.sharedInstance().saveContext()
+//        CoreDataStackManager.sharedInstance().saveContext()
         
         //return back to calendar
         self.navigationController?.popViewControllerAnimated(true)

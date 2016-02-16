@@ -62,16 +62,9 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         self.fetchAndRepopShift()
         self.fetchNotes()
         
-        do {
-            try self.notesFetchResultsController.performFetch()
-        } catch {
-            print("failed to fetch notes")
-            //TODO: HANDLE ERROR
-        }
-        
         //reload table
-        self.newScheduleTable.reloadData()
-                
+//        self.newScheduleTable.reloadData()
+        
     }
     
     override func viewDidLoad() {
@@ -248,7 +241,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     
     //user presses done button, commit all changes to schedule
     func doneButtonPressed(sender: UIButton) {
-        
+        print(self.schedule)
         //save context
         CoreDataStackManager.sharedInstance().saveContext()
         
@@ -309,6 +302,8 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         if self.shiftFetchResultsController.fetchedObjects?.count == 0 {
             let shift = SSShift(type: SSShiftType.NEWSHIFT, context: CoreDataStackManager.sharedInstance().managedObjectContext)
             shift.schedule = self.schedule
+            //TODO: WHY IS APP CRASHING WHEN SAVING CONTEXT?
+            //      IS IT SETTING SCHEDULE?
             CoreDataStackManager.sharedInstance().saveContext()
             self.fetchShifts()
         }
@@ -352,10 +347,8 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //make changes to table depending on changeType
         switch type {
         case .Insert :
-            print(newerIndexPath)
             self.newScheduleTable.insertRowsAtIndexPaths([newerIndexPath!], withRowAnimation: .Fade)
         case .Delete :
-            print(oldIndexPath)
             self.newScheduleTable.deleteRowsAtIndexPaths([oldIndexPath!], withRowAnimation: .Fade)
         case .Update :
             var scheduleItem : SSScheduleItem
@@ -374,7 +367,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     
     //called when a section is changed
     func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
-        print("changing \(sectionInfo)")
+        //add appropriate methods
     }
     
     //called when controller finishes changing content

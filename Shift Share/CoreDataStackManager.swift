@@ -52,7 +52,7 @@ class CoreDataStackManager {
             var dict = [String: AnyObject]()
             dict[NSLocalizedDescriptionKey] = "Failed to initialize object's saved data"
             dict[NSLocalizedFailureReasonErrorKey] = failureReason
-            dict[NSUnderlyingErrorKey] = error as NSError
+            dict[NSUnderlyingErrorKey] = error as! NSError
             let wrappedError = NSError(domain: "persistentStoreCoordinator", code: 9999, userInfo: dict)
             NSLog("Unresolved error, \(wrappedError)", "\(wrappedError.userInfo)")
             
