@@ -288,7 +288,19 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         self.dataImageView.userInteractionEnabled = self.dataIsShift
         
         //delete button only on if schedule is set (implying item is from a store and not a new item)
-        self.deleteButton.enabled = self.scheduleItem.schedule != nil ? true : false
+        self.deleteButton.enabled = {
+            if self.dataIsShift {
+                //data is a shift, delete button enabled if type not NEWSHIFT
+                if (self.scheduleItem as! SSShift).type != .NEWSHIFT {
+                    return true
+                }
+            } else {
+                //data is a note, enable if indexPath indicates newNote or note from store
+                return self.selectedIndexPath.section == 1
+            }
+            //shift is NEWSHIFT, or note is newNote
+            return false
+        }()
     }
     
     //return to calendar without changes
@@ -304,7 +316,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         if self.scheduleItem.schedule == nil {
             self.scheduleItem.schedule = self.schedule
         }
-    print(self.scheduleItem)
+
         //make changes to shift/note
         if self.dataIsShift {
             let data = self.scheduleItem as! SSShift
@@ -331,22 +343,20 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
     //delete shift or note
     @IBAction func deleteButtonPressed(sender: UIBarButtonItem) {
         
-        //determine shit or not
-        if self.selectedIndexPath.section == 1 || self.selectedIndexPath.section == 2 {
-            if self.dataIsShift {
-                let shift = self.shiftFetchResultsController.fetchedObjects![self.selectedIndexPath.row] as! SSShift
-                CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(shift)
-            } else {
-                let note = self.notesFetchResultsController.fetchedObjects![self.selectedIndexPath.row] as! SSNote
-                CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(note)
-            }
-            
-            //save context
-            CoreDataStackManager.sharedInstance().saveContext()
-            
-            //return back to calendar
-            self.navigationController?.popViewControllerAnimated(true)
+    //determine shit or not
+        if self.dataIsShift {
+            let shift = self.scheduleItem as! SSShift
+            CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(shift)
+        } else {
+            let note = self.scheduleItem as! SSNote
+            CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(note)
         }
+        
+        //save context
+        CoreDataStackManager.sharedInstance().saveContext()
+        
+        //return back to calendar
+        self.navigationController?.popViewControllerAnimated(true)
     }
 
     //make all values nil

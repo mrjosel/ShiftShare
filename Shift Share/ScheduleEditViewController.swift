@@ -59,12 +59,8 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         self.navigationController?.navigationBar.hidden = true
         
         //perform fetches
-        do {
-            try self.shiftFetchResultsController.performFetch()
-        } catch {
-            print("failed to fetch shifts")
-            //TODO: HANDLE ERROR
-        }
+        self.fetchAndRepopShift()
+        self.fetchNotes()
         
         do {
             try self.notesFetchResultsController.performFetch()
@@ -100,11 +96,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         self.notesFetchResultsController.delegate = self
         self.notesFetchResultsController.sectionNameKeyPath
         self.shiftFetchResultsController.delegate = self
-        
-        //get items at store
-        self.fetchNotes()
-        self.fetchAndRepopShift()
-        
+
     }
     
     
@@ -197,11 +189,11 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         if editingStyle == UITableViewCellEditingStyle.Delete {
             
             //handle shift or notes depending on section
-            if indexPath.section == 1 {
+            if indexPath.section == 0 {
                 //if row can be deleted, shift must exist, using implicitly unwrapped optionals
                 let shift = self.shiftFetchResultsController.fetchedObjects![indexPath.row] as! SSShift
                 CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(shift)
-            } else if indexPath.section == 2 {
+            } else if indexPath.section == 1 {
                 //if row can be deleted, note must exist, using implicitly unwrapped optionals
                 let note = self.notesFetchResultsController.fetchedObjects![indexPath.row] as! SSNote
                 CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(note)
@@ -219,7 +211,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
 
             //create VC for show presentation
             let tbDataEditVC : TBDataEditViewController = segue.destinationViewController as! TBDataEditViewController
-//            tbDataEditVC.selectedIndexPath = sender as? NSIndexPath
+            tbDataEditVC.selectedIndexPath = sender as? NSIndexPath
             tbDataEditVC.scheduleItem = self.getItemAtIndexPath(atIndexPath: sender as! NSIndexPath)
             tbDataEditVC.date = self.date
             tbDataEditVC.schedule = self.schedule
@@ -313,16 +305,12 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //perform fetches
         self.fetchShifts()
         
-        print(self.shiftFetchResultsController.fetchedObjects)
-        
         //if no shift at fetch, create newShift
         if self.shiftFetchResultsController.fetchedObjects?.count == 0 {
             let shift = SSShift(type: SSShiftType.NEWSHIFT, context: CoreDataStackManager.sharedInstance().managedObjectContext)
             shift.schedule = self.schedule
-            print(shift.title)
             CoreDataStackManager.sharedInstance().saveContext()
             self.fetchShifts()
-            print(self.shiftFetchResultsController.fetchedObjects)
         }
     }
     
@@ -333,16 +321,15 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     
     //called when an object is changed
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
-        print("changing \(anObject)")
         
         //create different indexPaths so handling tableView is easier considering that the fetchResultsControllers have one section each
         let oldIndexPath : NSIndexPath? = {
             var path : NSIndexPath?
             if let indexPath = indexPath {
                 if controller == self.shiftFetchResultsController {
-                    path = NSIndexPath(forRow: indexPath.row, inSection: 1)
+                    path = NSIndexPath(forRow: indexPath.row, inSection: 0)
                 } else {
-                    path = NSIndexPath(forRow: indexPath.row, inSection: 2)
+                    path = NSIndexPath(forRow: indexPath.row, inSection: 1)
                 }
             }
             return path
@@ -352,9 +339,9 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
             var path : NSIndexPath?
             if let newIndexPath = newIndexPath {
                 if controller == self.shiftFetchResultsController {
-                    path = NSIndexPath(forRow: newIndexPath.row, inSection: 1)
+                    path = NSIndexPath(forRow: newIndexPath.row, inSection: 0)
                 } else {
-                    path = NSIndexPath(forRow: newIndexPath.row, inSection: 2)
+                    path = NSIndexPath(forRow: newIndexPath.row, inSection: 1)
                 }
             }
             return path

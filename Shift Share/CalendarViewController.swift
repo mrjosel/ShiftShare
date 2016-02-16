@@ -153,14 +153,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             abort()
         }
         
-        
-        if dayView.date.readableDate == "February 14, 2016" {
-            //catch debug
-            
-            
-            print("da fourteemff")
-        }
-        
         //format for today's date
         if calendar.dateHelper.date(NSDate(), isTheSameDayThan: dayView.date) {
             
