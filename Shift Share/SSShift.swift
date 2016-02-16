@@ -24,7 +24,6 @@ class SSShift : NSManagedObject, SSScheduleItem {
                 self.body = SSShiftType.shiftTimes[type]
                 self.persistedType = type.rawValue
             }
-            
         }
     }
     
@@ -52,6 +51,12 @@ class SSShift : NSManagedObject, SSScheduleItem {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
     
         //set type
-        self.type = type
+        if let type = type {
+            self.type = type
+            self.imageName = SSShiftType.shiftNames[type]
+            self.title = SSShiftType.shiftNames[type]
+            self.body = SSShiftType.shiftTimes[type]
+            self.persistedType = type.rawValue
+        }
     }
 }

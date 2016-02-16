@@ -90,8 +90,8 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
             self.schedule = SSSchedule(forDate: self.date, forUser: "Brian", context: CoreDataStackManager.sharedInstance().managedObjectContext)
         }
         
-        //get item from store
-        self.getItemFromStore(atIndexPath: self.selectedIndexPath)
+        //convenience var for when data is shift or note
+        self.dataIsShift = self.scheduleItem is SSShift
         
         //setup views for all common/static behaviors
         let trailingConstraint = self.view.frame.width / 16.0
@@ -116,7 +116,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         
         //get default shift, setup saveButton behavior
         if self.dataIsShift {
-            if let type = (self.scheduleItem as! SSShift).type {
+            if let type = (self.scheduleItem as! SSShift).type where type != SSShiftType.NEWSHIFT {
                 //type is set implying its an existing schedule, don't allow saving until user taps image
                 self.scratchShiftType = type
                 self.saveButton.enabled = false
@@ -348,48 +348,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
             self.navigationController?.popViewControllerAnimated(true)
         }
     }
-    
-    //method to get item to be used in schedule editing
-    func getItemFromStore(atIndexPath indexPath: NSIndexPath) {
-        
-        do {
-            try self.shiftFetchResultsController.performFetch()
-        } catch {
-            //TODO: HANDLE ERROR
-            print("failed to fetch shifts")
-        }
-        
-        do {
-            try self.notesFetchResultsController.performFetch()
-        } catch {
-            //TODO: HANDLE ERROR
-            print("failed to fetch notes")
-        }
-        
-        //section and row
-        let section = indexPath.section
-        let index = indexPath.row
-        
-        //check section
-        if section == 0 {
-            //item is a newShift
-            self.dataIsShift = true
-            self.scheduleItem = SSShift(type: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
-        } else if section == 1 {
-            //item is shift from the store
-            self.dataIsShift = true
-            self.scheduleItem = self.shiftFetchResultsController.fetchedObjects![index] as! SSShift
-        } else if section == 2 {
-            //item is a note from store
-            self.dataIsShift = false
-            self.scheduleItem = self.notesFetchResultsController.fetchedObjects![index] as! SSNote
-        } else {
-            //item is a newNote
-            self.dataIsShift = false
-            self.scheduleItem = SSNote(title: nil, body: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
-        }
-    }
-    
+
     //make all values nil
     override func viewWillDisappear(animated: Bool) {
         self.scheduleItem = nil
