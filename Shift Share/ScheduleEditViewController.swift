@@ -15,9 +15,8 @@ import CoreData
 class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate {
 
     
-    //schedule that will be created for that date
+    //schedule (created in previous VC)
     var schedule : SSSchedule!
-    var date : NSDate!
     
     //outlets
     @IBOutlet weak var menuBar: JTCalendarMenuView!
@@ -35,12 +34,14 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         fetchRequest.predicate = NSPredicate(format: "schedule == %@", self.schedule)
         
         //create and return controller
-        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        //call cacheName notesEditVC to imply notes fetched in the editVC
+        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "notesEditVC")
         return fetchResultsController
         
     }()
     
     //shift fetch results controller
+    //call cacheName shiftEditVC to imply shift fetched in the editVC
     lazy var shiftFetchResultsController : NSFetchedResultsController = {
        
         //create fetch
@@ -49,7 +50,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         fetchRequest.predicate = NSPredicate(format: "schedule == %@", self.schedule)
         
         //create and return controller
-        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "shiftEditVC")
         return fetchResultsController
     }()
     
@@ -83,11 +84,10 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         self.doneButton.addTarget(self, action: "doneButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
         self.menuBar.bringSubviewToFront(self.cancelButton)
         self.menuBar.bringSubviewToFront(self.doneButton)
-        self.dateLabel.text = self.date.readableDate
+        self.dateLabel.text = self.schedule.date!.readableDate
         
         //fetch controllers
         self.notesFetchResultsController.delegate = self
-        self.notesFetchResultsController.sectionNameKeyPath
         self.shiftFetchResultsController.delegate = self
 
     }
@@ -206,7 +206,6 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
             let tbDataEditVC : TBDataEditViewController = segue.destinationViewController as! TBDataEditViewController
             tbDataEditVC.selectedIndexPath = sender as? NSIndexPath
             tbDataEditVC.scheduleItem = self.getItemAtIndexPath(atIndexPath: sender as! NSIndexPath)
-            tbDataEditVC.date = self.date
             tbDataEditVC.schedule = self.schedule
 
         }
@@ -235,6 +234,18 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //clear schedule from VC
         self.schedule = nil
         
+        //if no shift, delete newShift from context
+        if let shift = self.shiftFetchResultsController.fetchedObjects?.first as? SSShift {
+            if shift.type == SSShiftType.NEWSHIFT {
+                CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(shift)
+            }
+            if self.notesFetchResultsController.fetchedObjects?.count == 0 {
+                //no shift and no notes, remove schedule
+                CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(self.schedule)
+            }
+            CoreDataStackManager.sharedInstance().saveContext()
+        }
+        
         //dismiss viewController
         self.navigationController?.popToRootViewControllerAnimated(true)
     }
@@ -244,6 +255,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         print(self.schedule)
         //save context
         CoreDataStackManager.sharedInstance().saveContext()
+        print(self.schedule.shift)
         
         //dismiss viewController
         self.navigationController?.popToRootViewControllerAnimated(true)
@@ -254,10 +266,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
 
         //cast cell
         let cell = cell as! SSTableViewCell
-        
-        //set date in cell (for bookkeeping, may be removed later)
-        cell.date = self.date
-        
+                
         //set cell properties
         if let imageName = item.imageName {
             cell.imageView?.image = UIImage(named: imageName)
@@ -288,6 +297,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
             //seciton 3 implies newNote
             //no note in store, make new note
             scheduleItem = SSNote(title: "New Note", body: "Your note content", context: CoreDataStackManager.sharedInstance().managedObjectContext)
+            CoreDataStackManager.sharedInstance().saveContext()
         }
         return scheduleItem
     }
@@ -302,10 +312,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         if self.shiftFetchResultsController.fetchedObjects?.count == 0 {
             let shift = SSShift(type: SSShiftType.NEWSHIFT, context: CoreDataStackManager.sharedInstance().managedObjectContext)
             shift.schedule = self.schedule
-            //TODO: WHY IS APP CRASHING WHEN SAVING CONTEXT?
-            //      IS IT SETTING SCHEDULE?
-            CoreDataStackManager.sharedInstance().saveContext()
-            self.fetchShifts()
+            print(self.schedule.shift)
         }
     }
     
@@ -377,6 +384,11 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     
     //convencience method for fetching shifts
     func fetchShifts() {
+        
+        //clear out cache
+        NSFetchedResultsController.deleteCacheWithName("shiftEditVC")
+        
+        //attempt fetch
         do {
             try self.shiftFetchResultsController.performFetch()
         } catch {
@@ -387,6 +399,11 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     
     //convencience method for fetching notes
     func fetchNotes() {
+        
+        //clear out cashe
+        NSFetchedResultsController.deleteCacheWithName("notesEditVC")
+        
+        //attempt fetch
         do {
             try self.notesFetchResultsController.performFetch()
         } catch {

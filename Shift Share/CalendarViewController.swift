@@ -19,7 +19,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     var calendarManager : JTCalendarManager!
     
     //date is selected when a user touches that dayView
-    var selectedDate : NSDate!
+    var selectedDate : NSDate! {
+        didSet {
+            //when date is set, reload table
+            self.dayViewTableView.reloadData()
+        }
+    }
 
     //outlets
     @IBOutlet weak var monthSelectorView: JTCalendarMenuView!
@@ -39,7 +44,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         
         //create controller and return
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "schedule")
         
         return fetchedResultsController
     }()
@@ -53,7 +58,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
         //create controller and return
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        //set cacheName to "shiftCalVC" to imply shifts cache fetched in the CalendarVC
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "shiftCalVC")
         
         return fetchedResultsController
     }()
@@ -67,7 +73,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "dateCreated", ascending: true)]
         
         //create controller and return
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        //set cacheName to "notesCalVC" to imply notes cache fetched in the CalendarVC
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "notesCalVC")
         
         return fetchedResultsController
     }()
@@ -84,14 +91,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
 //        self.dayViewTableView.reloadData()
 //        print(self.fetchSchedule(atDate: self.selectedDate))
         
-        //fetch all schedules
-        do {
-            try self.scheduleFetchResultsController.performFetch()
-        } catch {
-            //TODO: HANDLE ERROR
-            print("fetching schedules failed")
-        }
-
     }
 
     override func viewDidLoad() {
@@ -115,23 +114,30 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
 //        self.createRandomEvents()
 //        self.createSetEvents()
         
+        //fetchedResultsControllerDelegates
+        self.shiftFetchResultsController.delegate = self
+        self.notesFetchResultsController.delegate = self
+        
+        //fetch schedules
+        self.fetchSchedules()
+        
         //setup views
         self.calendarManager.menuView = self.monthSelectorView
         self.calendarManager.contentView = self.calendarView
         self.calendarManager.setDate(NSDate())
         self.leftSSButton.hostViewController = self
         self.rightSSButton.hostViewController = self
-        self.leftSSButton.ssButtonType = .NEW
+        self.leftSSButton.ssButtonType = {
+            //load button to be NEW if a schedule does not exist, or EDIT if it does
+            if let _ = self.getSchedule(withDate: self.selectedDate) {
+                return .EDIT
+            }
+            return .NEW
+        }()
         self.rightSSButton.ssButtonType = .TODAY
         self.monthSelectorView.bringSubviewToFront(self.leftSSButton)
         self.monthSelectorView.bringSubviewToFront(self.rightSSButton)
         self.dayViewTableView.allowsMultipleSelectionDuringEditing = false
-        
-        //fetchedResultsControllerDelegates
-
-        self.scheduleFetchResultsController.delegate = self
-        self.shiftFetchResultsController.delegate = self
-        self.notesFetchResultsController.delegate = self
         
     }
     
@@ -201,27 +207,11 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             return
         }
         
-        //fetch shift and notes since schedule fetch produced a result
-        self.shiftFetchResultsController.fetchRequest.predicate = NSPredicate(format: "schedule == %@", schedule)
-        do {
-            print("FETCHING SHIFTS!!!")
-            try self.shiftFetchResultsController.performFetch()
-        } catch {
-            //TODO: HANDLE ERROR
-            print("failed to fetch shift")
-        }
-        
-        self.notesFetchResultsController.fetchRequest.predicate = NSPredicate(format: "schedule == %@", schedule)
-        do {
-            print("FETCHING NOTES!!!")
-            try self.notesFetchResultsController.performFetch()
-        } catch {
-            //TODO: HANDLE ERROR
-            print("failed to fetch shift")
-        }
+        //get shifts and notes
+        self.fetchShiftAndNotes(forSchedule: schedule)
         
         //set image
-        dispatch_async(dispatch_get_main_queue(), {
+//        dispatch_async(dispatch_get_main_queue(), {
             if let shift = self.shiftFetchResultsController.fetchedObjects?.first as? SSShift, imageName = shift.imageName {
                 dayView.ssDVImageView.image = UIImage(named: imageName)
                 dayView.ssDVImageView.hidden = false
@@ -229,18 +219,16 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 dayView.ssDVImageView.image = nil
                 dayView.ssDVImageView.hidden = true
             }
-        })
+//        })
         
         //display dotView if notes exist
-        if let notes = self.notesFetchResultsController.fetchedObjects where notes.count != 0 {
-            dispatch_async(dispatch_get_main_queue(), {
+//        dispatch_async(dispatch_get_main_queue(), {
+            if let notes = self.notesFetchResultsController.fetchedObjects where notes.count != 0 {
                 dayView.dotView.hidden = false
-            })
-        } else {
-            dispatch_async(dispatch_get_main_queue(), {
+            } else {
                 dayView.dotView.hidden = true
-            })
-        }
+            }
+//        })
     }
     
     //code for handling touching the dayView of the calendar
@@ -273,19 +261,15 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             }
         }
         
-        let schedule = self.getSchedule(withDate: self.selectedDate)
-        print(schedule)
+        print(self.getSchedule(withDate: self.selectedDate))
         
-        //config button if schedule exists or not
-        //TODO: IMPLEMENT WITH FETCH
-//        if let _ = SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate] {
-//            self.leftSSButton.ssButtonType = SSButtonType.EDIT
-//        } else {
-//            self.leftSSButton.ssButtonType = SSButtonType.NEW
-//        }
-        
-        //reload tableViews
-        self.dayViewTableView.reloadData()
+        self.leftSSButton.ssButtonType = {
+            //load button to be NEW if a schedule does not exist, or EDIT if it does
+            if let _ = self.getSchedule(withDate: self.selectedDate) {
+                return .EDIT
+            }
+            return .NEW
+            }()
 
     }
     
@@ -323,7 +307,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         case .NEW :
             
             let newSchedule = SSSchedule(forDate: (self.selectedDate), forUser: "Brian", context: CoreDataStackManager.sharedInstance().managedObjectContext)
-            CoreDataStackManager.sharedInstance().saveContext()
             
             //segue to scheduleEditVC only
             self.performSegueWithIdentifier("scheduleEditVCsegue", sender: newSchedule)
@@ -491,37 +474,14 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             
             //set VC's date to selectedDate, and cast sender as SSTBCellData
             tbEditVC.scheduleItem = sender as? SSScheduleItem
-            tbEditVC.date = self.selectedDate
             
         } else if segue.identifier == "scheduleEditVCsegue" {
             
             //create VC to create new schedule
             let scheduleVC : ScheduleEditViewController = segue.destinationViewController as! ScheduleEditViewController
-            print(sender)
-            let schedule = sender as! SSSchedule
-            scheduleVC.schedule = schedule
-            scheduleVC.date = schedule.date
+            scheduleVC.schedule = sender as! SSSchedule
         }
         
-    }
-    
-    //presents editVC
-    func presentScheduleEditVC(forDate date: NSDate) {
-
-//        if SSSchedule.sharedInstance().schedules[self.selectedDate.keyFromDate] != nil {
-//            //TODO: ALERT FUNCTION TO DELETE SCHEDULE
-//            print("delete schedule?")
-//            return
-//        }
-        
-        //create VC for modal presentation
-        let scheduleEditVC = self.storyboard?.instantiateViewControllerWithIdentifier("ScheduleEditViewController") as! ScheduleEditViewController
-        
-        //send date to new VC
-        scheduleEditVC.date = self.selectedDate
-        
-        //set VC's schedule to schedule, and present
-        self.presentViewController(scheduleEditVC, animated: true, completion: nil)
     }
     
     //toggles between week and month view
@@ -549,9 +509,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //cast cell
         let cell = cell as! SSTableViewCell
         
-        //set date in cell (for bookkeeping, may be removed later)
-        cell.date = self.selectedDate
-        
         //set cell properties
         if let imageName = item.imageName {
             cell.imageView?.image = UIImage(named: imageName)
@@ -567,12 +524,71 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     
     //fetches schedule at exact date
     func getSchedule(withDate date : NSDate) -> SSSchedule? {
-        
+
         //get schedules from store if they exist
-        if let schedules = self.scheduleFetchResultsController.fetchedObjects as? [SSSchedule] {
+        if let schedules = self.scheduleFetchResultsController.fetchedObjects as? [SSSchedule] where !schedules.isEmpty {
+
+//            let todaysSchedule = schedules.filter({$0.date?.readableDate == date.readableDate}).first
             return schedules.filter({$0.date?.readableDate == date.readableDate}).first
         }
         return nil
+    }
+    
+    //fetch shift and notes from store
+    func fetchShiftAndNotes(forSchedule schedule : SSSchedule) {
+
+        //clear out shift and notes cashe
+        NSFetchedResultsController.deleteCacheWithName("shiftCalVC")
+        NSFetchedResultsController.deleteCacheWithName("notesCalVC")
+        
+//        if let shifts = self.shiftFetchResultsController.fetchedObjects, let notes = self.notesFetchResultsController.fetchedObjects {
+//            
+//            if !shifts.isEmpty || !notes.isEmpty {
+//                print("clearing cache failing")
+//                print("shifts count = \(shifts.count)")
+//                print("notes.count = \(notes.count)")
+//                abort()
+//            }
+//        }
+        
+        //configure the predicate and set to the fetchResultControllers
+        let predicate = NSPredicate(format: "schedule == %@", schedule)
+        self.shiftFetchResultsController.fetchRequest.predicate = predicate
+        self.notesFetchResultsController.fetchRequest.predicate = predicate
+        
+        //perform fetches
+        do {
+            try self.shiftFetchResultsController.performFetch()
+        } catch {
+            //TODO: HANDLE ERROR
+            print("FAILED TO FETCH SHIFTS")
+        }
+        do {
+            try self.notesFetchResultsController.performFetch()
+        } catch {
+            //TODO: HANDLE ERROR
+            print("FAILED TO FETCH NOTES")
+        }
+        
+        //clear out predicates (probably not required, but safe)
+        self.shiftFetchResultsController.fetchRequest.predicate = nil
+        self.notesFetchResultsController.fetchRequest.predicate = nil
+        
+    }
+    
+    //convenience method for fetching schedules
+    func fetchSchedules() {
+        
+        //clear out caches
+        NSFetchedResultsController.deleteCacheWithName(nil)
+        
+        //fetch all schedules
+        do {
+            try self.scheduleFetchResultsController.performFetch()
+        } catch {
+            //TODO: HANDLE ERROR
+            print("fetching schedules failed")
+        }
     }
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {

@@ -36,39 +36,35 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
     var touchGesture : UITapGestureRecognizer?
     var selectedIndexPath : NSIndexPath!
     
-    //selected date
-    var date : NSDate!
-
-    
     //default shiftType
     var scratchShiftType : SSShiftType?
     
-    //notes fetch results controller
-    lazy var notesFetchResultsController : NSFetchedResultsController = {
-        
-        //create fetch
-        let fetchRequest = NSFetchRequest(entityName: "SSNote")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "dateCreated", ascending: true)]
-        fetchRequest.predicate = NSPredicate(format: "schedule == %@", self.schedule!)
-        
-        //create and return controller
-        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
-        return fetchResultsController
-        
-    }()
-    
-    //shift fetch results controller
-    lazy var shiftFetchResultsController : NSFetchedResultsController = {
-        
-        //create fetch
-        let fetchRequest = NSFetchRequest(entityName: "SSShift")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        fetchRequest.predicate = NSPredicate(format: "schedule == %@", self.schedule!)
-        
-        //create and return controller
-        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
-        return fetchResultsController
-    }()
+//    //notes fetch results controller
+//    lazy var notesFetchResultsController : NSFetchedResultsController = {
+//        
+//        //create fetch
+//        let fetchRequest = NSFetchRequest(entityName: "SSNote")
+//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "dateCreated", ascending: true)]
+//        fetchRequest.predicate = NSPredicate(format: "schedule == %@", self.schedule!)
+//        
+//        //create and return controller
+//        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+//        return fetchResultsController
+//        
+//    }()
+//    
+//    //shift fetch results controller
+//    lazy var shiftFetchResultsController : NSFetchedResultsController = {
+//        
+//        //create fetch
+//        let fetchRequest = NSFetchRequest(entityName: "SSShift")
+//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+//        fetchRequest.predicate = NSPredicate(format: "schedule == %@", self.schedule!)
+//        
+//        //create and return controller
+//        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+//        return fetchResultsController
+//    }()
 
     
     override func viewWillAppear(animated: Bool) {
@@ -82,13 +78,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        
-        //if schedule exists for date, use it, otherwise use schedule set in other VC, if not set, create empty schedule for user
-        if self.schedule == nil {
 
-            //schedule not present for date, does not exist, creating new schedule
-            self.schedule = SSSchedule(forDate: self.date, forUser: "Brian", context: CoreDataStackManager.sharedInstance().managedObjectContext)
-        }
         
         //convenience var for when data is shift or note
         self.dataIsShift = self.scheduleItem is SSShift
@@ -99,7 +89,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         self.rightTrailingConstraint.constant = trailingConstraint
         self.automaticallyAdjustsScrollViewInsets = false
         self.navigationController?.navigationBar.hidden = false
-        self.dateLabel.text = date.readableDate
+        self.dateLabel.text = self.schedule.date!.readableDate
         self.dataTitle.borderStyle = .None
         self.dataTitle.textAlignment = NSTextAlignment.Center
         self.touchGesture = UITapGestureRecognizer(target: self, action: "imageViewTapped:")

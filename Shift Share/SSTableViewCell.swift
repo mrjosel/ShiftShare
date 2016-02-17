@@ -13,9 +13,6 @@ import JTCalendar
 //cell used in tableView, inherits properties from SSDayView
 class SSTableViewCell: UITableViewCell {
     
-    //date to track which schedule belongs
-    var date : NSDate?
-    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
         //super init, force style to be of .Subtitle
