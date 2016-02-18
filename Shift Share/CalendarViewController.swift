@@ -90,6 +90,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
 //        self.calendarView.reloadInputViews()
 //        self.dayViewTableView.reloadData()
 //        print(self.fetchSchedule(atDate: self.selectedDate))
+        print(self.navigationController?.viewControllers)
         
     }
 
@@ -139,7 +140,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.monthSelectorView.bringSubviewToFront(self.leftSSButton)
         self.monthSelectorView.bringSubviewToFront(self.rightSSButton)
         self.dayViewTableView.allowsMultipleSelectionDuringEditing = false
-        
+
     }
     
     //delegate method that produces UIView conforming to JTCalendarDay protocol, returns custom ShiftShareDayView object
@@ -212,24 +213,21 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.fetchShiftAndNotes(forSchedule: schedule)
         
         //set image
-//        dispatch_async(dispatch_get_main_queue(), {
-            if let shift = self.shiftFetchResultsController.fetchedObjects?.first as? SSShift, let imageName = shift.imageName {
-                dayView.ssDVImageView.image = UIImage(named: imageName)
-                dayView.ssDVImageView.hidden = false
-            } else {
-                dayView.ssDVImageView.image = nil
-                dayView.ssDVImageView.hidden = true
-            }
-//        })
+        if let shift = self.shiftFetchResultsController.fetchedObjects?.first as? SSShift, let imageName = shift.imageName {
+            dayView.ssDVImageView.image = UIImage(named: imageName)
+            dayView.ssDVImageView.hidden = false
+        } else {
+            dayView.ssDVImageView.image = nil
+            dayView.ssDVImageView.hidden = true
+        }
+
         
         //display dotView if notes exist
-//        dispatch_async(dispatch_get_main_queue(), {
-            if let notes = self.notesFetchResultsController.fetchedObjects where notes.count != 0 {
-                dayView.dotView.hidden = false
-            } else {
-                dayView.dotView.hidden = true
-            }
-//        })
+        if let notes = self.notesFetchResultsController.fetchedObjects where notes.count != 0 {
+            dayView.dotView.hidden = false
+        } else {
+            dayView.dotView.hidden = true
+        }
     }
     
     //code for handling touching the dayView of the calendar
@@ -302,7 +300,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             self.selectedDate = NSDate()
             self.calendarManager.setDate(NSDate())
             self.weekViewEnabled(false)
-            self.dayViewTableView.reloadData()
             
             //Edit Button
         case .NEW :
@@ -328,16 +325,24 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             self.weekViewEnabled(false)
 
         }
+    }
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
-        //reload table data if applicable
-        self.dayViewTableView.reloadData()
+        //if no schedule, one section, if there is, compute
+        guard let _ = self.scheduleFetchResultsController.fetchedObjects?.first as? SSSchedule else {
+            return 1
+        }
+        
+        //two sections, one for shift, one for notes
+        return 2
     }
     
     //number of rows in tableView
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         //get dayView and schedule if they exist, return 1 or 2 otherwise
-        guard let schedule = self.scheduleFetchResultsController.fetchedObjects?.first as? SSSchedule else {
+        guard let _ = self.scheduleFetchResultsController.fetchedObjects?.first as? SSSchedule else {
             
             //scroll and cell selection based
             tableView.userInteractionEnabled = false
@@ -351,12 +356,11 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //tableView not grayed out and is user accessible
         tableView.alpha = 1.0
         
-        //number of rows equal to shift plus number of notes
-        let cellCount = schedule.tableData.count
-        
-        //return cellCount
-        return cellCount
-
+        if section == 0 {
+            return self.shiftFetchResultsController.fetchedObjects!.count
+        } else {
+            return self.notesFetchResultsController.fetchedObjects!.count
+        }
     }
     
     //cell alpha values depending on schedule present or not
@@ -407,18 +411,13 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //tapping cells launches detail view or launches edit mode if selected while in edit mode
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        //get schedule for date corresponding to selected cell
-        guard let schedule = self.scheduleFetchResultsController.fetchedObjects?.first as? SSSchedule else {
-            
-            //no schedule, add shifts, notes
-            return
-        }
-        
-        //get data for detailVC
-        let cellData = schedule.tableData[indexPath.row]
-        
         //perform segue to editVC
-        self.performSegueWithIdentifier("TBeditVCSegueFromCal", sender: cellData)
+        self.performSegueWithIdentifier("TBeditVCSegueFromCal", sender: indexPath)
+    }
+    
+    //keep height at 30 for section 0, 0 for section 1 (do not want a header visible)
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return section == 0 ? 30 : 0
     }
     
     //header for table view, displays selected date
@@ -468,13 +467,32 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //handles segues
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
+        
         if segue.identifier == "TBeditVCSegueFromCal" {
+            
+            //schedule item to pass to nextVC, and indexPath
+            var scheduleItem : SSScheduleItem?
+            let indexPath = sender as! NSIndexPath
+            
+            //get data for detailVC
+            if indexPath.section == 0 {
+                //get shift
+                if let shifts = self.shiftFetchResultsController.fetchedObjects as? [SSShift] where !shifts.isEmpty {
+                    scheduleItem = shifts.first!
+                }
+            } else {
+                if let notes = self.notesFetchResultsController.fetchedObjects as? [SSNote] where !notes.isEmpty {
+                    scheduleItem = notes[indexPath.row]
+                }
+            }
 
             //create VC to edit schedule
             let tbEditVC : TBDataEditViewController = segue.destinationViewController as! TBDataEditViewController
             
             //set VC's date to selectedDate, and cast sender as SSTBCellData
-            tbEditVC.scheduleItem = sender as? SSScheduleItem
+            tbEditVC.scheduleItem = scheduleItem
+            tbEditVC.schedule = self.getSchedule(withDate: self.selectedDate)
+            tbEditVC.selectedIndexPath = indexPath
             
         } else if segue.identifier == "scheduleEditVCsegue" {
             

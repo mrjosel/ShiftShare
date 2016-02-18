@@ -65,6 +65,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         
         //reload table
 //        self.newScheduleTable.reloadData()
+        print(self.navigationController?.viewControllers)
         
     }
     
@@ -89,7 +90,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //fetch controllers
         self.notesFetchResultsController.delegate = self
         self.shiftFetchResultsController.delegate = self
-
+        
     }
     
     
@@ -125,7 +126,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //create cell
         guard let cell = tableView.dequeueReusableCellWithIdentifier("SSTableViewCell") as? SSTableViewCell else {
                 print("no cell made")
-                self.navigationController?.popToRootViewControllerAnimated(true)
+                self.navigationController?.popViewControllerAnimated(true)
                 return UITableViewCell()
         }
         
@@ -230,9 +231,6 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     
     //user presses cancel button
     func cancelButtonPressed(sender: UIButton) {
-
-        //clear schedule from VC
-        self.schedule = nil
         
         //remove newShift
         let didRemoveNewShift = self.removeNewShift()
@@ -246,8 +244,11 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //save context
         CoreDataStackManager.sharedInstance().saveContext()
         
+        //clear out schedule (probably not needed)
+        self.schedule = nil
+        
         //dismiss viewController
-        self.navigationController?.popToRootViewControllerAnimated(true)
+        self.navigationController?.popViewControllerAnimated(true)
     }
     
     //user presses done button, commit all changes to schedule
@@ -260,7 +261,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         CoreDataStackManager.sharedInstance().saveContext()
         
         //dismiss viewController
-        self.navigationController?.popToRootViewControllerAnimated(true)
+        self.navigationController?.popViewControllerAnimated(true)
     }
     
     //configures cell in tableView with item (either shift or note)

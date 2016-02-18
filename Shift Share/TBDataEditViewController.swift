@@ -71,6 +71,7 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         
         //hide navBar
         self.navigationController?.navigationBarHidden = true
+        print(self.navigationController?.viewControllers)
 
     }
     
@@ -322,9 +323,12 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
             }
         }
 
-        //save context
-//        CoreDataStackManager.sharedInstance().saveContext()
-        
+        //save context only VC presented from CalendarVC (VC count is 2 in this case)
+        print(self.navigationController?.viewControllers)
+        if self.navigationController?.viewControllers.count == 2 {
+            CoreDataStackManager.sharedInstance().saveContext()
+        }
+
         //return back to calendar
         self.navigationController?.popViewControllerAnimated(true)
     }
