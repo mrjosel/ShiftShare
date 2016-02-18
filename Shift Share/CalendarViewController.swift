@@ -117,6 +117,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //fetchedResultsControllerDelegates
         self.shiftFetchResultsController.delegate = self
         self.notesFetchResultsController.delegate = self
+        self.scheduleFetchResultsController.delegate = self
         
         //fetch schedules
         self.fetchSchedules()
@@ -212,7 +213,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //set image
 //        dispatch_async(dispatch_get_main_queue(), {
-            if let shift = self.shiftFetchResultsController.fetchedObjects?.first as? SSShift, imageName = shift.imageName {
+            if let shift = self.shiftFetchResultsController.fetchedObjects?.first as? SSShift, let imageName = shift.imageName {
                 dayView.ssDVImageView.image = UIImage(named: imageName)
                 dayView.ssDVImageView.hidden = false
             } else {
@@ -524,13 +525,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     
     //fetches schedule at exact date
     func getSchedule(withDate date : NSDate) -> SSSchedule? {
-
+        
         //get schedules from store if they exist
         if let schedules = self.scheduleFetchResultsController.fetchedObjects as? [SSSchedule] where !schedules.isEmpty {
-
-//            let todaysSchedule = schedules.filter({$0.date?.readableDate == date.readableDate}).first
             return schedules.filter({$0.date?.readableDate == date.readableDate}).first
         }
+
         return nil
     }
     
@@ -592,6 +592,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        self.fetchSchedules()
         self.calendarManager.reload()
     }
     

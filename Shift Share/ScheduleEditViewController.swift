@@ -234,17 +234,17 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //clear schedule from VC
         self.schedule = nil
         
-        //if no shift, delete newShift from context
-        if let shift = self.shiftFetchResultsController.fetchedObjects?.first as? SSShift {
-            if shift.type == SSShiftType.NEWSHIFT {
-                CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(shift)
-            }
-            if self.notesFetchResultsController.fetchedObjects?.count == 0 {
-                //no shift and no notes, remove schedule
-                CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(self.schedule)
-            }
-            CoreDataStackManager.sharedInstance().saveContext()
+        //remove newShift
+        let didRemoveNewShift = self.removeNewShift()
+        
+        //if newShift removed and no notes in store, remove schedule
+        if didRemoveNewShift && self.notesFetchResultsController.fetchedObjects?.count == 0 {
+            //no shift and no notes, remove schedule
+            CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(self.schedule)
         }
+        
+        //save context
+        CoreDataStackManager.sharedInstance().saveContext()
         
         //dismiss viewController
         self.navigationController?.popToRootViewControllerAnimated(true)
@@ -252,10 +252,12 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     
     //user presses done button, commit all changes to schedule
     func doneButtonPressed(sender: UIButton) {
-        print(self.schedule)
+        
+        //remove NEWSHIFT object if it exists
+        self.removeNewShift()
+        
         //save context
         CoreDataStackManager.sharedInstance().saveContext()
-        print(self.schedule.shift)
         
         //dismiss viewController
         self.navigationController?.popToRootViewControllerAnimated(true)
@@ -410,5 +412,20 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
             //TODO: HANDLE ERROR
             print("failed to fetch notes")
         }
+    }
+    
+    //removes newShift, if it exists, if it doesn't exist, function call does nothing
+    //function returns bool, if needed
+    func removeNewShift() -> Bool {
+        
+        var didRemove : Bool = false
+        
+        if let shift = self.shiftFetchResultsController.fetchedObjects?.first as? SSShift {
+            if shift.type == SSShiftType.NEWSHIFT {
+                CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(shift)
+                didRemove = true
+            }
+        }
+        return didRemove
     }
 }
