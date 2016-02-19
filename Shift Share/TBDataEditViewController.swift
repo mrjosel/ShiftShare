@@ -323,10 +323,14 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
             }
         }
 
-        //save context only VC presented from CalendarVC (VC count is 2 in this case)
-        print(self.navigationController?.viewControllers)
+        //save context only VC presented from CalendarVC (VC count is 2 in this case), and
         if self.navigationController?.viewControllers.count == 2 {
             CoreDataStackManager.sharedInstance().saveContext()
+            
+//            //safely unwrap first VC as calVC and fetch new shifts
+//            if let calVC = self.navigationController?.viewControllers.first as? CalendarViewController {
+//                calVC.fetchShiftAndNotes(forSchedule: self.schedule)
+//            }
         }
 
         //return back to calendar

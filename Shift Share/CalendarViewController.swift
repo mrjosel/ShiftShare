@@ -14,13 +14,15 @@ import CoreData
 
 //main calendarView
 class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SSCalendarDelegate, NSFetchedResultsControllerDelegate {
-
+    //TODO: FIX SCHEDULES NEED TO LOAD ONCE SAVED
+    //      IMPLEMENT A CACHE
     //calendar manager
     var calendarManager : JTCalendarManager!
     
     //date is selected when a user touches that dayView
     var selectedDate : NSDate! {
         didSet {
+            print("setting date to \(self.selectedDate.readableDate)")
             //when date is set, reload table
             self.dayViewTableView.reloadData()
         }
@@ -239,9 +241,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //TODO: REMOVE IN PRODUCTION
             abort()
         }
-
-        //set selected date
+        
+        //set date
         self.selectedDate = dayView.date
+
         //animation for the dayView
         UIView.transitionWithView(dayView, duration: 0.1, options: UIViewAnimationOptions(), animations: {calendar.reload()}, completion: nil)
         
@@ -260,15 +263,17 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             }
         }
         
-        print(self.getSchedule(withDate: self.selectedDate))
+        //get schedule if it exists
+        guard let schedule = self.getSchedule(withDate: self.selectedDate) else {
+            
+            //no schedule, change button type to new and exist routine
+            self.leftSSButton.ssButtonType = SSButtonType.NEW
+            return
+        }
         
-        self.leftSSButton.ssButtonType = {
-            //load button to be NEW if a schedule does not exist, or EDIT if it does
-            if let _ = self.getSchedule(withDate: self.selectedDate) {
-                return .EDIT
-            }
-            return .NEW
-            }()
+        //schedule exits, fetch shifts and notes and set button
+        self.fetchShiftAndNotes(forSchedule: schedule)
+        self.leftSSButton.ssButtonType = SSButtonType.EDIT
 
     }
     
@@ -330,10 +335,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
         //if no schedule, one section, if there is, compute
-        guard let _ = self.scheduleFetchResultsController.fetchedObjects?.first as? SSSchedule else {
+        guard let schedule = self.getSchedule(withDate: self.selectedDate) else {
             return 1
         }
-        
+        print(schedule.date?.readableDate)
         //two sections, one for shift, one for notes
         return 2
     }
@@ -342,19 +347,13 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         //get dayView and schedule if they exist, return 1 or 2 otherwise
-        guard let _ = self.scheduleFetchResultsController.fetchedObjects?.first as? SSSchedule else {
+        guard let schedule = self.getSchedule(withDate: self.selectedDate) else {
             
-            //scroll and cell selection based
-            tableView.userInteractionEnabled = false
+            //no schedule
             return 1
         }
         
-        //schedule exists, scroll enabled
-        tableView.userInteractionEnabled = true
-        tableView.scrollEnabled = true
-        
-        //tableView not grayed out and is user accessible
-        tableView.alpha = 1.0
+        print(schedule.date?.readableDate)
         
         if section == 0 {
             return self.shiftFetchResultsController.fetchedObjects!.count
@@ -367,13 +366,23 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         
         //check if schedule exists for date
-        if let _ = self.scheduleFetchResultsController.fetchedObjects?.first as? SSSchedule {
-            //schedule exists, full color
-            cell.alpha = 1.0
-        } else {
+        guard let schedule = self.getSchedule(withDate: self.selectedDate) else {
             //no schedule, gray out
             cell.alpha = 0.5
+            
+            //scroll disabled
+            tableView.userInteractionEnabled = false
+            tableView.scrollEnabled = false
+            return
         }
+        
+            print(schedule.date?.readableDate)
+            //schedule exists, full color
+            cell.alpha = 1.0
+            
+            //scroll enabled
+            tableView.userInteractionEnabled = true
+            tableView.scrollEnabled = true
     }
     
     //creates cells for tableView
@@ -386,22 +395,24 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             return UITableViewCell()
         }
         
+        //if there is a schedule, proceed, else
+        guard let _ = self.getSchedule(withDate: self.selectedDate) else {
+            //create scratch shift
+            let newShift = SSShift(type: nil, context: CoreDataStackManager.sharedInstance().scratchContext)
+            newShift.title = "No Schedule"
+            self.configureCell(cell, withItem: newShift)
+            return cell
+        }
+        
         if indexPath.section == 0 {
             if let shifts = self.shiftFetchResultsController.fetchedObjects where shifts.count != 0, let shift = shifts[indexPath.row] as? SSShift {
-                
+                print(shift)
+                print(shift.type)
                 self.configureCell(cell, withItem: shift)
-            } else {
-                //create scratch shift
-                let newShift = SSShift(type: nil, context: CoreDataStackManager.sharedInstance().scratchContext)
-                newShift.title = "New Shift"
-                self.configureCell(cell, withItem: newShift)
             }
         } else {
             if let notes = self.notesFetchResultsController.fetchedObjects where notes.count != 0, let note = notes[indexPath.row] as? SSNote {
                 self.configureCell(cell, withItem: note)
-            } else {
-                let newNote = SSNote(title: "New Note", body: nil, context: CoreDataStackManager.sharedInstance().scratchContext)
-                self.configureCell(cell, withItem: newNote)
             }
         }
         
@@ -439,7 +450,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     
-    //allow editing
+    //allow editing, 
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         return true
     }
@@ -609,9 +620,25 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
+    //called when controllers change content in the context
+    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        
+//        if controller == self.shiftFetchResultsController || controller == self.notesFetchResultsController {
+//            self.dayViewTableView.beginUpdates()
+//        }
+        
+    }
+    
+    //
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        self.fetchSchedules()
-        self.calendarManager.reload()
+        
+//        if controller == self.shiftFetchResultsController || controller == self.notesFetchResultsController {
+////            self.dayViewTableView.endUpdates()
+//        } else {
+//        
+//            self.fetchSchedules()
+//            self.calendarManager.reload()
+//        }
     }
     
     

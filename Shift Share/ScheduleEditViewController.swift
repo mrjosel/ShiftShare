@@ -260,6 +260,11 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //save context
         CoreDataStackManager.sharedInstance().saveContext()
         
+        //safely unwrap first VC as calVC and fetch new shifts
+//        if let calVC = self.z navigationController?.viewControllers.first as? CalendarViewController {
+//            calVC.fetchShiftAndNotes(forSchedule: self.schedule)
+//        }
+        
         //dismiss viewController
         self.navigationController?.popViewControllerAnimated(true)
     }
