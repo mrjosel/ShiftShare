@@ -18,11 +18,20 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     var calendarManager : JTCalendarManager!
     
     //date is selected when a user touches that dayView
-    var selectedDate : NSDate!
+    var selectedDate : NSDate! {
+        didSet {
+            
+            //store date in defaults, each time it is set
+            self.userDefaults.setValue(self.selectedDate, forKey: "selectedDate")
+        }
+    }
     
     //speeds up memory access if copying schedules to a local dict and then keying off extension of NSDate (keyFromDate)
     var schedulesDict = [String : SSSchedule]()
 
+    //user defaults, used to load date after user launches app
+    let userDefaults = NSUserDefaults.standardUserDefaults()
+    
     //outlets
     @IBOutlet weak var monthSelectorView: JTCalendarMenuView!
     @IBOutlet weak var calendarView: JTHorizontalCalendarView!
@@ -98,8 +107,16 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.calendarManager = JTCalendarManager()
         self.calendarManager.delegate = self
         
-        //start with today's date
-        self.selectedDate = NSDate()
+        //start with last date viewed by user
+        self.selectedDate = {
+            
+            //if date exists in the defaults, return
+            if let date = self.userDefaults.valueForKey("selectedDate") as? NSDate {
+                return date
+            }
+            //no date in defaults, set date to today
+            return NSDate()
+            }()
         
         //fetchedResultsControllerDelegates
         self.shiftFetchResultsController.delegate = self
