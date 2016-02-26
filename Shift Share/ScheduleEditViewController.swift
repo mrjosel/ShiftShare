@@ -8,7 +8,6 @@
 
 import UIKit
 import JTCalendar
-import Parse
 import CoreData
 
 //vc for creating/editing schedules
@@ -62,10 +61,6 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //perform fetches
         self.fetchAndRepopShift()
         self.fetchNotes()
-        
-        //reload table
-//        self.newScheduleTable.reloadData()
-        print(self.navigationController?.viewControllers)
         
     }
     
@@ -260,10 +255,10 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //save context
         CoreDataStackManager.sharedInstance().saveContext()
         
-        //safely unwrap first VC as calVC and fetch new shifts
-//        if let calVC = self.z navigationController?.viewControllers.first as? CalendarViewController {
-//            calVC.fetchShiftAndNotes(forSchedule: self.schedule)
-//        }
+        //call cacheAndConfig,config UI methods in CalVC
+        let calVC = self.navigationController?.viewControllers.first as! CalendarViewController
+        calVC.cacheAndConfig(self.schedule)
+        calVC.configUIViews(self.schedule.date!)
         
         //dismiss viewController
         self.navigationController?.popViewControllerAnimated(true)
@@ -320,7 +315,6 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         if self.shiftFetchResultsController.fetchedObjects?.count == 0 {
             let shift = SSShift(type: SSShiftType.NEWSHIFT, context: CoreDataStackManager.sharedInstance().managedObjectContext)
             shift.schedule = self.schedule
-            print(self.schedule.shift)
         }
     }
     

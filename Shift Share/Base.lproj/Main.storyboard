@@ -96,13 +96,25 @@
                                     <constraint firstItem="3lz-yx-ED6" firstAttribute="top" secondItem="KkR-sd-dBO" secondAttribute="top" id="qLV-3q-7cb"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lfy-sQ-mju">
+                                <rect key="frame" x="0.0" y="424" width="600" height="43"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="43" id="0At-9T-7yp"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="lfy-sQ-mju" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="4SZ-Fz-DTy"/>
                             <constraint firstItem="r2A-Pd-HyF" firstAttribute="top" secondItem="Vd0-12-PKY" secondAttribute="bottom" id="873-XO-NrE"/>
                             <constraint firstItem="r2A-Pd-HyF" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="DZg-Fe-ARB"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="lfy-sQ-mju" secondAttribute="trailing" constant="-20" id="GNt-gn-KlV"/>
                             <constraint firstAttribute="trailingMargin" secondItem="r2A-Pd-HyF" secondAttribute="trailing" constant="-20" id="RZp-SS-kyX"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Vd0-12-PKY" secondAttribute="trailing" constant="-20" id="SoG-zw-QlZ"/>
                             <constraint firstItem="Vd0-12-PKY" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="Tu2-mJ-8Fb"/>
@@ -112,6 +124,7 @@
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="r2A-Pd-HyF" secondAttribute="bottom" id="oPj-Gb-vbe"/>
                             <constraint firstItem="KkR-sd-dBO" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="ue8-0E-iC9"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="r2A-Pd-HyF" secondAttribute="bottom" id="wHF-pV-TJ0"/>
+                            <constraint firstItem="lfy-sQ-mju" firstAttribute="top" secondItem="Vd0-12-PKY" secondAttribute="bottom" id="xWf-pM-rUw"/>
                             <constraint firstItem="KkR-sd-dBO" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="ykQ-7L-OpA"/>
                         </constraints>
                     </view>
@@ -122,6 +135,7 @@
                         <outlet property="dayViewTableView" destination="r2A-Pd-HyF" id="EuV-Gs-Cor"/>
                         <outlet property="leftSSButton" destination="3lz-yx-ED6" id="IdB-ir-lsg"/>
                         <outlet property="monthSelectorView" destination="KkR-sd-dBO" id="N59-SU-o5h"/>
+                        <outlet property="noScheduleLabel" destination="lfy-sQ-mju" id="pUJ-Uc-Bhb"/>
                         <outlet property="rightSSButton" destination="dv3-wz-1tT" id="01r-U6-32h"/>
                         <segue destination="3pj-eg-jkr" kind="show" identifier="TBeditVCSegueFromCal" id="fWd-yi-8Hw"/>
                         <segue destination="Lie-ba-gjf" kind="show" identifier="scheduleEditVCsegue" id="yrY-HW-oqN"/>
@@ -408,6 +422,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="37i-gb-S2j"/>
+        <segue reference="fWd-yi-8Hw"/>
     </inferredMetricsTieBreakers>
 </document>

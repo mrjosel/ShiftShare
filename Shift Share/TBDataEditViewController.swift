@@ -71,7 +71,6 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         
         //hide navBar
         self.navigationController?.navigationBarHidden = true
-        print(self.navigationController?.viewControllers)
 
     }
     
