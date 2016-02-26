@@ -486,12 +486,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(note)
             }
             
-            //deleted shift and notes, delete schedule entirely
-            if self.shiftFetchResultsController.fetchedObjects?.count == 0 && self.notesFetchResultsController.fetchedObjects?.count == 0 {
-                if let schedule = self.schedulesDict[self.selectedDate.keyFromDate] {
-                    CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(schedule)
-                }
-            }
             //save context
             CoreDataStackManager.sharedInstance().saveContext()
         }
@@ -618,6 +612,45 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
+    //checks if shifts and notes exist for schedule, if they don't, schedule removed from context and cache, returns bool for inidication
+    func checkScheduleForRemoval(schedule: SSSchedule) {
+        
+        //fetch shift and notes
+        self.fetchShiftAndNotes(forSchedule: schedule)
+
+        //bool to tell if shift exists or not
+        let hasShift : Bool = {
+            if let shifts = self.shiftFetchResultsController.fetchedObjects {
+                if !shifts.isEmpty {
+                    return true
+                }
+            }
+            //shifts is empty, or they don't exist
+            return false
+        }()
+        
+        //bool to tell if shift exists or not
+        let hasNotes : Bool = {
+            if let notes = self.notesFetchResultsController.fetchedObjects {
+                if !notes.isEmpty {
+                    //notes exist and are not empty
+                    return true
+                }
+            }
+            //notes are empty, or they don't exist
+            return false
+        }()
+        
+        //if no shift nor notes, return true, else false
+        if !hasShift && !hasNotes {
+            //no shift or notes, remove from context and cache, save, reconfig UI
+            self.schedulesDict.removeValueForKey(self.selectedDate.keyFromDate)
+            CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(schedule)
+            self.configUIViews(self.selectedDate)
+            self.calendarManager.reload()
+        }
+    }
+    
     //convenience method for fetching schedules
     func fetchSchedules() {
         
@@ -715,7 +748,11 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         if controller == self.shiftFetchResultsController || controller == self.notesFetchResultsController {
             self.dayViewTableView.endUpdates()
         } else {
-            return
+            //if schedule for date still exists, check if it should be removed, configure UI accordingly
+            if let schedule = self.schedulesDict[self.selectedDate.keyFromDate] {
+                //there is a schedule, check for removal
+                self.checkScheduleForRemoval(schedule)
+            }
         }
     }
 
