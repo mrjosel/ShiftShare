@@ -5,6 +5,7 @@ use_frameworks!
 
 target 'Shift Share' do
 pod 'JTCalendar'
+pod 'Firebase', '>= 2.5.0'
 end
 
 target 'Shift ShareTests' do

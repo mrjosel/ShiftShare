@@ -1,10 +1,13 @@
 PODS:
+  - Firebase (2.5.1)
   - JTCalendar (2.1.4)
 
 DEPENDENCIES:
+  - Firebase (>= 2.5.0)
   - JTCalendar
 
 SPEC CHECKSUMS:
+  Firebase: 3565ea88b830f28f2c77ecc524622bc71a20d085
   JTCalendar: 9b1352c7ec41cc26b19c189d6608ba48060a53d9
 
 COCOAPODS: 0.39.0
