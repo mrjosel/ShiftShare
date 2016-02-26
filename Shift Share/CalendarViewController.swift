@@ -12,7 +12,7 @@ import Foundation
 import CoreData
 
 //main calendarView
-class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SSCalendarDelegate, NSFetchedResultsControllerDelegate {
+class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, JTCalendarDelegate, NSFetchedResultsControllerDelegate {
 
     //calendar manager
     var calendarManager : JTCalendarManager!
@@ -360,11 +360,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //number of rows in tableView
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-//        //no schedule, no rows in either section, prevents later methods from being called
-//        guard let _ = self.schedulesDict[self.selectedDate.keyFromDate] else {
-//            return 0
-//        }
-        
         //set number of rows depending on each section and objects count
         if section == 0 {
             
@@ -377,28 +372,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
-//    //cell alpha values depending on schedule present or not
-//    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-//        
-//        //check if schedule exists for date
-//        guard let _ = self.schedulesDict[self.selectedDate.keyFromDate]  else {
-//            //no schedule, gray out
-//            cell.alpha = 0.5
-//            
-//            //scroll disabled
-//            tableView.userInteractionEnabled = false
-//            tableView.scrollEnabled = false
-//            return
-//        }
-//        
-//            //schedule exists, full color
-//            cell.alpha = 1.0
-//            
-//            //scroll enabled
-//            tableView.userInteractionEnabled = true
-//            tableView.scrollEnabled = true
-//    }
-    
     //creates cells for tableView
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
@@ -408,14 +381,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             self.navigationController?.popToRootViewControllerAnimated(true)
             return UITableViewCell()
         }
-        
-//        //if there is a schedule, proceed, else
-//        guard let _ = self.schedulesDict[self.selectedDate.keyFromDate]  else {
-//            
-//            //configure for no item
-//            self.configureCell(cell, withItem: nil)
-//            return cell
-//        }
         
         //configure cell based on section and fetched contents
         if indexPath.section == 0 {
@@ -647,7 +612,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             self.schedulesDict.removeValueForKey(self.selectedDate.keyFromDate)
             CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(schedule)
             self.configUIViews(self.selectedDate)
-            self.calendarManager.reload()
         }
     }
     
@@ -753,6 +717,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 //there is a schedule, check for removal
                 self.checkScheduleForRemoval(schedule)
             }
+            //reload calendar
+            self.calendarManager.reload()
         }
     }
 

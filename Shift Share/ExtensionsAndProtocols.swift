@@ -72,24 +72,6 @@ extension NSDate {
     }
 }
 
-//extending to allow for double tap gestures
-extension JTCalendarDelegateManager {
-    
-    //double tapped dayView
-    func didDoubleTapDayView(dayView: UIView!) {
-        
-        //get manager and delegate, can't continue otherwise
-        guard let manager = self.manager, delegate = manager.delegate as? SSCalendarDelegate else {
-            return
-        }
-        
-        //execute double tap in delegate
-        if delegate.respondsToSelector("calendar:didDoubleTapDayView:") {
-            delegate.calendar(manager, didDoubleTapDayView: dayView)
-        }
-    }
-}
-
 //allows for easy population of tableCell data
 protocol SSScheduleItem : NSObjectProtocol {
     

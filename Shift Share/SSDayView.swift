@@ -18,8 +18,6 @@ class SSDayView: JTCalendarDayView {
     //image displayed for sun, moon, other events
     var ssDVImageView: UIImageView!
     
-    var doubleTapGesture: UITapGestureRecognizer!
-        
     override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -58,21 +56,8 @@ class SSDayView: JTCalendarDayView {
         self.ssDVImageView.layer.rasterizationScale = UIScreen.mainScreen().scale
         self.ssDVImageView.layer.shouldRasterize = true
         
-        //set up doubleTap Gesture
-        self.doubleTapGesture = UITapGestureRecognizer(target: self, action: "handleDoubleTap:")
-        self.doubleTapGesture.numberOfTapsRequired = 2
-        self.addGestureRecognizer(self.doubleTapGesture)
-        
         //dotView default is hidden
         self.dotView.hidden = true
         
-    }
-    
-    //invoke double tap gesture
-    func handleDoubleTap(sender: UITapGestureRecognizer) {
-        
-        //alert the delegate
-        self.manager?.delegateManager.didDoubleTapDayView(self)
-
     }
 }

@@ -39,34 +39,6 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
     //default shiftType
     var scratchShiftType : SSShiftType?
     
-//    //notes fetch results controller
-//    lazy var notesFetchResultsController : NSFetchedResultsController = {
-//        
-//        //create fetch
-//        let fetchRequest = NSFetchRequest(entityName: "SSNote")
-//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "dateCreated", ascending: true)]
-//        fetchRequest.predicate = NSPredicate(format: "schedule == %@", self.schedule!)
-//        
-//        //create and return controller
-//        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
-//        return fetchResultsController
-//        
-//    }()
-//    
-//    //shift fetch results controller
-//    lazy var shiftFetchResultsController : NSFetchedResultsController = {
-//        
-//        //create fetch
-//        let fetchRequest = NSFetchRequest(entityName: "SSShift")
-//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//        fetchRequest.predicate = NSPredicate(format: "schedule == %@", self.schedule!)
-//        
-//        //create and return controller
-//        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
-//        return fetchResultsController
-//    }()
-
-    
     override func viewWillAppear(animated: Bool) {
         
         //hide navBar
@@ -325,11 +297,6 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         //save context only VC presented from CalendarVC (VC count is 2 in this case), and
         if self.navigationController?.viewControllers.count == 2 {
             CoreDataStackManager.sharedInstance().saveContext()
-            
-//            //safely unwrap first VC as calVC and fetch new shifts
-//            if let calVC = self.navigationController?.viewControllers.first as? CalendarViewController {
-//                calVC.fetchShiftAndNotes(forSchedule: self.schedule)
-//            }
         }
 
         //return back to calendar
@@ -347,9 +314,6 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
             let note = self.scheduleItem as! SSNote
             CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(note)
         }
-        
-        //save context
-//        CoreDataStackManager.sharedInstance().saveContext()
         
         //return back to calendar
         self.navigationController?.popViewControllerAnimated(true)
