@@ -40,6 +40,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var leftSSButton: SSButton!
     @IBOutlet weak var rightSSButton: SSButton!
     @IBOutlet weak var noScheduleLabel: UILabel!
+    @IBOutlet weak var bottomToolBar: UIToolbar!
     
     //fetched results controller
     lazy var scheduleFetchResultsController : NSFetchedResultsController = {
@@ -126,6 +127,11 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //fetch schedules
         self.fetchSchedules()
         
+        //create buttons for bottomToobar
+        let menuButton = UIBarButtonItem(title: "Menu", style: .Plain, target: self, action: "showMenu")
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: self, action: nil)
+        let buttons : [UIBarButtonItem] = [menuButton, flexibleSpace]
+        
         //setup views
         self.calendarManager.menuView = self.monthSelectorView
         self.calendarManager.contentView = self.calendarView
@@ -137,6 +143,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.monthSelectorView.bringSubviewToFront(self.leftSSButton)
         self.monthSelectorView.bringSubviewToFront(self.rightSSButton)
         self.dayViewTableView.allowsMultipleSelectionDuringEditing = false
+        self.bottomToolBar.items = buttons
+
 
         //config views depending on schedule content
         self.configUIViews(self.selectedDate)
@@ -651,6 +659,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         for schedule in schedules {
             self.schedulesDict[schedule.date!.keyFromDate] = schedule
         }
+    }
+    
+    //modally show menuViewController
+    func showMenu() {
+        let menuVC = self.storyboard?.instantiateViewControllerWithIdentifier("MenuViewController") as! MenuViewController
+        self.navigationController?.presentViewController(menuVC, animated: true, completion: nil)
     }
     
     //called when controllers change content in the context

@@ -20,7 +20,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="r2A-Pd-HyF">
-                                <rect key="frame" x="0.0" y="424" width="600" height="176"/>
+                                <rect key="frame" x="0.0" y="424" width="600" height="146"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
@@ -106,6 +106,16 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UYW-Rq-uRS">
+                                <rect key="frame" x="0.0" y="570" width="600" height="30"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="hb6-eP-V6p"/>
+                                </constraints>
+                                <items>
+                                    <barButtonItem title="Item" id="C8B-au-0eL"/>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -118,18 +128,20 @@
                             <constraint firstAttribute="trailingMargin" secondItem="r2A-Pd-HyF" secondAttribute="trailing" constant="-20" id="RZp-SS-kyX"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Vd0-12-PKY" secondAttribute="trailing" constant="-20" id="SoG-zw-QlZ"/>
                             <constraint firstItem="Vd0-12-PKY" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="Tu2-mJ-8Fb"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="UYW-Rq-uRS" secondAttribute="bottom" id="Wys-d4-1B0"/>
                             <constraint firstAttribute="trailingMargin" secondItem="KkR-sd-dBO" secondAttribute="trailing" constant="-20" id="hNG-Bv-CCN"/>
                             <constraint firstItem="Vd0-12-PKY" firstAttribute="top" secondItem="KkR-sd-dBO" secondAttribute="bottom" id="j0y-ox-zuz"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="r2A-Pd-HyF" secondAttribute="bottom" id="oJf-pz-zFH"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="r2A-Pd-HyF" secondAttribute="bottom" id="oPj-Gb-vbe"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="UYW-Rq-uRS" secondAttribute="trailing" constant="-20" id="lhD-Ra-DG7"/>
+                            <constraint firstItem="UYW-Rq-uRS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="t9x-Aq-NTg"/>
                             <constraint firstItem="KkR-sd-dBO" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="ue8-0E-iC9"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="r2A-Pd-HyF" secondAttribute="bottom" id="wHF-pV-TJ0"/>
+                            <constraint firstItem="UYW-Rq-uRS" firstAttribute="top" secondItem="r2A-Pd-HyF" secondAttribute="bottom" id="vvi-GU-ZA1"/>
                             <constraint firstItem="lfy-sQ-mju" firstAttribute="top" secondItem="Vd0-12-PKY" secondAttribute="bottom" id="xWf-pM-rUw"/>
                             <constraint firstItem="KkR-sd-dBO" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="ykQ-7L-OpA"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="BUr-Qf-2xz"/>
                     <connections>
+                        <outlet property="bottomToolBar" destination="UYW-Rq-uRS" id="vhJ-pY-Xfv"/>
                         <outlet property="calendarView" destination="Vd0-12-PKY" id="kIf-8S-nvr"/>
                         <outlet property="calendarViewHeight" destination="t4z-xQ-tX3" id="UWO-r0-ZLm"/>
                         <outlet property="dayViewTableView" destination="r2A-Pd-HyF" id="EuV-Gs-Cor"/>
@@ -277,7 +289,40 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OSI-Eu-6N7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2211" y="628"/>
+            <point key="canvasLocation" x="2325" y="432"/>
+        </scene>
+        <!--Menu View Controller-->
+        <scene sceneID="x57-r9-aV8">
+            <objects>
+                <viewController storyboardIdentifier="MenuViewController" id="euc-g9-P7h" customClass="MenuViewController" customModule="Shift_Share" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="VIc-3n-vBO"/>
+                        <viewControllerLayoutGuide type="bottom" id="eZ7-XY-OIu"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="jvS-5H-4di">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nOw-sx-R8X">
+                                <rect key="frame" x="273" y="285" width="54" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Dismiss"/>
+                                <connections>
+                                    <action selector="dismissVC:" destination="euc-g9-P7h" eventType="touchUpInside" id="n5D-sN-50M"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="nOw-sx-R8X" firstAttribute="centerX" secondItem="jvS-5H-4di" secondAttribute="centerX" id="3p4-CN-1sg"/>
+                            <constraint firstItem="nOw-sx-R8X" firstAttribute="centerY" secondItem="jvS-5H-4di" secondAttribute="centerY" id="xVA-lz-deC"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uaw-wh-pX4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="926" y="1188"/>
         </scene>
         <!--Schedule Edit View Controller-->
         <scene sceneID="YAa-Tt-AUO">
@@ -399,7 +444,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="O6B-v4-b0X" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1316" y="1133"/>
+            <point key="canvasLocation" x="1654" y="1267"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="S9w-Q4-8Fo">
@@ -422,6 +467,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="fWd-yi-8Hw"/>
+        <segue reference="37i-gb-S2j"/>
     </inferredMetricsTieBreakers>
 </document>
