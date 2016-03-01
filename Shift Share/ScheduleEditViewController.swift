@@ -394,8 +394,9 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         do {
             try self.shiftFetchResultsController.performFetch()
         } catch {
-            //TODO: HANDLE ERROR
-            print("failed to fetch shifts")
+            
+            //alert user that app failed to load date
+            self.makeAlert(self, title: "Failed to Load Shift", error: error as NSError)
         }
     }
     
@@ -409,8 +410,9 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         do {
             try self.notesFetchResultsController.performFetch()
         } catch {
-            //TODO: HANDLE ERROR
-            print("failed to fetch notes")
+
+            //alert user that app failed to load date
+            self.makeAlert(self, title: "Failed to Load Notes", error: error as NSError)
         }
     }
     

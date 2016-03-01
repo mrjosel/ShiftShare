@@ -163,9 +163,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //cast dayView to ShiftShareDayView
         guard let dayView = dayView as? SSDayView else {
-            //failed to cast, abort
-            //TODO: REMOVE IN PRODUCTION
-            abort()
+            
+            //failed to cast
+            self.makeAlert(self, title: "Critical Error : UI", error: nil)
+            return
         }
         
         //format for today's date
@@ -216,9 +217,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //cast dayView to ShiftShareDayView
         guard let dayView = dayView as? SSDayView else {
-            //failed to cast, abort
-            //TODO: REMOVE IN PRODUCTION
-            abort()
+            
+            //failed to cast
+            self.makeAlert(self, title: "Critical Error : UI", error: nil)
+            return
         }
         
         //set date
@@ -248,23 +250,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //reload table
         self.dayViewTableView.reloadData()
 
-    }
-    
-    //handles double taps of dayViews
-    func calendar(calendar: JTCalendarManager!, didDoubleTapDayView dayView: UIView!) {
-        
-        //cast dayView to ShiftShareDayView
-        guard let _ = dayView as? SSDayView else {
-            //failed to cast, abort
-            //TODO: REMOVE IN PRODUCTION
-            abort()
-        }
-        
-        //toggle weekView
-        self.weekViewEnabled(!self.calendarManager.settings.weekModeEnabled)
-        
-        //reload table data
-        self.dayViewTableView.reloadData()
     }
     
     //config UI views depending on date
@@ -586,14 +571,16 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         do {
             try self.shiftFetchResultsController.performFetch()
         } catch {
-            //TODO: HANDLE ERROR
-            print("FAILED TO FETCH SHIFTS")
+            
+            //alert user that app failed to load date
+            self.makeAlert(self, title: "Failed to Load Shifts", error: error as NSError)
         }
         do {
             try self.notesFetchResultsController.performFetch()
         } catch {
-            //TODO: HANDLE ERROR
-            print("FAILED TO FETCH NOTES")
+            
+            //alert user that app failed to load date
+            self.makeAlert(self, title: "Failed to Load Notes", error: error as NSError)
         }
 
         //clear out predicates (probably not required, but safe)
@@ -650,8 +637,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         do {
             try self.scheduleFetchResultsController.performFetch()
         } catch {
-            //TODO: HANDLE ERROR
-            print("fetching schedules failed")
+
+            //alert user that app failed to load date
+            self.makeAlert(self, title: "Failed to Load Schedules", error: error as NSError)
         }
         
         //successful fetch, make temp array of schedules, and map to [String: SSSchedule], set to schedulesDict

@@ -72,6 +72,37 @@ extension NSDate {
     }
 }
 
+//allows all VCs to use custom alert when saving context fails (and other alerts)
+extension UIViewController {
+    
+    //handler for OK button depending on VC
+    func makeAlert(hostVC: UIViewController, title: String, error: NSError?) -> Void {
+        
+        //text to be displated
+        var messageText: String!
+        
+        if let error = error {
+            messageText = error.localizedDescription
+        } else {
+            messageText = "Press OK to Continue"
+        }
+        
+        //create UIAlertVC
+        let alertVC = UIAlertController(title: title, message: messageText, preferredStyle: UIAlertControllerStyle.Alert)
+        
+        //create action
+        let ok = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
+        
+        //add actions to alertVC
+        alertVC.addAction(ok)
+        dispatch_async(dispatch_get_main_queue(), {
+            //present alertVC
+            hostVC.presentViewController(alertVC, animated: true, completion: nil)
+        })
+    }
+
+}
+
 //allows for easy population of tableCell data
 protocol SSScheduleItem : NSObjectProtocol {
     

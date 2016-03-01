@@ -123,18 +123,6 @@ class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFiel
         }
     }
     
-    //TODO: DEBUG, REMOVE
-    func textBody(lineCount: Int) -> String {
-        var content = ""
-        let usableCount = lineCount > self.maxLines ? self.maxLines : lineCount
-        for var i = 0; i < usableCount - 1; i++ {
-            content += "\(i).)\n"
-        }
-        content += "\(usableCount - 1).)"
-        
-        return content
-    }
-    
     //check if data is shift, if not shift, allow editing of text body until body is full, otherwise disallow
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
         

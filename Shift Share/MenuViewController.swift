@@ -8,7 +8,10 @@
 
 import UIKit
 
+//shows menu, allows users to logout, and switch between friends' schedules
 class MenuViewController: UIViewController {
+    
+    //TODO: MAKE INTO SLIDE OUT MENU FOR PRODUCTION
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,13 +19,14 @@ class MenuViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
 
+    //dismiss VC
+    func dismissVC() {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    @IBAction func dismissVC(sender: UIButton) {
-        self.dismissViewControllerAnimated(true, completion: nil)
     }
 
     /*
