@@ -25,6 +25,8 @@
 		B79274A31BF55E4400FFE21C /* Shift_ShareTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79274A21BF55E4400FFE21C /* Shift_ShareTests.swift */; };
 		B79274AE1BF55E4400FFE21C /* Shift_ShareUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79274AD1BF55E4400FFE21C /* Shift_ShareUITests.swift */; };
 		B7C7781F1C2210EC006213CA /* TBDataEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C7781E1C2210EC006213CA /* TBDataEditViewController.swift */; };
+		B7E2A68A1C860A04001243E3 /* SSUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E2A6891C860A04001243E3 /* SSUser.swift */; };
+		B7E2A68C1C860CA2001243E3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E2A68B1C860CA2001243E3 /* LoginViewController.swift */; };
 		B7E6C1331C16657600A30682 /* SSShiftType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E6C1321C16657600A30682 /* SSShiftType.swift */; };
 		B7E6C1351C19F20800A30682 /* ScheduleEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E6C1341C19F20800A30682 /* ScheduleEditViewController.swift */; };
 		D737A387B0A4C4BDF7D71E54 /* Pods_Shift_Share.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 118FB04471BA827DDB631C39 /* Pods_Shift_Share.framework */; };
@@ -75,6 +77,8 @@
 		B79274AD1BF55E4400FFE21C /* Shift_ShareUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shift_ShareUITests.swift; sourceTree = "<group>"; };
 		B79274AF1BF55E4400FFE21C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B7C7781E1C2210EC006213CA /* TBDataEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TBDataEditViewController.swift; sourceTree = "<group>"; };
+		B7E2A6891C860A04001243E3 /* SSUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSUser.swift; sourceTree = "<group>"; };
+		B7E2A68B1C860CA2001243E3 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		B7E6C1321C16657600A30682 /* SSShiftType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSShiftType.swift; sourceTree = "<group>"; };
 		B7E6C1341C19F20800A30682 /* ScheduleEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleEditViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -130,6 +134,7 @@
 				B75A94251BFE2F3E0075C2DA /* SSShift.swift */,
 				B75A946E1C062B640075C2DA /* SSSchedule.swift */,
 				B7E6C1321C16657600A30682 /* SSShiftType.swift */,
+				B7E2A6891C860A04001243E3 /* SSUser.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -193,6 +198,7 @@
 		B79274BB1BF5600800FFE21C /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				B7E2A68B1C860CA2001243E3 /* LoginViewController.swift */,
 				B792748F1BF55E4400FFE21C /* CalendarViewController.swift */,
 				B7E6C1341C19F20800A30682 /* ScheduleEditViewController.swift */,
 				B7C7781E1C2210EC006213CA /* TBDataEditViewController.swift */,
@@ -417,6 +423,8 @@
 				B75A940D1BFA67220075C2DA /* SSDayView.swift in Sources */,
 				B75A942E1BFEB0200075C2DA /* SSNote.swift in Sources */,
 				B7E6C1331C16657600A30682 /* SSShiftType.swift in Sources */,
+				B7E2A68A1C860A04001243E3 /* SSUser.swift in Sources */,
+				B7E2A68C1C860CA2001243E3 /* LoginViewController.swift in Sources */,
 				B74262C81C80EEF900DE0CE2 /* SSTableViewCell.swift in Sources */,
 				B792748E1BF55E4400FFE21C /* AppDelegate.swift in Sources */,
 				B78676241C697B420028663A /* ShiftShareModel.xcdatamodeld in Sources */,

@@ -338,7 +338,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //Edit Button
         case .NEW :
             
-            let newSchedule = SSSchedule(forDate: (self.selectedDate), forUser: "Brian", context: CoreDataStackManager.sharedInstance().managedObjectContext)
+            let newSchedule = SSSchedule(forDate: (self.selectedDate), forUser: SSUser(userName: "Brian", context: CoreDataStackManager.sharedInstance().managedObjectContext), context: CoreDataStackManager.sharedInstance().managedObjectContext)
             
             //segue to scheduleEditVC only
             self.performSegueWithIdentifier("scheduleEditVCsegue", sender: newSchedule)

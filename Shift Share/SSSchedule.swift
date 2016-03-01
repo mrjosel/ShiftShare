@@ -22,7 +22,7 @@ class SSSchedule : NSManagedObject {
     @NSManaged var date : NSDate?
     
     //user associated with schedule
-    @NSManaged var user : String?
+    @NSManaged var user : SSUser?
     
     //shift for the day
     @NSManaged var shift : SSShift?
@@ -56,7 +56,7 @@ class SSSchedule : NSManagedObject {
     }
     
     //init with params
-    init(forDate date: NSDate?, forUser user: AnyObject?, context: NSManagedObjectContext) {
+    init(forDate date: NSDate?, forUser user: SSUser?, context: NSManagedObjectContext) {
         
         //coredata
         let entity = NSEntityDescription.entityForName("SSSchedule", inManagedObjectContext: context)!
@@ -64,7 +64,7 @@ class SSSchedule : NSManagedObject {
         
         //set params to properties
         self.date = date
-        self.user = user as? String //TODO: FIX WHEN USER OBJECT IS IMPLEMENTED
+        self.user = user
 
     }
 }

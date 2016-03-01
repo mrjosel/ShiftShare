@@ -9,9 +9,9 @@
     </entity>
     <entity name="SSSchedule" representedClassName="SSSchedule" syncable="YES">
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="user" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="notes" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SSNote" inverseName="schedule" inverseEntity="SSNote" syncable="YES"/>
         <relationship name="shift" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SSShift" inverseName="schedule" inverseEntity="SSShift" syncable="YES"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SSUser" inverseName="schedules" inverseEntity="SSUser" syncable="YES"/>
     </entity>
     <entity name="SSShift" representedClassName="SSShift" syncable="YES">
         <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
@@ -20,9 +20,15 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="schedule" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SSSchedule" inverseName="shift" inverseEntity="SSSchedule" syncable="YES"/>
     </entity>
+    <entity name="SSUser" syncable="YES">
+        <attribute name="dateCreated" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="schedules" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SSSchedule" inverseName="user" inverseEntity="SSSchedule" syncable="YES"/>
+    </entity>
     <elements>
         <element name="SSNote" positionX="-18" positionY="63" width="128" height="120"/>
         <element name="SSSchedule" positionX="-54" positionY="18" width="128" height="105"/>
         <element name="SSShift" positionX="-36" positionY="45" width="128" height="120"/>
+        <element name="SSUser" positionX="-36" positionY="90" width="128" height="90"/>
     </elements>
 </model>
