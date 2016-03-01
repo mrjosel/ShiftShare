@@ -78,6 +78,9 @@ extension UIViewController {
     //handler for OK button depending on VC
     func makeAlert(hostVC: UIViewController, title: String, error: NSError?) -> Void {
         
+        //handler
+        var handler : ((UIAlertAction) -> Void)?
+        
         //text to be displated
         var messageText: String!
         
@@ -87,11 +90,20 @@ extension UIViewController {
             messageText = "Press OK to Continue"
         }
         
+        //create handler, always nil unless sent by menuVC
+        if hostVC is MenuViewController {
+            handler = {alert in
+                hostVC.dismissViewControllerAnimated(true, completion: nil)
+            }
+        } else {
+            handler = nil
+        }
+        
         //create UIAlertVC
         let alertVC = UIAlertController(title: title, message: messageText, preferredStyle: UIAlertControllerStyle.Alert)
         
         //create action
-        let ok = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
+        let ok = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: handler)
         
         //add actions to alertVC
         alertVC.addAction(ok)

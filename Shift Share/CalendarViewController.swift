@@ -388,7 +388,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //create cell
         guard let cell = tableView.dequeueReusableCellWithIdentifier("SSTableViewCell") as? SSTableViewCell else {
             print("no cell made")
-            self.navigationController?.popToRootViewControllerAnimated(true)
             return UITableViewCell()
         }
         
