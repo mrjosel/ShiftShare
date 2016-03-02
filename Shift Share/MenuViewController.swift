@@ -13,7 +13,7 @@ import UIKit
 enum MenuCellTitle : Int {
     
     //CELLS POPULATE IN THIS ORDER
-    case User = 0, Friends, Share, Retrieve, Logout
+    case User = 0, Friends, Retrieve, Logout
     
     //title names for cells
     static let titleNames = [
@@ -43,6 +43,9 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet weak var menuTable: UITableView!
     @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
     
+    //user
+    var user: SSUser!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -50,6 +53,10 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.menuTable.scrollEnabled = false
         
         // Do any additional setup after loading the view.
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        self.navigationItem.title = "Menu"
     }
     
     //number of rows
@@ -78,6 +85,15 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return cell
     }
     
+    //handles behavior for cell when its displayed
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        //disable user activity for User Cell
+        if cell.textLabel?.text == MenuCellTitle.titleNames[MenuCellTitle.User] {
+            cell.userInteractionEnabled = false
+        }
+    }
+    
     //present next view depending on which cell is selected
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
@@ -94,9 +110,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         case MenuCellTitle.User :
             print("\(MenuCellTitle.User.description) was Selected")
         case MenuCellTitle.Friends :
-            print("\(MenuCellTitle.Friends.description) was Selected")
-        case MenuCellTitle.Share :
-            print("\(MenuCellTitle.Share.description) was Selected")
+            self.performSegueWithIdentifier("FriendsListSegue", sender: self.user)
         case MenuCellTitle.Retrieve :
             print("\(MenuCellTitle.Retrieve.description) was Selected")
         case MenuCellTitle.Logout :
@@ -105,6 +119,16 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
     }
+    
+    //segue to various controllers
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "FriendsListSegue" {
+            let friendsVC = segue.destinationViewController as! FriendsListViewController
+            friendsVC.user = self.user
+        }
+    }
+    
 
     //dismiss VC
     func dismissVC() {

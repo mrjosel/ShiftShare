@@ -658,8 +658,11 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     
     //modally show menuViewController
     func showMenu() {
-        let menuVC = self.storyboard?.instantiateViewControllerWithIdentifier("MenuViewController") as! MenuViewController
-        self.navigationController?.presentViewController(menuVC, animated: true, completion: nil)
+        
+        let menuNavVC = self.storyboard?.instantiateViewControllerWithIdentifier("MenuNavVC") as! UINavigationController
+        let menuVC = menuNavVC.viewControllers.first as! MenuViewController
+        menuVC.user = self.user
+        self.navigationController?.presentViewController(menuNavVC, animated: true, completion: nil)
     }
     
     //called when controllers change content in the context
