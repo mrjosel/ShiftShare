@@ -26,6 +26,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
+    //currently loggin in user
+    var user : SSUser!
+    
     //speeds up memory access if copying schedules to a local dict and then keying off extension of NSDate (keyFromDate)
     var schedulesDict = [String : SSSchedule]()
 
@@ -338,7 +341,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //Edit Button
         case .NEW :
             
-            let newSchedule = SSSchedule(forDate: (self.selectedDate), forUser: SSUser(userName: "Brian", context: CoreDataStackManager.sharedInstance().managedObjectContext), context: CoreDataStackManager.sharedInstance().managedObjectContext)
+            let newSchedule = SSSchedule(forDate: (self.selectedDate), forUser: self.user, context: CoreDataStackManager.sharedInstance().managedObjectContext)
             
             //segue to scheduleEditVC only
             self.performSegueWithIdentifier("scheduleEditVCsegue", sender: newSchedule)

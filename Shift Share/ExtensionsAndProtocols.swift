@@ -13,17 +13,6 @@ import UIKit
 import JTCalendar
 import CoreData
 
-//extending UITableView to allow for deselecting all cells
-extension UITableView {
-    
-    //runs through all cells in visible cells and sets selected parameter to false
-    func deselectAllCells() {
-        for cell in self.visibleCells {
-            cell.selected = false
-        }
-    }
-}
-
 //custom color for Today's Date
 extension UIColor {
     public class func todayColor() -> UIColor {
@@ -112,57 +101,6 @@ extension UIViewController {
             hostVC.presentViewController(alertVC, animated: true, completion: nil)
         })
     }
-
-}
-
-//handles all keyboard view adjustments
-//TODO : WHY ISN'T SCREEN MOVING?
-extension LoginViewController {
-    
-    func subscribeToKeyboardNotifications() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
-    }
-    
-    func unsubscribeToKeyboardNotifications() {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
-    }
-    
-    func keyboardWillShow(notification: NSNotification) {
-        
-        if keyboardAdjusted == false {
-            lastKeyboardOffset = getKeyboardHeight(notification) / 2
-            self.view.superview?.frame.origin.y -= lastKeyboardOffset
-            keyboardAdjusted = true
-        }
-    }
-    
-    func keyboardWillHide(notification: NSNotification) {
-        
-        if keyboardAdjusted == true {
-            self.view.superview?.frame.origin.y += lastKeyboardOffset
-            keyboardAdjusted = false
-        }
-    }
-    
-    func getKeyboardHeight(notification: NSNotification) -> CGFloat {
-        let userInfo = notification.userInfo
-        let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue // of CGRect
-        return keyboardSize.CGRectValue().height
-    }
-    
-    func addKeyboardDismissRecognizer() {
-        self.view.addGestureRecognizer(tapRecognizer!)
-    }
-    
-    func removeKeyboardDismissRecognizer() {
-        self.view.removeGestureRecognizer(tapRecognizer!)
-    }
-    
-    func handleSingleTap(recognizer: UITapGestureRecognizer) {
-        self.view.endEditing(true)
-    }
-
 }
 
 //allows for easy population of tableCell data

@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 //VC to handle all login activity
-class LoginViewController: UIViewController, UITextFieldDelegate {
+class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
     
     //outlets
     @IBOutlet weak var titleLabel: UILabel!
@@ -18,14 +18,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var passwordTextFeld: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var signupButton: UIButton!
-    
-    //for keyboard adjustments (used in ExtensionsAndProtocols.swift)
-    var keyboardAdjusted = false
-    var lastKeyboardOffset : CGFloat = 0.0
-    var tapRecognizer: UITapGestureRecognizer? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //delegates
+        self.userNameTextField.delegate = self
+        self.passwordTextFeld.delegate = self
         
         //setup views
         self.titleLabel.text = "ShiftShare"
@@ -43,9 +42,18 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         // Do any additional setup after loading the view.
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewWillAppear(animated: Bool) {
+        
         //hide navBar
         self.navigationController?.navigationBar.hidden = true
+        
+        //subscribe to keyboard notifications to allow view resizing
+        self.subscribeToKeyboardNotifications()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        //unsubscribe to keyboard notifications to allow view resizing
+        self.unsubscribeToKeyboardNotifications()
     }
     
     //logs user in
@@ -56,6 +64,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     //signs user up
     func signupButtonPressed() {
         print("new user signing up")
+    }
+    
+    //what to do when return key is pressed
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.endEditing(true)
+        return true
     }
 
     override func didReceiveMemoryWarning() {

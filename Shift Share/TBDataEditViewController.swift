@@ -11,7 +11,7 @@ import JTCalendar
 import CoreData
 
 //presents shift or note in detail
-class TBDataEditViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
+class TBDataEditViewController: KeyboardPresentViewController, UITextViewDelegate, UITextFieldDelegate {
     
     //outlets
     @IBOutlet weak var dataImageView: UIImageView!
