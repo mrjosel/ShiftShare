@@ -30,7 +30,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     var user : SSUser!
     
     //speeds up memory access if copying schedules to a local dict and then keying off extension of NSDate (keyFromDate)
-    var schedulesDict = [String : SSSchedule]()
+    var schedulesDict : [String : SSSchedule]!
 
     //user defaults, used to load date after user launches app
     let userDefaults = NSUserDefaults.standardUserDefaults()
@@ -51,8 +51,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         //create fetch request
         let fetchRequest = NSFetchRequest(entityName: "SSSchedule")
         
+        //create predicate
+        let predicate = NSPredicate(format: "user  == %@", self.user)
+        
         //make sort descriptor
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        fetchRequest.predicate = predicate
         
         //create controller and return
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "schedule")
@@ -645,6 +649,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         //successful fetch, make temp array of schedules, and map to [String: SSSchedule], set to schedulesDict
+        self.schedulesDict = [String : SSSchedule]()
         let schedules = self.scheduleFetchResultsController.fetchedObjects as! [SSSchedule]
         for schedule in schedules {
             self.schedulesDict[schedule.date!.keyFromDate] = schedule

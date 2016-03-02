@@ -19,7 +19,6 @@ enum MenuCellTitle : Int {
     static let titleNames = [
         User: "UserName",
         Friends: "Friends",
-        Share: "Share",
         Retrieve: "Retrieve Backup",
         Logout: "Logout"
     ]
@@ -102,6 +101,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
             print("\(MenuCellTitle.Retrieve.description) was Selected")
         case MenuCellTitle.Logout :
             print("\(MenuCellTitle.Logout.description) was Selected")
+            self.navigationController?.popToRootViewControllerAnimated(true)
         }
         
     }

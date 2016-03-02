@@ -72,14 +72,19 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
         
         //TODO : construct URL for GET
         //TODO : create URL session, make request
-        //TODO : parse data, send schedules to calVC
-        let schedules = [String : SSSchedule]()   //placeholder until method finalized
+        //TODO : parse data, get user, schedules, send to calVC
+        let schedules : [SSSchedule] = []
+        let user = SSUser(userName: "Brian", userID: 000000001, schedules: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
         
+
+        //create VCs and present
         let navVC = self.storyboard?.instantiateViewControllerWithIdentifier("NavVC") as! UINavigationController
         let calVC = navVC.viewControllers.first as! CalendarViewController
-        calVC.schedulesDict = schedules
+        calVC.user = user
         self.presentViewController(navVC, animated: true, completion: {
             _ in
+            
+            //clear out login credentials after new VC is presented
                 self.userNameTextField.text = ""
                 self.passwordTextFeld.text = ""
             })

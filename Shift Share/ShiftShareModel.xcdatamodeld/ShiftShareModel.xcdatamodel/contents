@@ -21,7 +21,10 @@
         <relationship name="schedule" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SSSchedule" inverseName="shift" inverseEntity="SSSchedule" syncable="YES"/>
     </entity>
     <entity name="SSUser" syncable="YES">
+        <attribute name="canView" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="dateCreated" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="letsView" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="userID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="schedules" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SSSchedule" inverseName="user" inverseEntity="SSSchedule" syncable="YES"/>
     </entity>
@@ -29,6 +32,6 @@
         <element name="SSNote" positionX="-18" positionY="63" width="128" height="120"/>
         <element name="SSSchedule" positionX="-54" positionY="18" width="128" height="105"/>
         <element name="SSShift" positionX="-36" positionY="45" width="128" height="120"/>
-        <element name="SSUser" positionX="-36" positionY="90" width="128" height="90"/>
+        <element name="SSUser" positionX="-36" positionY="90" width="128" height="135"/>
     </elements>
 </model>
