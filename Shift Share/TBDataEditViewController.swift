@@ -44,6 +44,8 @@ class TBDataEditViewController: KeyboardPresentViewController, UITextViewDelegat
         //hide navBar
         self.navigationController?.navigationBarHidden = true
 
+        //subscribe to keyboard notifications to allow view resizing
+        self.subscribeToKeyboardNotifications()
     }
     
     override func viewDidLoad() {
@@ -311,6 +313,9 @@ class TBDataEditViewController: KeyboardPresentViewController, UITextViewDelegat
     override func viewWillDisappear(animated: Bool) {
         self.scheduleItem = nil
         self.numLines = nil
+        
+        //unsubscribe to keyboard notifications to allow view resizing
+        self.unsubscribeToKeyboardNotifications()
     }
     
     override func didReceiveMemoryWarning() {

@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Firebase
 
 //VC to handle all login activity
 class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
@@ -18,6 +19,9 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
     @IBOutlet weak var passwordTextFeld: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var signupButton: UIButton!
+    @IBOutlet weak var textFieldSpacing: NSLayoutConstraint!
+    @IBOutlet weak var loginButtonToTextFieldSpacing: NSLayoutConstraint!
+    @IBOutlet weak var signupButtonToTextFieldSpacing: NSLayoutConstraint!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +42,8 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
         self.loginButton.actionsForTarget("loginButtonTouched", forControlEvent: .TouchUpInside)
         self.signupButton.setTitle("Sign-Up", forState: .Normal)
         self.signupButton.actionsForTarget("signupButtonPressed", forControlEvent: .TouchUpInside)
+        self.loginButtonToTextFieldSpacing = self.textFieldSpacing
+        self.signupButtonToTextFieldSpacing = self.textFieldSpacing
 
         // Do any additional setup after loading the view.
     }
@@ -56,20 +62,56 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
         self.unsubscribeToKeyboardNotifications()
     }
     
-    //logs user in
+    //logs user in, gets data via HTTP GET request, passes retrieved schedule data into calendarVC
     func loginButtonPressed() {
         print("user logging in")
+        
+        //get credentials
+        let username = self.userNameTextField.text
+        let password = self.passwordTextFeld.text
+        
+        //TODO : construct URL for GET
+        //TODO : create URL session, make request
+        //TODO : parse data, send schedules to calVC
+        let schedules = [String : SSSchedule]()   //placeholder until method finalized
+        
+        let navVC = self.storyboard?.instantiateViewControllerWithIdentifier("NavVC") as! UINavigationController
+        let calVC = navVC.viewControllers.first as! CalendarViewController
+        calVC.schedulesDict = schedules
+        self.presentViewController(navVC, animated: true, completion: {
+            _ in
+                self.userNameTextField.text = ""
+                self.passwordTextFeld.text = ""
+            })
+        
     }
     
     //signs user up
     func signupButtonPressed() {
         print("new user signing up")
+        //TODO: CREATE NEW SIGNUPVC, COMPARE TO ON THE MAP PROJECT
     }
     
     //what to do when return key is pressed
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.endEditing(true)
-        return true
+        
+        if textField.text != "" {
+            //if textField is userName, progress to password textField
+            if textField == self.userNameTextField {
+                self.passwordTextFeld.becomeFirstResponder()
+
+            } else {
+                //if textField is password, hit login button
+                self.loginButtonPressed()
+                
+                //remove keyboard
+                textField.resignFirstResponder()
+            }
+            //rmeove keyboard since text is not nil
+            return true
+        }
+        //text is "", do not allow return
+        return false
     }
 
     override func didReceiveMemoryWarning() {
