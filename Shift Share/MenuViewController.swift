@@ -42,6 +42,10 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     //outlets
     @IBOutlet weak var menuTable: UITableView!
     @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var calButton: UIButton!
+    @IBOutlet weak var rightButton: UIButton!
+    @IBOutlet weak var menuBar: UIView!
     
     //user
     var user: SSUser!
@@ -51,6 +55,10 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
         //setup UIViews
         self.menuTable.scrollEnabled = false
+        self.calButton.setTitle("Calendar", forState: .Normal)
+        self.calButton.addTarget(self, action: "calButtonPressed", forControlEvents: .TouchUpInside)
+        self.menuBar.bringSubviewToFront(self.calButton)
+        self.rightButton.hidden = true
         
         // Do any additional setup after loading the view.
     }
@@ -115,9 +123,15 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
             print("\(MenuCellTitle.Retrieve.description) was Selected")
         case MenuCellTitle.Logout :
             print("\(MenuCellTitle.Logout.description) was Selected")
-            self.navigationController?.popToRootViewControllerAnimated(true)
+            self.logout()
+            
         }
         
+    }
+    
+    //return to calendar
+    func calButtonPressed() {
+        self.navigationController?.popViewControllerAnimated(true)
     }
     
     //segue to various controllers
@@ -129,10 +143,13 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-
-    //dismiss VC
-    func dismissVC() {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    //logout method
+    func logout() {
+        //TODO: HTTP DELETE Method  completionHandler : (success: Bool, error: NSerror) -> Void
+        let navVC = self.storyboard?.instantiateViewControllerWithIdentifier("NavVC") as! UINavigationController
+        let calVC = navVC.viewControllers.first as! CalendarViewController
+        calVC.logoutOrder = true
+        self.navigationController?.popToRootViewControllerAnimated(true)
     }
     
     override func didReceiveMemoryWarning() {

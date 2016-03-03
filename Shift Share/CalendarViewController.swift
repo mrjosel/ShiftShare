@@ -35,6 +35,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //user defaults, used to load date after user launches app
     let userDefaults = NSUserDefaults.standardUserDefaults()
     
+    //logout order
+    var logoutOrder : Bool = false
+    
     //outlets
     @IBOutlet weak var monthSelectorView: JTCalendarMenuView!
     @IBOutlet weak var calendarView: JTHorizontalCalendarView!
@@ -99,6 +102,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //hide navBar
         self.navigationController?.navigationBar.hidden = true
+        
+        //logout if order is true
+        if self.logoutOrder {
+            print("should logout")
+            self.dismissViewControllerAnimated(false, completion: nil)
+        }
         
     }
 
@@ -475,8 +484,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //handles segues
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
+        let segueID = segue.identifier! as String
         
-        if segue.identifier == "TBeditVCSegueFromCal" {
+        switch segueID {
+        case "TBeditVCSegueFromCal" :
             
             //schedule item to pass to nextVC, and indexPath
             var scheduleItem : SSScheduleItem?
@@ -502,11 +513,20 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             tbEditVC.schedule = self.schedulesDict[self.selectedDate.keyFromDate] 
             tbEditVC.selectedIndexPath = indexPath
             
-        } else if segue.identifier == "scheduleEditVCsegue" {
+        case "scheduleEditVCsegue" :
             
             //create VC to create new schedule
             let scheduleVC : ScheduleEditViewController = segue.destinationViewController as! ScheduleEditViewController
             scheduleVC.schedule = sender as! SSSchedule
+            
+        case "menuSegue" :
+
+            //TODO: FIX VC PRESENTATION
+            let menuVC : MenuViewController = segue.destinationViewController as! MenuViewController
+            menuVC.user = sender as! SSUser
+            
+        default :
+            self.makeAlert(self, title: "Critical Error : UI", error: nil)
         }
         
     }
@@ -658,11 +678,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     
     //modally show menuViewController
     func showMenu() {
-        
-        let menuNavVC = self.storyboard?.instantiateViewControllerWithIdentifier("MenuNavVC") as! UINavigationController
-        let menuVC = menuNavVC.viewControllers.first as! MenuViewController
-        menuVC.user = self.user
-        self.navigationController?.presentViewController(menuNavVC, animated: true, completion: nil)
+        self.performSegueWithIdentifier("menuSegue", sender: self.user)
     }
     
     //called when controllers change content in the context
