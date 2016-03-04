@@ -22,6 +22,21 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
     @IBOutlet weak var textFieldSpacing: NSLayoutConstraint!
     @IBOutlet weak var loginButtonToTextFieldSpacing: NSLayoutConstraint!
     @IBOutlet weak var signupButtonToTextFieldSpacing: NSLayoutConstraint!
+    
+    //fetched results controller
+    lazy var userFetchResultsController : NSFetchedResultsController = {
+        
+        //create fetch request
+        let fetchRequest = NSFetchRequest(entityName: "SSUser")
+        
+        //make sort descriptor
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "userID", ascending: true)]
+        
+        //create controller and return
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "user")
+        
+        return fetchedResultsController
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,9 +89,36 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
         //TODO : create URL session, make request
         //TODO : parse data, get user, schedules, send to calVC
         let schedules : [SSSchedule] = []
-        let user = SSUser(userName: "Brian", userID: 000000001, schedules: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+        let userID = 000001
+        let userIDstring = String(userID)
+        var user : SSUser?
         
-
+        //create predicate
+        let predicate = NSPredicate(format: "userID  == %@", userIDstring)
+        self.userFetchResultsController.fetchRequest.predicate = predicate
+        
+        //perform fetch
+        do {
+            try self.userFetchResultsController.performFetch()
+        } catch {
+            self.makeAlert(self, title: "No User Found", error: nil)
+        }
+        
+        //if user is found in CoreData, fetch
+        if let users = self.userFetchResultsController.fetchedObjects as? [SSUser] {
+            for _user in users {
+                if _user.userID == userID {
+                    user = _user
+                }
+            }
+        }
+        
+        //if no user found in fetch, create new user from JSON
+        if user == nil {
+            user = SSUser(userName: "Brian", userID: 000000001, schedules: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+        }
+        
+        
         //create VCs and present
         let navVC = self.storyboard?.instantiateViewControllerWithIdentifier("NavVC") as! UINavigationController
         let calVC = navVC.viewControllers.first as! CalendarViewController
