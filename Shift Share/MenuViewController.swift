@@ -64,7 +64,9 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.navigationItem.title = "Menu"
+
+        //always have cells deselected
+        self.menuTable.deselectAllCells()
     }
     
     //number of rows

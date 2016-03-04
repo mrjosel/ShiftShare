@@ -678,6 +678,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     
     //modally show menuViewController
     func showMenu() {
+        //TODO: MAKE SEGUE FROM LEFT IN PRODUCTION
         self.performSegueWithIdentifier("menuSegue", sender: self.user)
     }
     

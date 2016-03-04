@@ -9,16 +9,18 @@
 import UIKit
 import Firebase
 
-class FriendsListViewController: KeyboardPresentViewController {
+class FriendsListViewController: KeyboardPresentViewController, UITableViewDelegate, UITableViewDataSource {
 
     //outlets
     @IBOutlet weak var menuButton: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var rightButton: UIButton!
     @IBOutlet weak var menuBar: UIView!
+    @IBOutlet weak var friendsTable: UITableView!
     
     //user
     var user : SSUser!
+    var friends : [SSUser]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,15 +33,35 @@ class FriendsListViewController: KeyboardPresentViewController {
         self.menuBar.bringSubviewToFront(self.menuButton)
         self.titleLabel.text = "Friends"
         self.rightButton.hidden = true
+        
+        //delegates
+        self.friendsTable.delegate = self
     }
     
     override func viewWillAppear(animated: Bool) {
         self.navigationItem.title = "Friends"
     }
     
+    //number of rows
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        //TODO: Perform HTTP GET assemble friend objects, populate accordingly
+        return 1 //will change
+    }
+    
+    //construct cell
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        let cell : UITableViewCell = tableView.dequeueReusableCellWithIdentifier("friendCell")!
+        
+        if let friends = self.friends {
+            cell.textLabel?.text = friends[indexPath.row].userName
+        }
+        
+        return cell
+    }
+    
     //return to menu
     func menuButtonPressed() {
-       
         self.navigationController?.popViewControllerAnimated(true)
     }
 
