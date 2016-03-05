@@ -308,7 +308,7 @@
                                 <rect key="frame" x="279" y="124" width="42" height="20.5"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Wqw-Il-75y">
@@ -358,6 +358,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="yZU-dU-Mgu"/>
                     <connections>
+                        <outlet property="emailTextField" destination="Wqw-Il-75y" id="0qp-NG-Zks"/>
                         <outlet property="loginButton" destination="DYN-Ig-QxX" id="xIh-8g-f5M"/>
                         <outlet property="loginButtonToTextFieldSpacing" destination="RIr-a0-4qt" id="Ti4-B2-mbu"/>
                         <outlet property="passwordTextFeld" destination="WLu-Oy-6qP" id="QvG-Pb-7Sg"/>
@@ -365,7 +366,6 @@
                         <outlet property="signupButtonToTextFieldSpacing" destination="7ww-AW-NTH" id="tPw-A4-thP"/>
                         <outlet property="textFieldSpacing" destination="Hkd-ip-wuw" id="Swm-Mo-mhb"/>
                         <outlet property="titleLabel" destination="gpV-i1-fWe" id="dpQ-ko-gKh"/>
-                        <outlet property="userNameTextField" destination="Wqw-Il-75y" id="9Ob-9K-G32"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4N8-x6-8dk" userLabel="First Responder" sceneMemberID="firstResponder"/>

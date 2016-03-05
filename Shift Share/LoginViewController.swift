@@ -15,7 +15,7 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
     
     //outlets
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var userNameTextField: UITextField!
+    @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextFeld: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var signupButton: UIButton!
@@ -42,21 +42,22 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         //delegates
-        self.userNameTextField.delegate = self
+        self.emailTextField.delegate = self
         self.passwordTextFeld.delegate = self
         
         //setup views
         self.titleLabel.text = "ShiftShare"
-        self.userNameTextField.placeholder = "Username"
-        self.userNameTextField.clearsOnBeginEditing = true
-        self.userNameTextField.clearButtonMode = .WhileEditing
+        self.emailTextField.placeholder = "Email"
+        self.emailTextField.clearsOnBeginEditing = true
+        self.emailTextField.clearButtonMode = .WhileEditing
         self.passwordTextFeld.placeholder = "Password"
         self.passwordTextFeld.clearsOnBeginEditing = true
         self.passwordTextFeld.clearButtonMode = .WhileEditing
+        self.passwordTextFeld.secureTextEntry = true
         self.loginButton.setTitle("Login", forState: .Normal)
-        self.loginButton.actionsForTarget("loginButtonTouched", forControlEvent: .TouchUpInside)
+        self.loginButton.addTarget(self, action: "loginButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
         self.signupButton.setTitle("Sign-Up", forState: .Normal)
-        self.signupButton.actionsForTarget("signupButtonPressed", forControlEvent: .TouchUpInside)
+        self.signupButton.addTarget(self, action: "signupButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
         self.loginButtonToTextFieldSpacing = self.textFieldSpacing
         self.signupButtonToTextFieldSpacing = self.textFieldSpacing
 
@@ -78,11 +79,11 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
     }
     
     //logs user in, gets data via HTTP GET request, passes retrieved schedule data into calendarVC
-    func loginButtonPressed() {
+    func loginButtonPressed(sender: UIButton) {
         print("user logging in")
         
         //get credentials
-        let username = self.userNameTextField.text
+        let username = self.emailTextField.text
         let password = self.passwordTextFeld.text
         
         //TODO : construct URL for GET
@@ -127,16 +128,28 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
             _ in
             
             //clear out login credentials after new VC is presented
-                self.userNameTextField.text = ""
+                self.emailTextField.text = ""
                 self.passwordTextFeld.text = ""
             })
         
     }
     
     //signs user up
-    func signupButtonPressed() {
+    func signupButtonPressed(sender: UIButton) {
+        
         print("new user signing up")
-        //TODO: CREATE NEW SIGNUPVC, COMPARE TO ON THE MAP PROJECT
+        FirebaseClient.sharedInstance().createNewUser(self.emailTextField.text!, password: self.passwordTextFeld.text!, completionHandler: {success, userID, error in
+            
+            //check for success, if false, make alert, if true carry on new user routine
+            if !success {
+                self.makeAlert(self, title: "Sign-Up Failed", error: error)
+            } else {
+                //ensure userID is not nil, create new SSUser using
+                if let userID = userID as? String {
+                    print("Successful, userID = \(userID)")
+                }
+            }
+        })
     }
     
     //what to do when return key is pressed
@@ -144,12 +157,12 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
         
         if textField.text != "" {
             //if textField is userName, progress to password textField
-            if textField == self.userNameTextField {
+            if textField == self.emailTextField {
                 self.passwordTextFeld.becomeFirstResponder()
 
             } else {
                 //if textField is password, hit login button
-                self.loginButtonPressed()
+                self.loginButtonPressed(self.loginButton)
                 
                 //remove keyboard
                 textField.resignFirstResponder()
