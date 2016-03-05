@@ -16,7 +16,7 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
     //outlets
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var emailTextField: UITextField!
-    @IBOutlet weak var passwordTextFeld: UITextField!
+    @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var signupButton: UIButton!
     @IBOutlet weak var textFieldSpacing: NSLayoutConstraint!
@@ -43,17 +43,17 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
         
         //delegates
         self.emailTextField.delegate = self
-        self.passwordTextFeld.delegate = self
+        self.passwordTextField.delegate = self
         
         //setup views
         self.titleLabel.text = "ShiftShare"
         self.emailTextField.placeholder = "Email"
         self.emailTextField.clearsOnBeginEditing = true
         self.emailTextField.clearButtonMode = .WhileEditing
-        self.passwordTextFeld.placeholder = "Password"
-        self.passwordTextFeld.clearsOnBeginEditing = true
-        self.passwordTextFeld.clearButtonMode = .WhileEditing
-        self.passwordTextFeld.secureTextEntry = true
+        self.passwordTextField.placeholder = "Password"
+        self.passwordTextField.clearsOnBeginEditing = true
+        self.passwordTextField.clearButtonMode = .WhileEditing
+        self.passwordTextField.secureTextEntry = true
         self.loginButton.setTitle("Login", forState: .Normal)
         self.loginButton.addTarget(self, action: "loginButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
         self.signupButton.setTitle("Sign-Up", forState: .Normal)
@@ -84,13 +84,13 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
         
         //get credentials
         let username = self.emailTextField.text
-        let password = self.passwordTextFeld.text
+        let password = self.passwordTextField.text
         
         //TODO : construct URL for GET
         //TODO : create URL session, make request
         //TODO : parse data, get user, schedules, send to calVC
         let schedules : [SSSchedule] = []
-        let userID = 000001
+        let userID = "00000001"
         let userIDstring = String(userID)
         var user : SSUser?
         
@@ -116,7 +116,7 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
         
         //if no user found in fetch, create new user from JSON
         if user == nil {
-            user = SSUser(userName: "Brian", userID: 000000001, schedules: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+            user = SSUser(userName: "Brian", userID: "00000001", schedules: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
         }
         
         
@@ -129,7 +129,7 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
             
             //clear out login credentials after new VC is presented
                 self.emailTextField.text = ""
-                self.passwordTextFeld.text = ""
+                self.passwordTextField.text = ""
             })
         
     }
@@ -137,19 +137,10 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
     //signs user up
     func signupButtonPressed(sender: UIButton) {
         
-        print("new user signing up")
-        FirebaseClient.sharedInstance().createNewUser(self.emailTextField.text!, password: self.passwordTextFeld.text!, completionHandler: {success, userID, error in
-            
-            //check for success, if false, make alert, if true carry on new user routine
-            if !success {
-                self.makeAlert(self, title: "Sign-Up Failed", error: error)
-            } else {
-                //ensure userID is not nil, create new SSUser using
-                if let userID = userID as? String {
-                    print("Successful, userID = \(userID)")
-                }
-            }
-        })
+        let signupVC = self.storyboard?.instantiateViewControllerWithIdentifier("SignUpViewController") as! SignUpViewController
+        self.presentViewController(signupVC, animated: true, completion: {print("attempted to sign up")})
+        
+
     }
     
     //what to do when return key is pressed
@@ -158,7 +149,7 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
         if textField.text != "" {
             //if textField is userName, progress to password textField
             if textField == self.emailTextField {
-                self.passwordTextFeld.becomeFirstResponder()
+                self.passwordTextField.becomeFirstResponder()
 
             } else {
                 //if textField is password, hit login button

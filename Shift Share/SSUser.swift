@@ -17,7 +17,7 @@ class SSUser: NSManagedObject {
     //managed vars
     @NSManaged var schedules : [SSSchedule]?
     @NSManaged var userName : String!
-    @NSManaged var userID : NSNumber!
+    @NSManaged var userID : String!
     @NSManaged var dateCreated : NSDate?
     @NSManaged var letsView : NSMutableArray?
     @NSManaged var canView : NSMutableArray?
@@ -26,14 +26,14 @@ class SSUser: NSManagedObject {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
     }
     
-    init(userName: String, userID : Int, schedules : [SSSchedule]?, context: NSManagedObjectContext) {
+    init(userName: String, userID : String, schedules : [SSSchedule]?, context: NSManagedObjectContext) {
         let entity = NSEntityDescription.entityForName("SSUser", inManagedObjectContext: context)!
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         
         //create empty array of schedules
         self.schedules = schedules
         self.userName = userName
-        self.userID = NSNumber(long: userID)
+        self.userID = userID
         self.dateCreated = NSDate()
         self.letsView = nil
         self.canView = nil

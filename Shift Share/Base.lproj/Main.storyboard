@@ -361,7 +361,7 @@
                         <outlet property="emailTextField" destination="Wqw-Il-75y" id="0qp-NG-Zks"/>
                         <outlet property="loginButton" destination="DYN-Ig-QxX" id="xIh-8g-f5M"/>
                         <outlet property="loginButtonToTextFieldSpacing" destination="RIr-a0-4qt" id="Ti4-B2-mbu"/>
-                        <outlet property="passwordTextFeld" destination="WLu-Oy-6qP" id="QvG-Pb-7Sg"/>
+                        <outlet property="passwordTextField" destination="WLu-Oy-6qP" id="6qU-Jx-Yg4"/>
                         <outlet property="signupButton" destination="4rW-Ds-vQe" id="vbS-E6-NHU"/>
                         <outlet property="signupButtonToTextFieldSpacing" destination="7ww-AW-NTH" id="tPw-A4-thP"/>
                         <outlet property="textFieldSpacing" destination="Hkd-ip-wuw" id="Swm-Mo-mhb"/>
@@ -370,7 +370,101 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4N8-x6-8dk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="918" y="349"/>
+            <point key="canvasLocation" x="616" y="349"/>
+        </scene>
+        <!--Sign Up View Controller-->
+        <scene sceneID="hRm-4z-dCE">
+            <objects>
+                <viewController storyboardIdentifier="SignUpViewController" id="2Ht-eL-KkQ" customClass="SignUpViewController" customModule="Shift_Share" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="obE-iC-zJP"/>
+                        <viewControllerLayoutGuide type="bottom" id="Nwt-Qd-lKy"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8eu-jU-SfB">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fXl-A5-MfZ">
+                                <rect key="frame" x="100" y="165" width="400" height="270"/>
+                                <subviews>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="t2r-SX-GGu">
+                                        <rect key="frame" x="79" y="0.0" width="242" height="30"/>
+                                        <animations/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="eIt-zN-64M"/>
+                                            <constraint firstAttribute="width" constant="242" id="yrN-EU-ehV"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ehd-lW-YMM">
+                                        <rect key="frame" x="79" y="160" width="242" height="30"/>
+                                        <animations/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="473-Lk-AiA">
+                                        <rect key="frame" x="79" y="240" width="242" height="30"/>
+                                        <animations/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Uux-6l-XGK">
+                                        <rect key="frame" x="79" y="80" width="242" height="30"/>
+                                        <animations/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="242" id="kwE-Jf-Neb"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                </subviews>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="270" id="05s-VL-Wbd"/>
+                                    <constraint firstItem="ehd-lW-YMM" firstAttribute="top" secondItem="Uux-6l-XGK" secondAttribute="bottom" constant="50" id="2Dj-Fx-xLV"/>
+                                    <constraint firstItem="Uux-6l-XGK" firstAttribute="height" secondItem="t2r-SX-GGu" secondAttribute="height" id="2zu-f3-plH"/>
+                                    <constraint firstItem="Uux-6l-XGK" firstAttribute="leading" secondItem="t2r-SX-GGu" secondAttribute="leading" id="KE7-IH-pKC"/>
+                                    <constraint firstAttribute="width" constant="400" id="P6j-Aw-TE6"/>
+                                    <constraint firstItem="ehd-lW-YMM" firstAttribute="leading" secondItem="Uux-6l-XGK" secondAttribute="leading" id="Vjc-Vf-PWH"/>
+                                    <constraint firstItem="473-Lk-AiA" firstAttribute="width" secondItem="ehd-lW-YMM" secondAttribute="width" id="XiE-b6-r0z"/>
+                                    <constraint firstItem="473-Lk-AiA" firstAttribute="leading" secondItem="ehd-lW-YMM" secondAttribute="leading" id="aj1-fc-Ymy"/>
+                                    <constraint firstItem="Uux-6l-XGK" firstAttribute="top" secondItem="t2r-SX-GGu" secondAttribute="bottom" constant="50" id="cZG-eF-wRv"/>
+                                    <constraint firstItem="t2r-SX-GGu" firstAttribute="top" secondItem="fXl-A5-MfZ" secondAttribute="top" id="qyW-2v-298"/>
+                                    <constraint firstItem="ehd-lW-YMM" firstAttribute="width" secondItem="Uux-6l-XGK" secondAttribute="width" id="rFD-ej-ux9"/>
+                                    <constraint firstItem="t2r-SX-GGu" firstAttribute="centerX" secondItem="fXl-A5-MfZ" secondAttribute="centerX" id="sb8-Pu-gDv"/>
+                                    <constraint firstItem="t2r-SX-GGu" firstAttribute="top" secondItem="fXl-A5-MfZ" secondAttribute="top" id="ytV-QY-qvP"/>
+                                    <constraint firstItem="473-Lk-AiA" firstAttribute="top" secondItem="ehd-lW-YMM" secondAttribute="bottom" constant="50" id="z1b-VQ-AJt"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YVy-SA-jjT">
+                                <rect key="frame" x="179" y="485" width="242" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Button"/>
+                            </button>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="fXl-A5-MfZ" firstAttribute="centerX" secondItem="8eu-jU-SfB" secondAttribute="centerX" id="3wI-PB-vHZ"/>
+                            <constraint firstItem="fXl-A5-MfZ" firstAttribute="centerY" secondItem="8eu-jU-SfB" secondAttribute="centerY" id="5zL-ve-YLY"/>
+                            <constraint firstItem="YVy-SA-jjT" firstAttribute="top" secondItem="473-Lk-AiA" secondAttribute="bottom" constant="50" id="9u7-aB-xru"/>
+                            <constraint firstItem="YVy-SA-jjT" firstAttribute="leading" secondItem="473-Lk-AiA" secondAttribute="leading" id="NfZ-jL-p9o"/>
+                            <constraint firstItem="YVy-SA-jjT" firstAttribute="width" secondItem="473-Lk-AiA" secondAttribute="width" id="x4h-Be-9H4"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="createNewUserButton" destination="YVy-SA-jjT" id="qDv-CR-KCT"/>
+                        <outlet property="emailTextField" destination="ehd-lW-YMM" id="qrf-Y3-s79"/>
+                        <outlet property="fieldsView" destination="fXl-A5-MfZ" id="9e0-SG-okV"/>
+                        <outlet property="firstNameTextField" destination="t2r-SX-GGu" id="Fww-vE-vpd"/>
+                        <outlet property="lastNameTextField" destination="Uux-6l-XGK" id="u2M-QU-9ZS"/>
+                        <outlet property="passwordTextField" destination="473-Lk-AiA" id="vlN-2B-oax"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="52e-1r-ujp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="616" y="1097"/>
         </scene>
         <!--Menu View Controller-->
         <scene sceneID="x57-r9-aV8">
