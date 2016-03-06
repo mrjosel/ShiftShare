@@ -22,6 +22,9 @@ class SignUpViewController: KeyboardPresentViewController, UITextFieldDelegate {
     //delegate
     var delegate : SignUpViewControllerDelegate?
     
+    //new user
+    var newUser : SSUser?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -50,32 +53,32 @@ class SignUpViewController: KeyboardPresentViewController, UITextFieldDelegate {
         
     }
     
+    //get keyboard notifications
+    override func viewWillAppear(animated: Bool) {
+        self.subscribeToKeyboardNotifications()
+    }
+    
     //creates new user based off input params
     func createNewUser(sender: UIButton) {
         
-//        //migrate this to other viewController
-//        FirebaseClient.sharedInstance().createNewUser(self.emailTextField.text!, password: self.passwordTextField.text!, completionHandler: {success, userID, error in
-//            
-//            //check for success, if false, make alert, if true carry on new user routine
-//            if !success {
-//                self.makeAlert(self, title: "Sign-Up Failed", error: error)
-//            } else {
-//                //ensure userID is not nil, create new SSUser using
-//                if let userID = userID as? String {
-//                    print("Successful, userID = \(userID)")
-//                    
-//                    //create SSUser
-//                    let wholeName = self.firstNameTextField.text! + " " + self.lastNameTextField.text!
-//                    let newUser = SSUser(userName: wholeName, userID: userID, schedules: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
-                    let newUser = SSUser(userName: "Brian", userID: "00000001", schedules: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+        //migrate this to other viewController
+        FirebaseClient.sharedInstance().createNewUser(self.emailTextField.text!, password: self.passwordTextField.text!, completionHandler: {success, userID, error in
+            
+            //check for success, if false, make alert, if true carry on new user routine
+            if !success {
+                self.makeAlert(self, title: "Sign-Up Failed", error: error)
+            } else {
+                //ensure userID is not nil, create new SSUser using
+                if let userID = userID as? String {
+                    print("Successful, userID = \(userID)")
                     
-                    //inform delegate
-//                    self.delegate?.didCreateNewUser(newUser, email: self.emailTextField.text, password: self.passwordTextField.text)
-                    self.delegate?.didCreateNewUser(newUser, email: "datEmail", password: "datPassword")
+                    //create SSUser
+                    let wholeName = self.firstNameTextField.text! + " " + self.lastNameTextField.text!
+                    self.newUser = SSUser(userName: wholeName, userID: userID, schedules: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
                     self.dismissViewControllerAnimated(true, completion: nil)
-//                }
-//            }
-//        })
+                }
+            }
+        })
     }
     
     //cancels and exists VC
@@ -88,14 +91,20 @@ class SignUpViewController: KeyboardPresentViewController, UITextFieldDelegate {
         })
     }
     
-    //get keyboard notifications
-    override func viewWillAppear(animated: Bool) {
-        self.subscribeToKeyboardNotifications()
+    //do when view will disappear
+    override func viewWillDisappear(animated: Bool) {
+        
+        //remove keyboard notifications
+        self.unsubscribeToKeyboardNotifications()
     }
     
-    //remove keyboard notifications
-    override func viewWillDisappear(animated: Bool) {
-        self.unsubscribeToKeyboardNotifications()
+    //do after view disappears
+    override func viewDidDisappear(animated: Bool) {
+        
+        //inform delegate
+        if let newUser = self.newUser {
+            self.delegate?.didCreateNewUser(newUser)
+        }
     }
 
     override func didReceiveMemoryWarning() {

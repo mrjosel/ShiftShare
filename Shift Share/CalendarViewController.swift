@@ -100,6 +100,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //do anytime view will show
     override func viewWillAppear(animated: Bool) {
         
+        print(self.user)
+        
         //hide navBar
         self.navigationController?.navigationBar.hidden = true
         

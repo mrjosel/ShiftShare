@@ -112,7 +112,30 @@ extension UIViewController {
             hostVC.presentViewController(alertVC, animated: true, completion: nil)
         })
     }
+    
+    func choiceAlert(hostVC: UIViewController, title: String, completionHandler: (yesButtonHit: Bool) -> Void) -> Void {
+        
+        //text to be displated
+        let messageText: String! = "This is your first time logging into ShiftShare on this phone, do you wish to continue?"
+        
+        //create UIAlertVC
+        let alertVC = UIAlertController(title: title, message: messageText, preferredStyle: UIAlertControllerStyle.Alert)
+        
+        //create action
+        let yes = UIAlertAction(title: "Yes", style: UIAlertActionStyle.Default, handler: {alert in completionHandler(yesButtonHit: true)})
+        let no = UIAlertAction(title: "No", style: UIAlertActionStyle.Default, handler: {alert in completionHandler(yesButtonHit: false)})
+        
+        //add actions to alertVC
+        alertVC.addAction(yes)
+        alertVC.addAction(no)
+        dispatch_async(dispatch_get_main_queue(), {
+            //present alertVC
+            hostVC.presentViewController(alertVC, animated: true, completion: nil)
+        })
+    }
 }
+
+
 
 //allows for easy population of tableCell data
 protocol SSScheduleItem : NSObjectProtocol {
@@ -134,7 +157,6 @@ protocol SSScheduleItem : NSObjectProtocol {
 //handles passing of data during signup
 protocol SignUpViewControllerDelegate : NSObjectProtocol {
     
-    
     //informs delegate new user was created
-    func didCreateNewUser(user: SSUser, email: String, password: String) -> Void
+    func didCreateNewUser(user: SSUser) -> Void
 }

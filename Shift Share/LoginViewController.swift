@@ -89,49 +89,60 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, S
         //TODO : construct URL for GET
         //TODO : create URL session, make request
         //TODO : parse data, get user, schedules, send to calVC
-        let schedules : [SSSchedule] = []
-        let userID = "00000001"
-        let userIDstring = String(userID)
-        var user : SSUser?
+        let userID = "0717"
+        
+        //get user from fetch
+        if let user = self.fetchUserWithID(userID) {
+            //complete login
+            self.completeLoginRoutine(user)
+        } else {
+            //clear out fields
+            self.emailTextField.text = ""
+            self.passwordTextField.text = ""
+        }
+    }
+    
+    //fetch user with given ID from GET request
+    func fetchUserWithID(userID: String) -> SSUser? {
         
         //create predicate
-        let predicate = NSPredicate(format: "userID  == %@", userIDstring)
+        let predicate = NSPredicate(format: "userID  == %@", userID)
         self.userFetchResultsController.fetchRequest.predicate = predicate
         
         //perform fetch
         do {
             try self.userFetchResultsController.performFetch()
         } catch {
-            self.makeAlert(self, title: "No User Found", error: nil)
+            self.makeAlert(self, title: "Disk Error", error: nil)
         }
         
-        //if user is found in CoreData, fetch
-        if let users = self.userFetchResultsController.fetchedObjects as? [SSUser] {
-            for _user in users {
-                if _user.userID == userID {
-                    user = _user
-                }
+        //user to be returned
+        var user : SSUser?
+        
+        //get user in fetch with the given ID
+        if let users = self.userFetchResultsController.fetchedObjects as? [SSUser], let user = users.first {
+            if user.userID == userID {
+                //user matches ID, return
+                return user
             }
         }
-        
-        //if no user found in fetch, create new user from JSON
-        if user == nil {
-            user = SSUser(userName: "Brian", userID: "00000001", schedules: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
-        }
-        
-        
-        //create VCs and present
-        let navVC = self.storyboard?.instantiateViewControllerWithIdentifier("NavVC") as! UINavigationController
-        let calVC = navVC.viewControllers.first as! CalendarViewController
-        calVC.user = user
-        self.presentViewController(navVC, animated: true, completion: {
-            _ in
-            
-            //clear out login credentials after new VC is presented
-                self.emailTextField.text = ""
-                self.passwordTextField.text = ""
-            })
-        
+        //user is a ShiftShare user, not in fetch, get data from database
+        self.choiceAlert(self, title: "First Login", completionHandler: {yesButtonHit in
+          
+            if yesButtonHit {
+                //grab data from database
+                print("GETting data")
+                
+                //construct user from data
+                //TODO: GET data, make user
+                let testUser = SSUser(userName: "Brian", userID: "0514", schedules: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+                user = testUser
+            } else {
+                //user does not wish to grab data on this phone
+                user = nil
+            }
+        })
+        return user
     }
     
     //signs user up
@@ -144,13 +155,25 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, S
 
     }
     
+    //called by signup and login button routines, passes data onto calVC
+    func completeLoginRoutine(user: SSUser) {
+        
+        //clear out login credentials after new VC is presented
+        self.emailTextField.text = ""
+        self.passwordTextField.text = ""
+        
+        //create VCs and present
+        let navVC = self.storyboard?.instantiateViewControllerWithIdentifier("NavVC") as! UINavigationController
+        let calVC = navVC.viewControllers.first as! CalendarViewController
+        calVC.user = user
+        self.presentViewController(navVC, animated: true, completion: nil)
+    }
+    
     //called when new user is created
-    func didCreateNewUser(user: SSUser, email: String, password: String) {
-        //TODO: DELEGATE METHOD HERE
-        print("delegate informed")
-        print(user)
-        print(email)
-        print(password)
+    func didCreateNewUser(user: SSUser) {
+        
+        //finish login routine with user
+        self.completeLoginRoutine(user)
     }
     
     //what to do when return key is pressed
