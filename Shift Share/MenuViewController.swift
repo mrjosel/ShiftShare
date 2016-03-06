@@ -88,7 +88,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         //create title
         if let title = MenuCellTitle(rawValue: indexPath.row)?.description {
-            cell.textLabel?.text = title
+            cell.textLabel?.text = indexPath.row == 0 ? self.user.userName : title
             cell.imageView?.image = UIImage(named: title)
             cell.detailTextLabel?.text = nil
         }
@@ -151,11 +151,13 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     //logout method
     func logout() {
         
-        //alert delegate
-        self.delegate?.willLogoutUser(self.user)
+        //TODO: IS A HTTP DELETE REQUEST REQUIRED???
         
         //dismiss VC
         self.navigationController?.popToRootViewControllerAnimated(true)
+        
+        //alert delegate
+        self.delegate?.willLogoutUser(self.user)
     }
     
     override func didReceiveMemoryWarning() {

@@ -62,15 +62,20 @@ class SignUpViewController: KeyboardPresentViewController, UITextFieldDelegate {
     func createNewUser(sender: UIButton) {
         
         //migrate this to other viewController
-        FirebaseClient.sharedInstance().createNewUser(self.emailTextField.text!, password: self.passwordTextField.text!, completionHandler: {success, userID, error in
+        FirebaseClient.sharedInstance().createNewUser(self.emailTextField.text!, password: self.passwordTextField.text!, completionHandler: {success, result, error in
             
             //check for success, if false, make alert, if true carry on new user routine
             if !success {
                 self.makeAlert(self, title: "Sign-Up Failed", error: error)
             } else {
                 //ensure userID is not nil, create new SSUser using
-                if let userID = userID as? String {
+                if let result = result as? [String: AnyObject] {
+                    
+                    let userID = result["uid"] as! String
                     print("Successful, userID = \(userID)")
+                    
+                    //returned result
+                    print(result)
                     
                     //create SSUser
                     let wholeName = self.firstNameTextField.text! + " " + self.lastNameTextField.text!

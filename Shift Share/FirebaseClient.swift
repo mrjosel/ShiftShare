@@ -18,22 +18,37 @@ class FirebaseClient {
     }
     
     //generic root reference to ShiftShare's database in Firebase
-    var rootRef = Firebase(url: FirebaseClient.Keys.rootURL)
+    var rootRef = Firebase(url: FirebaseClient.Keys.rootURL)        //REQUIRED?????
     
     //Firebase reference for logging in users
     var loginRef = Firebase(url: FirebaseClient.Keys.rootURL)
     
     
     //create new user
-    func createNewUser(email: String, password: String, completionHandler: ((success: Bool, userID: AnyObject?, error: NSError?) -> Void)) {
+    func createNewUser(email: String, password: String, completionHandler: ((success: Bool, result: AnyObject?, error: NSError?) -> Void)) {
         self.loginRef.createUser(email, password: password, withValueCompletionBlock: {error, result in
             
             //if there is an error, pass error back to VC
             if error != nil {
-                completionHandler(success: false, userID: nil, error: error)
+                completionHandler(success: false, result: nil, error: error)
             } else {
-                let uid = result["uid"] as? String
-                completionHandler(success: true, userID: uid, error: nil)
+                //pass result back via handler
+                completionHandler(success: true, result: result, error: nil)
+            }
+        })
+    }
+    
+    //authenticate login credentials
+    func authenticateUser(email: String, password: String, completionHandler: (success: Bool, authData: AnyObject?, error: NSError?) -> Void) {
+        self.loginRef.authUser(email, password: password, withCompletionBlock: {error, authData in
+            
+            //check for error
+            if let error = error {
+                //error exists, complete with handler
+                completionHandler(success: false, authData: nil, error: error)
+            } else {
+                //no error, complete with success
+                completionHandler(success: true, authData: authData, error: nil)
             }
         })
     }
