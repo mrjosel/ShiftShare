@@ -17,7 +17,7 @@ class SignUpViewController: KeyboardPresentViewController, UITextFieldDelegate {
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var createNewUserButton: UIButton!
-    
+    @IBOutlet weak var cancelButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,8 +34,10 @@ class SignUpViewController: KeyboardPresentViewController, UITextFieldDelegate {
         self.passwordTextField.placeholder = "Password"
         self.passwordTextField.clearButtonMode = .WhileEditing
         self.passwordTextField.secureTextEntry = true
-        self.createNewUserButton.setTitle("Create New User", forState: .Normal)
+        self.createNewUserButton.setTitle("Join ShiftShare", forState: .Normal)
         self.createNewUserButton.addTarget(self, action: "createNewUser:", forControlEvents: .TouchUpInside)
+        self.cancelButton.setTitle("Cancel", forState: .Normal)
+        self.cancelButton.addTarget(self, action: "cancelButtonPressed:", forControlEvents: .TouchUpInside)
         
         //delegates
         self.firstNameTextField.delegate = self
@@ -60,6 +62,16 @@ class SignUpViewController: KeyboardPresentViewController, UITextFieldDelegate {
                     print("Successful, userID = \(userID)")
                 }
             }
+        })
+    }
+    
+    //cancels and exists VC
+    func cancelButtonPressed(sender: UIButton) {
+        self.dismissViewControllerAnimated(true, completion: {
+            self.firstNameTextField.text = ""
+            self.lastNameTextField.text = ""
+            self.emailTextField.text = ""
+            self.passwordTextField.text = ""
         })
     }
     

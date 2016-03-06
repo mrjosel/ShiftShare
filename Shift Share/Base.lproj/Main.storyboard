@@ -437,8 +437,13 @@
                                     <constraint firstItem="473-Lk-AiA" firstAttribute="top" secondItem="ehd-lW-YMM" secondAttribute="bottom" constant="50" id="z1b-VQ-AJt"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YVy-SA-jjT">
-                                <rect key="frame" x="179" y="485" width="242" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YVy-SA-jjT">
+                                <rect key="frame" x="307" y="485" width="114" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Button"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ex-wJ-TRi">
+                                <rect key="frame" x="179" y="485" width="114" height="30"/>
                                 <animations/>
                                 <state key="normal" title="Button"/>
                             </button>
@@ -449,11 +454,15 @@
                             <constraint firstItem="fXl-A5-MfZ" firstAttribute="centerX" secondItem="8eu-jU-SfB" secondAttribute="centerX" id="3wI-PB-vHZ"/>
                             <constraint firstItem="fXl-A5-MfZ" firstAttribute="centerY" secondItem="8eu-jU-SfB" secondAttribute="centerY" id="5zL-ve-YLY"/>
                             <constraint firstItem="YVy-SA-jjT" firstAttribute="top" secondItem="473-Lk-AiA" secondAttribute="bottom" constant="50" id="9u7-aB-xru"/>
-                            <constraint firstItem="YVy-SA-jjT" firstAttribute="leading" secondItem="473-Lk-AiA" secondAttribute="leading" id="NfZ-jL-p9o"/>
-                            <constraint firstItem="YVy-SA-jjT" firstAttribute="width" secondItem="473-Lk-AiA" secondAttribute="width" id="x4h-Be-9H4"/>
+                            <constraint firstItem="0ex-wJ-TRi" firstAttribute="top" secondItem="473-Lk-AiA" secondAttribute="bottom" constant="50" id="Icn-dD-Mj5"/>
+                            <constraint firstItem="0ex-wJ-TRi" firstAttribute="width" secondItem="473-Lk-AiA" secondAttribute="height" multiplier="19:5" id="ST0-BN-JxA"/>
+                            <constraint firstItem="YVy-SA-jjT" firstAttribute="trailing" secondItem="473-Lk-AiA" secondAttribute="trailing" id="mDR-i7-41h"/>
+                            <constraint firstItem="YVy-SA-jjT" firstAttribute="width" secondItem="0ex-wJ-TRi" secondAttribute="width" id="mkN-B7-eqI"/>
+                            <constraint firstItem="0ex-wJ-TRi" firstAttribute="leading" secondItem="473-Lk-AiA" secondAttribute="leading" id="vqM-Qk-zup"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="cancelButton" destination="0ex-wJ-TRi" id="qma-a3-RI6"/>
                         <outlet property="createNewUserButton" destination="YVy-SA-jjT" id="qDv-CR-KCT"/>
                         <outlet property="emailTextField" destination="ehd-lW-YMM" id="qrf-Y3-s79"/>
                         <outlet property="fieldsView" destination="fXl-A5-MfZ" id="9e0-SG-okV"/>
