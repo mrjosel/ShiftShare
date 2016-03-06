@@ -50,6 +50,9 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     //user
     var user: SSUser!
     
+    //delegate
+    var delegate : MenuViewControllerDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -147,10 +150,11 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     //logout method
     func logout() {
-        //TODO: HTTP DELETE Method  completionHandler : (success: Bool, error: NSerror) -> Void
-        let navVC = self.storyboard?.instantiateViewControllerWithIdentifier("NavVC") as! UINavigationController
-        let calVC = navVC.viewControllers.first as! CalendarViewController
-        calVC.logoutOrder = true
+        
+        //alert delegate
+        self.delegate?.willLogoutUser(self.user)
+        
+        //dismiss VC
         self.navigationController?.popToRootViewControllerAnimated(true)
     }
     

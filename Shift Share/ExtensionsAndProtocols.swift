@@ -160,3 +160,10 @@ protocol SignUpViewControllerDelegate : NSObjectProtocol {
     //informs delegate new user was created
     func didCreateNewUser(user: SSUser) -> Void
 }
+
+//handles passing of data between menu and calendar
+protocol MenuViewControllerDelegate : NSObjectProtocol {
+    
+    //informs delegate that logout is requested
+    func willLogoutUser(user: SSUser) -> Void
+}

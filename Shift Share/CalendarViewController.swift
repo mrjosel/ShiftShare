@@ -12,7 +12,7 @@ import Foundation
 import CoreData
 
 //main calendarView
-class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, JTCalendarDelegate, NSFetchedResultsControllerDelegate {
+class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, JTCalendarDelegate, NSFetchedResultsControllerDelegate, MenuViewControllerDelegate {
 
     //calendar manager
     var calendarManager : JTCalendarManager!
@@ -526,6 +526,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //TODO: FIX VC PRESENTATION
             let menuVC : MenuViewController = segue.destinationViewController as! MenuViewController
             menuVC.user = sender as! SSUser
+            menuVC.delegate = self
             
         default :
             self.makeAlert(self, title: "Critical Error : UI", error: nil)
@@ -681,7 +682,19 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //modally show menuViewController
     func showMenu() {
         //TODO: MAKE SEGUE FROM LEFT IN PRODUCTION
+        
+        //perform segue
         self.performSegueWithIdentifier("menuSegue", sender: self.user)
+    }
+    
+    //logout button hit in menuVC
+    func willLogoutUser(user: SSUser) {
+        
+        //clear out schedules
+        self.schedulesDict = [String : SSSchedule]()
+        
+        //dismiss VC
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     //called when controllers change content in the context
