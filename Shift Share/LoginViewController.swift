@@ -11,7 +11,7 @@ import CoreData
 import Firebase
 
 //VC to handle all login activity
-class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
+class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, SignUpViewControllerDelegate {
     
     //outlets
     @IBOutlet weak var titleLabel: UILabel!
@@ -138,9 +138,19 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate {
     func signupButtonPressed(sender: UIButton) {
         
         let signupVC = self.storyboard?.instantiateViewControllerWithIdentifier("SignUpViewController") as! SignUpViewController
+        signupVC.delegate = self
         self.presentViewController(signupVC, animated: true, completion: {print("attempted to sign up")})
         
 
+    }
+    
+    //called when new user is created
+    func didCreateNewUser(user: SSUser, email: String, password: String) {
+        //TODO: DELEGATE METHOD HERE
+        print("delegate informed")
+        print(user)
+        print(email)
+        print(password)
     }
     
     //what to do when return key is pressed

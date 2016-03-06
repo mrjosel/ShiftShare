@@ -19,6 +19,9 @@ class SignUpViewController: KeyboardPresentViewController, UITextFieldDelegate {
     @IBOutlet weak var createNewUserButton: UIButton!
     @IBOutlet weak var cancelButton: UIButton!
     
+    //delegate
+    var delegate : SignUpViewControllerDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -48,21 +51,31 @@ class SignUpViewController: KeyboardPresentViewController, UITextFieldDelegate {
     }
     
     //creates new user based off input params
-    func createNewUser(sender: UIButton, completionHandler: (success: Bool, userID: String?, error: NSError?) -> Void) {
+    func createNewUser(sender: UIButton) {
         
-        //migrate this to other viewController
-        FirebaseClient.sharedInstance().createNewUser(self.emailTextField.text!, password: self.passwordTextField.text!, completionHandler: {success, userID, error in
-            
-            //check for success, if false, make alert, if true carry on new user routine
-            if !success {
-                self.makeAlert(self, title: "Sign-Up Failed", error: error)
-            } else {
-                //ensure userID is not nil, create new SSUser using
-                if let userID = userID as? String {
-                    print("Successful, userID = \(userID)")
-                }
-            }
-        })
+//        //migrate this to other viewController
+//        FirebaseClient.sharedInstance().createNewUser(self.emailTextField.text!, password: self.passwordTextField.text!, completionHandler: {success, userID, error in
+//            
+//            //check for success, if false, make alert, if true carry on new user routine
+//            if !success {
+//                self.makeAlert(self, title: "Sign-Up Failed", error: error)
+//            } else {
+//                //ensure userID is not nil, create new SSUser using
+//                if let userID = userID as? String {
+//                    print("Successful, userID = \(userID)")
+//                    
+//                    //create SSUser
+//                    let wholeName = self.firstNameTextField.text! + " " + self.lastNameTextField.text!
+//                    let newUser = SSUser(userName: wholeName, userID: userID, schedules: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+                    let newUser = SSUser(userName: "Brian", userID: "00000001", schedules: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+                    
+                    //inform delegate
+//                    self.delegate?.didCreateNewUser(newUser, email: self.emailTextField.text, password: self.passwordTextField.text)
+                    self.delegate?.didCreateNewUser(newUser, email: "datEmail", password: "datPassword")
+                    self.dismissViewControllerAnimated(true, completion: nil)
+//                }
+//            }
+//        })
     }
     
     //cancels and exists VC

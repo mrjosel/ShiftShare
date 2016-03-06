@@ -130,3 +130,11 @@ protocol SSScheduleItem : NSObjectProtocol {
     var schedule : SSSchedule? {get set}
     
 }
+
+//handles passing of data during signup
+protocol SignUpViewControllerDelegate : NSObjectProtocol {
+    
+    
+    //informs delegate new user was created
+    func didCreateNewUser(user: SSUser, email: String, password: String) -> Void
+}
