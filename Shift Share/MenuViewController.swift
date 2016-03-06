@@ -151,7 +151,8 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     //logout method
     func logout() {
         
-        //TODO: IS A HTTP DELETE REQUEST REQUIRED???
+        //logout with Firebase
+        FirebaseClient.sharedInstance().loginRef.unauth()
         
         //dismiss VC
         self.navigationController?.popToRootViewControllerAnimated(true)

@@ -22,6 +22,9 @@ class SSUser: NSManagedObject {
     @NSManaged var letsView : NSMutableArray?
     @NSManaged var canView : NSMutableArray?
     
+    //vars to be used post login, not allowed for persistence
+    var token : String?
+    
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
     }

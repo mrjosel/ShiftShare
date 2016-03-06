@@ -41,6 +41,21 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, S
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Do any additional setup after loading the view.
+        
+        //check for logged in user
+        //TODO:  HOW TO MAKE THIS FUNCTIONALITY WORK?????
+//        if FirebaseClient.sharedInstance().loginRef.authData == nil {
+//            print("no authData")
+//        } else {
+//            let authData = FirebaseClient.sharedInstance().loginRef.authData
+//            let userID = authData.uid
+//            let user = self.fetchUserWithID(userID)
+//            if let user = user {
+//                self.completeLoginRoutine(user)
+//            }
+//        }
+        
         //delegates
         self.emailTextField.delegate = self
         self.passwordTextField.delegate = self
@@ -60,8 +75,6 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, S
         self.signupButton.addTarget(self, action: "signupButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
         self.loginButtonToTextFieldSpacing = self.textFieldSpacing
         self.signupButtonToTextFieldSpacing = self.textFieldSpacing
-
-        // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -71,6 +84,7 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, S
         
         //subscribe to keyboard notifications to allow view resizing
         self.subscribeToKeyboardNotifications()
+
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -83,23 +97,34 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, S
         print("user logging in")
         
         //get credentials
-        let username = self.emailTextField.text
+        let email = self.emailTextField.text
         let password = self.passwordTextField.text
         
-        //TODO : construct URL for GET
-        //TODO : create URL session, make request
-        //TODO : parse data, get user, schedules, send to calVC
-        let userID = "0717"
-        
-        //get user from fetch
-        if let user = self.fetchUserWithID(userID) {
-            //complete login
-            self.completeLoginRoutine(user)
-        } else {
-            //clear out fields
-            self.emailTextField.text = ""
-            self.passwordTextField.text = ""
-        }
+        //attempt to authenticate user
+        FirebaseClient.sharedInstance().authenticateUser(email!, password: password!, completionHandler: {success, authData, error in
+            if !success {
+                self.makeAlert(self, title: "Authentication Failed", error: error)
+            } else {
+                if let authData = authData as? FAuthData {
+                    
+                    //get userID and token
+                    let userID = authData.uid
+                    let token = authData.token  //TODO:  DO I NEED THIS?
+                    print(token)
+                    
+                    //get user from fetch
+                    if let user = self.fetchUserWithID(userID) {
+                        //complete login
+//                        user.token = token
+                        self.completeLoginRoutine(user)
+                    } else {
+                        //clear out fields
+                        self.emailTextField.text = ""
+                        self.passwordTextField.text = ""
+                    }
+                }
+            }
+        })
     }
     
     //fetch user with given ID from GET request
@@ -165,7 +190,12 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, S
         //create VCs and present
         let navVC = self.storyboard?.instantiateViewControllerWithIdentifier("NavVC") as! UINavigationController
         let calVC = navVC.viewControllers.first as! CalendarViewController
+        
+        //pass in user, clear out user defaults
         calVC.user = user
+        calVC.userDefaults.removeObjectForKey("selectedDate")
+        
+        //present VC
         self.presentViewController(navVC, animated: true, completion: nil)
     }
     

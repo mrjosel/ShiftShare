@@ -45,7 +45,7 @@ class FirebaseClient {
             //check for error
             if let error = error {
                 //error exists, complete with handler
-                completionHandler(success: false, authData: nil, error: error)
+                completionHandler(success: false, authData: authData, error: error)
             } else {
                 //no error, complete with success
                 completionHandler(success: true, authData: authData, error: nil)
