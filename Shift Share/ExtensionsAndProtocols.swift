@@ -167,3 +167,10 @@ protocol MenuViewControllerDelegate : NSObjectProtocol {
     //informs delegate that logout is requested
     func willLogoutUser(user: SSUser) -> Void
 }
+
+//handles when schedule does change
+protocol ScheduleEditViewControllerDelegate : NSObjectProtocol {
+    
+    //informs delegate that schedule changed
+    func scheduleDidChange(schedule: SSSchedule) -> Void 
+}

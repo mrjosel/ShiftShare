@@ -12,7 +12,7 @@ import Foundation
 import CoreData
 
 //main calendarView
-class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, JTCalendarDelegate, NSFetchedResultsControllerDelegate, MenuViewControllerDelegate {
+class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, JTCalendarDelegate, NSFetchedResultsControllerDelegate, MenuViewControllerDelegate, ScheduleEditViewControllerDelegate {
 
     //calendar manager
     var calendarManager : JTCalendarManager!
@@ -483,6 +483,13 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
+    //called when schedule is changed
+    func scheduleDidChange(schedule: SSSchedule) {
+        //cache new schedule and config views
+        self.cacheAndConfig(schedule)
+        self.configUIViews(schedule.date!)
+    }
+    
     //handles segues
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
@@ -519,6 +526,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             
             //create VC to create new schedule
             let scheduleVC : ScheduleEditViewController = segue.destinationViewController as! ScheduleEditViewController
+            scheduleVC.delegate = self
             scheduleVC.schedule = sender as! SSSchedule
             
         case "menuSegue" :

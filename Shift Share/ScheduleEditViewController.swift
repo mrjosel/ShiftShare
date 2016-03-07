@@ -17,6 +17,9 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     //schedule (created in previous VC)
     var schedule : SSSchedule!
     
+    //delegate
+    var delegate : ScheduleEditViewControllerDelegate?
+    
     //outlets
     @IBOutlet weak var menuBar: JTCalendarMenuView!
     @IBOutlet weak var cancelButton: UIButton!
@@ -255,10 +258,11 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //save context
         CoreDataStackManager.sharedInstance().saveContext()
         
-        //call cacheAndConfig,config UI methods in CalVC
-        let calVC = self.navigationController?.viewControllers.first as! CalendarViewController
-        calVC.cacheAndConfig(self.schedule)
-        calVC.configUIViews(self.schedule.date!)
+        //call cacheAndConfig using delegate
+        self.delegate?.scheduleDidChange(self.schedule)
+//        let calVC = self.navigationController?.viewControllers.first as! CalendarViewController
+//        calVC.cacheAndConfig(self.schedule)
+//        calVC.configUIViews(self.schedule.date!)
         
         //dismiss viewController
         self.navigationController?.popViewControllerAnimated(true)

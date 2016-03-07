@@ -13,7 +13,7 @@ import UIKit
 enum MenuCellTitle : Int {
     
     //CELLS POPULATE IN THIS ORDER
-    case User = 0, Friends, Retrieve, Logout
+    case User = 0, Friends, Retrieve, Logout    //TODO: CREATE DELETE DATA METHOD
     
     //title names for cells
     static let titleNames = [
