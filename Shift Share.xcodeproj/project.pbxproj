@@ -24,6 +24,7 @@
 		B79274981BF55E4400FFE21C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B79274961BF55E4400FFE21C /* LaunchScreen.storyboard */; };
 		B79274A31BF55E4400FFE21C /* Shift_ShareTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79274A21BF55E4400FFE21C /* Shift_ShareTests.swift */; };
 		B79274AE1BF55E4400FFE21C /* Shift_ShareUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79274AD1BF55E4400FFE21C /* Shift_ShareUITests.swift */; };
+		B7AA408E1C8D082D00D2F45A /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AA408D1C8D082D00D2F45A /* WelcomeViewController.swift */; };
 		B7C7781F1C2210EC006213CA /* TBDataEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C7781E1C2210EC006213CA /* TBDataEditViewController.swift */; };
 		B7CA2F7D1C8B430800056158 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7CA2F7C1C8B430800056158 /* SignUpViewController.swift */; };
 		B7E2A68A1C860A04001243E3 /* SSUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E2A6891C860A04001243E3 /* SSUser.swift */; };
@@ -80,6 +81,7 @@
 		B79274A91BF55E4400FFE21C /* Shift ShareUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Shift ShareUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B79274AD1BF55E4400FFE21C /* Shift_ShareUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shift_ShareUITests.swift; sourceTree = "<group>"; };
 		B79274AF1BF55E4400FFE21C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B7AA408D1C8D082D00D2F45A /* WelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		B7C7781E1C2210EC006213CA /* TBDataEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TBDataEditViewController.swift; sourceTree = "<group>"; };
 		B7CA2F7C1C8B430800056158 /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		B7E2A6891C860A04001243E3 /* SSUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSUser.swift; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 			isa = PBXGroup;
 			children = (
 				B7E2A68D1C8760C5001243E3 /* KeyboardPresentViewController.swift */,
+				B7AA408D1C8D082D00D2F45A /* WelcomeViewController.swift */,
 				B7E2A68B1C860CA2001243E3 /* LoginViewController.swift */,
 				B7CA2F7C1C8B430800056158 /* SignUpViewController.swift */,
 				B792748F1BF55E4400FFE21C /* CalendarViewController.swift */,
@@ -452,6 +455,7 @@
 				B7E6C1351C19F20800A30682 /* ScheduleEditViewController.swift in Sources */,
 				B75A946F1C062B640075C2DA /* SSSchedule.swift in Sources */,
 				B75A940D1BFA67220075C2DA /* SSDayView.swift in Sources */,
+				B7AA408E1C8D082D00D2F45A /* WelcomeViewController.swift in Sources */,
 				B75A942E1BFEB0200075C2DA /* SSNote.swift in Sources */,
 				B7E6C1331C16657600A30682 /* SSShiftType.swift in Sources */,
 				B7CA2F7D1C8B430800056158 /* SignUpViewController.swift in Sources */,
