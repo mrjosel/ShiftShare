@@ -43,6 +43,32 @@ class FirebaseClient {
         self.loginRef.authUser(email, password: password, withCompletionBlock: {error, authData in
             //check for error
             if let error = error {
+                //TODO: PRODUCTION - BETTER ERROR HANDLING USING VARIOUS ENUM TYPES
+                if let errorCode = FAuthenticationError(rawValue: error.code) {
+                    switch(errorCode) {
+                    case .UserDoesNotExist:
+                        // Handle invalid user
+                        break
+                    case .InvalidEmail:
+                        // Handle invalid email
+                        break
+                    case .InvalidPassword:
+                        // Handle invalid password
+                        break
+                    case .EmailTaken:
+                        //Handle email taken
+                        break
+                    case .NetworkError:
+                        //Handle network error
+                        break
+                    case .InvalidCredentials:
+                        //Handle invalid credentials
+                        break
+                    default:
+                        break
+                    }
+                }
+                
                 //error exists, complete with handler
                 completionHandler(success: false, authData: authData, error: error)
             } else {

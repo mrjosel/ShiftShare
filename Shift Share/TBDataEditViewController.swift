@@ -83,7 +83,8 @@ class TBDataEditViewController: KeyboardPresentViewController, UITextViewDelegat
         
         //get default shift, setup saveButton behavior
         if self.dataIsShift {
-            if let type = (self.scheduleItem as! SSShift).type where type != SSShiftType.NEWSHIFT {
+            print(self.scheduleItem)
+            if let type = (self.scheduleItem as! SSShift).type  where type != SSShiftType.NEWSHIFT {
                 //type is set implying its an existing schedule, don't allow saving until user taps image
                 self.scratchShiftType = type
                 self.saveButton.enabled = false

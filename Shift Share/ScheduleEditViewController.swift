@@ -61,6 +61,9 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //hide navBar
         self.navigationController?.navigationBar.hidden = true
         
+        //deselect all cells
+        self.newScheduleTable.deselectAllCells()
+        
         //perform fetches
         self.fetchAndRepopShift()
         self.fetchNotes()

@@ -26,7 +26,7 @@ class SSShift : NSManagedObject, SSScheduleItem {
             }
         }
     }
-    
+        
     //persisted type, since enums not easily persisted in Swift 2.0
     @NSManaged var persistedType : NSNumber?
     
@@ -57,6 +57,12 @@ class SSShift : NSManagedObject, SSScheduleItem {
             self.title = SSShiftType.shiftNames[type]
             self.body = SSShiftType.shiftTimes[type]
             self.persistedType = type.rawValue
+        }
+    }
+    
+    override func awakeFromFetch() {
+        if let persistedType = persistedType {
+            self.type = SSShiftType(rawValue: Int(persistedType))
         }
     }
 }

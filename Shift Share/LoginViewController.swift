@@ -43,19 +43,6 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, S
         
         // Do any additional setup after loading the view.
         
-        //check for logged in user
-        //TODO:  HOW TO MAKE THIS FUNCTIONALITY WORK?????
-//        if FirebaseClient.sharedInstance().loginRef.authData == nil {
-//            print("no authData")
-//        } else {
-//            let authData = FirebaseClient.sharedInstance().loginRef.authData
-//            let userID = authData.uid
-//            let user = self.fetchUserWithID(userID)
-//            if let user = user {
-//                self.completeLoginRoutine(user)
-//            }
-//        }
-        
         //delegates
         self.emailTextField.delegate = self
         self.passwordTextField.delegate = self

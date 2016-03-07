@@ -96,6 +96,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     
     //do anytime view will show
     override func viewWillAppear(animated: Bool) {
+        
+        //deselect all cells
+        self.dayViewTableView.deselectAllCells()
     
         //hide navBar
         self.navigationController?.navigationBar.hidden = true
