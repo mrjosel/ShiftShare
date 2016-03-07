@@ -694,7 +694,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.schedulesDict = [String : SSSchedule]()
         
         //dismiss VC
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.navigationController?.popViewControllerAnimated(false)
     }
     
     //called when controllers change content in the context

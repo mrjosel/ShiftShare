@@ -155,7 +155,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         FirebaseClient.sharedInstance().loginRef.unauth()
         
         //dismiss VC
-        self.navigationController?.popToRootViewControllerAnimated(true)
+        self.navigationController?.popViewControllerAnimated(false)
         
         //alert delegate
         self.delegate?.willLogoutUser(self.user)
