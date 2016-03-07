@@ -70,6 +70,38 @@ extension NSDate {
             return self.month + " " + self.day + ", " + self.year
         }
     }
+    
+    //convenient method to get string from date
+    func toString() -> String {
+        
+        //create date formatter
+        let dateFormatter = NSDateFormatter()
+        
+        //specify format
+        dateFormatter.dateFormat = "yyyy-MM-dd hh:mm:ss.SSSSxxx"
+        
+        //get string and return
+        let stringFromDate = dateFormatter.stringFromDate(self)
+        return stringFromDate
+    }
+}
+
+//method to make date from string
+extension String {
+    
+    func toDateTime() -> NSDate {
+        //Create Date Formatter
+        let dateFormatter = NSDateFormatter()
+        
+        //Specify Format of String to Parse
+        dateFormatter.dateFormat = "yyyy-MM-dd hh:mm:ss.SSSSxxx"
+        
+        //Parse into NSDate
+        let dateFromString : NSDate = dateFormatter.dateFromString(self)!
+        
+        //Return Parsed Date
+        return dateFromString
+    }
 }
 
 //allows all VCs to use custom alert when saving context fails (and other alerts)

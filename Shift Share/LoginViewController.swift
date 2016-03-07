@@ -118,7 +118,7 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, S
                                 //yesButton hit, exit routine and carry on creating user
                             } else {
                                 //user does not wish to grab data on this phone, remove authData, exit routine
-                                FirebaseClient.sharedInstance().loginRef.unauth()
+                                FirebaseClient.sharedInstance().rootRef.unauth()
                                 return
                             }
                         })
@@ -192,6 +192,10 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, S
         //get FAuthData for new user
         FirebaseClient.sharedInstance().authenticateUser(email, password: password, completionHandler: {success, authData, error in
             if success {
+                
+                //add user to database
+                FirebaseClient.sharedInstance().addSSUserToDatabase(user)
+                
                 //finish login routine with user
                 self.completeLoginRoutine(user)
             } else {

@@ -71,17 +71,17 @@ class SignUpViewController: KeyboardPresentViewController, UITextFieldDelegate {
                 //ensure userID is not nil, create new SSUser using
                 if let result = result as? [String: AnyObject] {
                     
+                    //get userID
                     let userID = result["uid"] as! String
-                    print("Successful, userID = \(userID)")
-                    
-                    //returned result
-                    print(result)
                     
                     //create SSUser
-                    let wholeName = self.firstNameTextField.text! + " " + self.lastNameTextField.text!
-                    self.newUser = SSUser(userName: wholeName, userID: userID, schedules: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
-                    CoreDataStackManager.sharedInstance().saveContext()
-                    self.dismissViewControllerAnimated(true, completion: nil)
+                    if let firstName = self.firstNameTextField.text where firstName != "", let lastName = self.lastNameTextField.text where lastName != "" {
+                        self.newUser = SSUser(firstName: firstName, lastName: lastName, userID: userID, schedules: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+                        CoreDataStackManager.sharedInstance().saveContext()
+                        self.dismissViewControllerAnimated(true, completion: nil)
+                    } else {
+                        self.makeAlert(self, title: "Incomplete Name Fields", error: nil)
+                    }
                 }
             }
         })

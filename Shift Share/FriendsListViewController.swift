@@ -54,7 +54,7 @@ class FriendsListViewController: KeyboardPresentViewController, UITableViewDeleg
         let cell : UITableViewCell = tableView.dequeueReusableCellWithIdentifier("friendCell")!
         
         if let friends = self.friends {
-            cell.textLabel?.text = friends[indexPath.row].userName
+            cell.textLabel?.text = friends[indexPath.row].wholeName
         }
         
         return cell

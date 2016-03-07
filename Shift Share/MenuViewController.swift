@@ -88,7 +88,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         //create title
         if let title = MenuCellTitle(rawValue: indexPath.row)?.description {
-            cell.textLabel?.text = indexPath.row == 0 ? self.user.userName : title
+            cell.textLabel?.text = indexPath.row == 0 ? self.user.wholeName : title
             cell.imageView?.image = UIImage(named: title)
             cell.detailTextLabel?.text = nil
         }
@@ -152,7 +152,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func logout() {
         
         //logout with Firebase
-        FirebaseClient.sharedInstance().loginRef.unauth()
+        FirebaseClient.sharedInstance().rootRef.unauth()
         
         //dismiss VC
         self.navigationController?.popViewControllerAnimated(false)

@@ -1,0 +1,89 @@
+example dict for user
+
+{
+  users : {
+    [
+      "user_id" : {
+        first_name : "firstName",
+        last_name : "lastName",
+        date_created : "dateCreatedString",
+        schedules : {
+          [
+            {
+              date: "dateCreatedString",
+              shift: "shiftType.description",
+              notes: [
+                {
+                  title: "title",
+                  body: "body"
+                  dateCreated: "dateCreatedString"
+                  },
+                  {
+                    title: "title",
+                    body: "body"
+                    dateCreated: "dateCreatedString"
+                  }
+              ]
+            },
+            {
+            date: "dateCreatedString",
+            shift: "shiftType.description",
+            notes: [
+              {
+                title: "title",
+                body: "body"
+                dateCreated: "dateCreatedString"
+                },
+                {
+                  title: "title",
+                  body: "body"
+                  dateCreated: "dateCreatedString"
+                }
+            ]
+            }
+          ]
+        }
+      },
+      "user_id" : {
+        first_name : "firstName",
+        last_name : "lastName",
+        date_created : "dateCreatedString",
+        schedules : {
+          [
+            {
+              date: "dateCreatedString",
+              shift: "shiftType.description",
+              notes: [
+                {
+                  title: "title",
+                  body: "body"
+                  dateCreated: "dateCreatedString"
+                  },
+                  {
+                    title: "title",
+                    body: "body"
+                    dateCreated: "dateCreatedString"
+                  }
+              ]
+            },
+            {
+            date: "dateCreatedString",
+            shift: "shiftType.description",
+            notes: [
+              {
+                title: "title",
+                body: "body"
+                dateCreated: "dateCreatedString"
+                },
+                {
+                  title: "title",
+                  body: "body"
+                  dateCreated: "dateCreatedString"
+                }
+            ]
+            }
+          ]
+        }
+    ]
+  }
+}

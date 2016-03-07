@@ -14,9 +14,6 @@ import CoreData
 //persisted object for a schedule for that day
 class SSSchedule : NSManagedObject {
     //set and get commands for use in coreData to allow using property observers, which @NSManged var prohibits
-    
-    //schedules across application, used by singleton
-//    var schedules = [String : SSSchedule]()
 
     //date for the object
     @NSManaged var date : NSDate?

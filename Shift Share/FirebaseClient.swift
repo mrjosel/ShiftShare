@@ -14,19 +14,22 @@ class FirebaseClient {
     
     //commonly used keys
     struct Keys {
-        static let rootURL = "https://shiftshare.firebaseio.com"
+        static let ROOTURL = "https://shiftshare.firebaseio.com"
+        static let FIRSTNAME = "first_name"
+        static let LASTNAME = "last_name"
+        static let USERID = "user_id"
+        static let DATECREATED = "date_created"
+        static let SCHEDULES = "schedules"
+        static let SHIFT = "shift"
+        static let NOTES = "note"
     }
     
     //generic root reference to ShiftShare's database in Firebase
-    var rootRef = Firebase(url: FirebaseClient.Keys.rootURL)        //REQUIRED?????
-    
-    //Firebase reference for logging in users
-    var loginRef = Firebase(url: FirebaseClient.Keys.rootURL)
-    
+    var rootRef = Firebase(url: FirebaseClient.Keys.ROOTURL)
     
     //create new user
     func createNewUser(email: String, password: String, completionHandler: ((success: Bool, result: AnyObject?, error: NSError?) -> Void)) {
-        self.loginRef.createUser(email, password: password, withValueCompletionBlock: {error, result in
+        self.rootRef.createUser(email, password: password, withValueCompletionBlock: {error, result in
             
             //if there is an error, pass error back to VC
             if error != nil {
@@ -38,9 +41,31 @@ class FirebaseClient {
         })
     }
     
+    //add user to database
+    func addSSUserToDatabase(user: SSUser) {
+        
+        //get basic params, MUST be strings
+        let firstName = user.firstName
+        let lastName = user.lastName
+        let userID = user.userID
+        let dateCreated = user.dateCreated?.toString()
+        
+        //TODO: ASSEMBLE BEST DICT FOR USER MODEL
+        
+        //assemble into dict
+        let dictForID = [
+            FirebaseClient.Keys.FIRSTNAME : firstName,
+            FirebaseClient.Keys.LASTNAME : lastName,
+            FirebaseClient.Keys.DATECREATED : dateCreated
+        ]
+        
+        //add dict (valid JSON format) to database
+        self.setValue([userID : dictForID])
+    }
+    
     //authenticate login credentials
     func authenticateUser(email: String, password: String, completionHandler: (success: Bool, authData: FAuthData?, error: NSError?) -> Void) {
-        self.loginRef.authUser(email, password: password, withCompletionBlock: {error, authData in
+        self.rootRef.authUser(email, password: password, withCompletionBlock: {error, authData in
             //check for error
             if let error = error {
                 //TODO: PRODUCTION - BETTER ERROR HANDLING USING VARIOUS ENUM TYPES
@@ -79,8 +104,12 @@ class FirebaseClient {
     }
     
     //convenience function for sending values to Firebase
-    func setValue(validJSONobject : String) {
-        self.rootRef.setValue(validJSONobject)
+    func setValue(validJSONobject : AnyObject?) {
+        
+        if let json = validJSONobject as? [String: AnyObject] {
+            print("we casted")
+            self.rootRef.setValue(json)
+        }
     }
     
     //convenience function for reading data and reacting to changes

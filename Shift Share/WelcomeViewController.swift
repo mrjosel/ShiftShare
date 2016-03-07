@@ -43,7 +43,7 @@ class WelcomeViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         //DEBUG
-//        FirebaseClient.sharedInstance().loginRef.unauth()
+        FirebaseClient.sharedInstance().rootRef.unauth()
         
         //actual delay
         let seconds = 1.0
@@ -70,7 +70,7 @@ class WelcomeViewController: UIViewController {
     func checkForLoggedInUser() {
         
         //check for valid FAuthObject
-        if FirebaseClient.sharedInstance().loginRef.authData == nil {
+        if FirebaseClient.sharedInstance().rootRef.authData == nil {
             
             //no auth data, proceed to loginVC
             dispatch_async(dispatch_get_main_queue(), {self.messageLabel.text = "Loading..."})
@@ -80,7 +80,7 @@ class WelcomeViewController: UIViewController {
             
         } else {
             //authData exists, send to calVC
-            let authData = FirebaseClient.sharedInstance().loginRef.authData
+            let authData = FirebaseClient.sharedInstance().rootRef.authData
             let userID = authData.uid
             if let user = self.fetchUserWithID(userID) {
                 dispatch_async(dispatch_get_main_queue(), {self.messageLabel.text = "Loading Calendar..."})
@@ -90,7 +90,7 @@ class WelcomeViewController: UIViewController {
             } else {
                 //authData exists for ID, but user not found, this is error due to not having logged off but data missing, logoff to fix
                 self.makeAlert(self, title: "User Not Found", error: nil)
-                FirebaseClient.sharedInstance().loginRef.unauth()
+                FirebaseClient.sharedInstance().rootRef.unauth()
                 self.performSegueWithIdentifier("loginVCSegue", sender: nil)
             }
         }

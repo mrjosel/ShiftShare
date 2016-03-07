@@ -16,7 +16,8 @@ class SSUser: NSManagedObject {
     
     //managed vars
     @NSManaged var schedules : [SSSchedule]?
-    @NSManaged var userName : String!
+    @NSManaged var firstName : String!
+    @NSManaged var lastName : String!
     @NSManaged var userID : String!
     @NSManaged var dateCreated : NSDate?
     @NSManaged var letsView : NSMutableArray?
@@ -25,17 +26,25 @@ class SSUser: NSManagedObject {
     //vars to be used post login, not allowed for persistence
     var token : String?
     
+    //whole name
+    var wholeName : String {
+        get {
+            return self.firstName + " " + self.lastName
+        }
+    }
+    
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
     }
     
-    init(userName: String, userID : String, schedules : [SSSchedule]?, context: NSManagedObjectContext) {
+    init(firstName: String, lastName: String, userID : String, schedules : [SSSchedule]?, context: NSManagedObjectContext) {
         let entity = NSEntityDescription.entityForName("SSUser", inManagedObjectContext: context)!
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         
         //create empty array of schedules
         self.schedules = schedules
-        self.userName = userName
+        self.firstName = firstName
+        self.lastName = lastName
         self.userID = userID
         self.dateCreated = NSDate()
         self.letsView = nil
