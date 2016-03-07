@@ -187,16 +187,8 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, S
         self.emailTextField.text = ""
         self.passwordTextField.text = ""
         
-        //create VCs and present
-        let navVC = self.storyboard?.instantiateViewControllerWithIdentifier("NavVC") as! UINavigationController
-        let calVC = navVC.viewControllers.first as! CalendarViewController
-        
-        //pass in user, clear out user defaults
-        calVC.user = user
-        calVC.userDefaults.removeObjectForKey("selectedDate")
-        
-        //present VC
-        self.presentViewController(navVC, animated: true, completion: nil)
+        //prepare for segue
+        self.performSegueWithIdentifier("loginToCalVCSegue", sender: user)
     }
     
     //called when new user is created
@@ -204,6 +196,19 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, S
         
         //finish login routine with user
         self.completeLoginRoutine(user)
+    }
+    
+    //handle segue
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "loginToCalVCSegue" {
+        //create VCs and present
+        let calVC = segue.destinationViewController as! CalendarViewController
+        
+        //pass in user, clear out user defaults
+        calVC.user = sender as! SSUser
+        calVC.userDefaults.removeObjectForKey("selectedDate")
+        }
     }
     
     //what to do when return key is pressed

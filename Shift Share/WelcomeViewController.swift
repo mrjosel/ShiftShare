@@ -42,6 +42,9 @@ class WelcomeViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
+        //DEBUG
+//        FirebaseClient.sharedInstance().loginRef.unauth()
+        
         //actual delay
         let seconds = 2.0
         let delay = seconds * Double(NSEC_PER_SEC) //nanoseconds per seconda
