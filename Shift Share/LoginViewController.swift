@@ -102,26 +102,54 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, S
         
         //attempt to authenticate user
         FirebaseClient.sharedInstance().authenticateUser(email!, password: password!, completionHandler: {success, authData, error in
+            //failed to authenticate
             if !success {
                 self.makeAlert(self, title: "Authentication Failed", error: error)
             } else {
-                if let authData = authData as? FAuthData {
+                //successful authentication and authData
+                //get user from fetch, or create user using data from server
+                
+                //user
+                var user : SSUser
+                
+                //unwrap authData
+                if let authData = authData {
                     
-                    //get userID and token
+                    //get userID
                     let userID = authData.uid
-                    let token = authData.token  //TODO:  DO I NEED THIS?
-                    print(token)
                     
-                    //get user from fetch
-                    if let user = self.fetchUserWithID(userID) {
-                        //complete login
-//                        user.token = token
-                        self.completeLoginRoutine(user)
+                    //attempt to get user from fetch
+                    if let fetchedUser = self.fetchUserWithID(userID) {
+                        //user found in fetch
+                        user = fetchedUser
                     } else {
+                        
+                        //user is a ShiftShare user, not in fetch, get data from database
+                        self.choiceAlert(self, title: "First Login", completionHandler: {yesButtonHit in
+                            
+                            if yesButtonHit {
+                                //yesButton hit, exit routine and carry on creating user
+                            } else {
+                                //user does not wish to grab data on this phone, remove authData, exit routine
+                                FirebaseClient.sharedInstance().loginRef.unauth()
+                                return
+                            }
+                        })
+                        
                         //clear out fields
                         self.emailTextField.text = ""
                         self.passwordTextField.text = ""
+                        
+                        //grab data from database
+                        user = SSUser()
+                        print("Need to create methods for getting user data, aborting")
+                        abort()
+                        //TODO: 1.) GET ALL USER DATA
+                        //      2.) CONSTUCT SSUSER FROM DATA
+                        //      3.) SAVE CONTEXT
                     }
+                    //complete login
+                    self.completeLoginRoutine(user)
                 }
             }
         })
@@ -141,33 +169,13 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, S
             self.makeAlert(self, title: "Disk Error", error: nil)
         }
         
-        //user to be returned
-        var user : SSUser?
-        
         //get user in fetch with the given ID
         if let users = self.userFetchResultsController.fetchedObjects as? [SSUser], let user = users.first {
-            if user.userID == userID {
-                //user matches ID, return
-                return user
-            }
+            return user
         }
-        //user is a ShiftShare user, not in fetch, get data from database
-        self.choiceAlert(self, title: "First Login", completionHandler: {yesButtonHit in
-          
-            if yesButtonHit {
-                //grab data from database
-                print("GETting data")
-                
-                //construct user from data
-                //TODO: GET data, make user
-                let testUser = SSUser(userName: "Brian", userID: "0514", schedules: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
-                user = testUser
-            } else {
-                //user does not wish to grab data on this phone
-                user = nil
-            }
-        })
-        return user
+        
+        //no user in fetch
+        return nil
     }
     
     //signs user up
@@ -192,7 +200,17 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, S
     }
     
     //called when new user is created
-    func didCreateNewUser(user: SSUser) {
+    func didCreateNewUser(user: SSUser, email: String, password: String) {
+        
+        //get FAuthData for new user
+        FirebaseClient.sharedInstance().authenticateUser(email, password: password, completionHandler: {success, authData, error in
+            if success {
+                //finish login routine with user
+                self.completeLoginRoutine(user)
+            } else {
+                self.makeAlert(self, title: "Authentication Failed", error: error!)
+            }
+        })
         
         //finish login routine with user
         self.completeLoginRoutine(user)

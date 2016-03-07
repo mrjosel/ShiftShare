@@ -158,7 +158,7 @@ protocol SSScheduleItem : NSObjectProtocol {
 protocol SignUpViewControllerDelegate : NSObjectProtocol {
     
     //informs delegate new user was created
-    func didCreateNewUser(user: SSUser) -> Void
+    func didCreateNewUser(user: SSUser, email: String, password: String) -> Void
 }
 
 //handles passing of data between menu and calendar

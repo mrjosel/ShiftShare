@@ -68,6 +68,7 @@ class WelcomeViewController: UIViewController {
     
     //checks if user is logged in
     func checkForLoggedInUser() {
+        
         //check for valid FAuthObject
         if FirebaseClient.sharedInstance().loginRef.authData == nil {
             

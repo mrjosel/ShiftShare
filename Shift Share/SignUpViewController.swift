@@ -80,6 +80,7 @@ class SignUpViewController: KeyboardPresentViewController, UITextFieldDelegate {
                     //create SSUser
                     let wholeName = self.firstNameTextField.text! + " " + self.lastNameTextField.text!
                     self.newUser = SSUser(userName: wholeName, userID: userID, schedules: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+                    CoreDataStackManager.sharedInstance().saveContext()
                     self.dismissViewControllerAnimated(true, completion: nil)
                 }
             }
@@ -108,7 +109,7 @@ class SignUpViewController: KeyboardPresentViewController, UITextFieldDelegate {
         
         //inform delegate
         if let newUser = self.newUser {
-            self.delegate?.didCreateNewUser(newUser)
+            self.delegate?.didCreateNewUser(newUser, email: self.emailTextField.text!, password: self.passwordTextField.text!)
         }
     }
 

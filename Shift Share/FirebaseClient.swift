@@ -39,9 +39,8 @@ class FirebaseClient {
     }
     
     //authenticate login credentials
-    func authenticateUser(email: String, password: String, completionHandler: (success: Bool, authData: AnyObject?, error: NSError?) -> Void) {
+    func authenticateUser(email: String, password: String, completionHandler: (success: Bool, authData: FAuthData?, error: NSError?) -> Void) {
         self.loginRef.authUser(email, password: password, withCompletionBlock: {error, authData in
-            
             //check for error
             if let error = error {
                 //error exists, complete with handler
