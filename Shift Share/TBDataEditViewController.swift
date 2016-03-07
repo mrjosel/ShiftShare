@@ -25,6 +25,9 @@ class TBDataEditViewController: KeyboardPresentViewController, UITextViewDelegat
     @IBOutlet weak var menuBar: JTCalendarMenuView!
     @IBOutlet weak var dateLabel: UILabel!
     
+    //delegate
+    var delegate : ScheduleEditViewControllerDelegate?    //since VC can edit schedules
+    
     //data from cell selected in CalendarVC
     var scheduleItem : SSScheduleItem!
     var schedule : SSSchedule!
@@ -284,9 +287,10 @@ class TBDataEditViewController: KeyboardPresentViewController, UITextViewDelegat
             }
         }
 
-        //save context only VC presented from CalendarVC (VC count is 2 in this case), and
-        if self.navigationController?.viewControllers.count == 2 {
+        //save context only VC presented from CalendarVC, CalVC presenter implied if delegate is set (should inform delegate as well)
+        if let delegate = self.delegate {
             CoreDataStackManager.sharedInstance().saveContext()
+            delegate.scheduleDidChange(self.schedule)
         }
 
         //return back to calendar

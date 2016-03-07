@@ -260,9 +260,6 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         
         //call cacheAndConfig using delegate
         self.delegate?.scheduleDidChange(self.schedule)
-//        let calVC = self.navigationController?.viewControllers.first as! CalendarViewController
-//        calVC.cacheAndConfig(self.schedule)
-//        calVC.configUIViews(self.schedule.date!)
         
         //dismiss viewController
         self.navigationController?.popViewControllerAnimated(true)

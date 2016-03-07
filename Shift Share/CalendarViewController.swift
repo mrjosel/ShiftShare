@@ -518,6 +518,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             let tbEditVC : TBDataEditViewController = segue.destinationViewController as! TBDataEditViewController
             
             //set VC's date to selectedDate, and cast sender as SSTBCellData
+            tbEditVC.delegate = self
             tbEditVC.scheduleItem = scheduleItem
             tbEditVC.schedule = self.schedulesDict[self.selectedDate.keyFromDate] 
             tbEditVC.selectedIndexPath = indexPath
