@@ -202,9 +202,6 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, S
                 self.makeAlert(self, title: "Authentication Failed", error: error!)
             }
         })
-        
-        //finish login routine with user
-        self.completeLoginRoutine(user)
     }
     
     //handle segue

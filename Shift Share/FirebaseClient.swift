@@ -107,7 +107,6 @@ class FirebaseClient {
     func setValue(validJSONobject : AnyObject?) {
         
         if let json = validJSONobject as? [String: AnyObject] {
-            print("we casted")
             self.rootRef.setValue(json)
         }
     }

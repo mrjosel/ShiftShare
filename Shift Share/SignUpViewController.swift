@@ -102,10 +102,6 @@ class SignUpViewController: KeyboardPresentViewController, UITextFieldDelegate {
         
         //remove keyboard notifications
         self.unsubscribeToKeyboardNotifications()
-    }
-    
-    //do after view disappears
-    override func viewDidDisappear(animated: Bool) {
         
         //inform delegate
         if let newUser = self.newUser {
