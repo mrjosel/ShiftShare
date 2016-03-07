@@ -43,10 +43,10 @@ class WelcomeViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         //DEBUG
-        FirebaseClient.sharedInstance().loginRef.unauth()
+//        FirebaseClient.sharedInstance().loginRef.unauth()
         
         //actual delay
-        let seconds = 2.0
+        let seconds = 1.0
         let delay = seconds * Double(NSEC_PER_SEC) //nanoseconds per seconda
         self.dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
         

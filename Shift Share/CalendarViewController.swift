@@ -35,9 +35,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     //user defaults, used to load date after user launches app
     let userDefaults = NSUserDefaults.standardUserDefaults()
     
-    //logout order
-    var logoutOrder : Bool = false
-    
     //outlets
     @IBOutlet weak var monthSelectorView: JTCalendarMenuView!
     @IBOutlet weak var calendarView: JTHorizontalCalendarView!
@@ -99,17 +96,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     
     //do anytime view will show
     override func viewWillAppear(animated: Bool) {
-        
-        print(self.user)
-        
+    
         //hide navBar
         self.navigationController?.navigationBar.hidden = true
-        
-        //logout if order is true
-        if self.logoutOrder {
-            print("should logout")
-            self.dismissViewControllerAnimated(false, completion: nil)
-        }
         
     }
 
