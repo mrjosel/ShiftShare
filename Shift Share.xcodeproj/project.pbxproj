@@ -25,7 +25,7 @@
 		B79274A31BF55E4400FFE21C /* Shift_ShareTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79274A21BF55E4400FFE21C /* Shift_ShareTests.swift */; };
 		B79274AE1BF55E4400FFE21C /* Shift_ShareUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79274AD1BF55E4400FFE21C /* Shift_ShareUITests.swift */; };
 		B7AA408E1C8D082D00D2F45A /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AA408D1C8D082D00D2F45A /* WelcomeViewController.swift */; };
-		B7C7781F1C2210EC006213CA /* TBDataEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C7781E1C2210EC006213CA /* TBDataEditViewController.swift */; };
+		B7AA40901C8F981B00D2F45A /* ScheduleItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AA408F1C8F981B00D2F45A /* ScheduleItemViewController.swift */; };
 		B7CA2F7D1C8B430800056158 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7CA2F7C1C8B430800056158 /* SignUpViewController.swift */; };
 		B7E2A68A1C860A04001243E3 /* SSUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E2A6891C860A04001243E3 /* SSUser.swift */; };
 		B7E2A68C1C860CA2001243E3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E2A68B1C860CA2001243E3 /* LoginViewController.swift */; };
@@ -82,7 +82,7 @@
 		B79274AD1BF55E4400FFE21C /* Shift_ShareUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shift_ShareUITests.swift; sourceTree = "<group>"; };
 		B79274AF1BF55E4400FFE21C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B7AA408D1C8D082D00D2F45A /* WelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
-		B7C7781E1C2210EC006213CA /* TBDataEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TBDataEditViewController.swift; sourceTree = "<group>"; };
+		B7AA408F1C8F981B00D2F45A /* ScheduleItemViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleItemViewController.swift; sourceTree = "<group>"; };
 		B7CA2F7C1C8B430800056158 /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		B7E2A6891C860A04001243E3 /* SSUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSUser.swift; sourceTree = "<group>"; };
 		B7E2A68B1C860CA2001243E3 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -211,7 +211,7 @@
 				B7CA2F7C1C8B430800056158 /* SignUpViewController.swift */,
 				B792748F1BF55E4400FFE21C /* CalendarViewController.swift */,
 				B7E6C1341C19F20800A30682 /* ScheduleEditViewController.swift */,
-				B7C7781E1C2210EC006213CA /* TBDataEditViewController.swift */,
+				B7AA408F1C8F981B00D2F45A /* ScheduleItemViewController.swift */,
 				B74262C91C84BDF000DE0CE2 /* MenuViewController.swift */,
 				B7E2A68F1C87915D001243E3 /* FriendsListViewController.swift */,
 			);
@@ -442,8 +442,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B7C7781F1C2210EC006213CA /* TBDataEditViewController.swift in Sources */,
 				B74262CA1C84BDF000DE0CE2 /* MenuViewController.swift in Sources */,
+				B7AA40901C8F981B00D2F45A /* ScheduleItemViewController.swift in Sources */,
 				B79274901BF55E4400FFE21C /* CalendarViewController.swift in Sources */,
 				B7E2A6941C89FAA1001243E3 /* FirebaseClient.swift in Sources */,
 				B78675E41C690F6D0028663A /* CoreDataStackManager.swift in Sources */,

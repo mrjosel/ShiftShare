@@ -488,7 +488,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         let segueID = segue.identifier! as String
         
         switch segueID {
-        case "TBeditVCSegueFromCal" :
+        case "ItemVCSegueFromCal" :
             
             //schedule item to pass to nextVC, and indexPath
             var scheduleItem : SSScheduleItem?
@@ -507,13 +507,13 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             }
 
             //create VC to edit schedule
-            let tbEditVC : TBDataEditViewController = segue.destinationViewController as! TBDataEditViewController
+            let scheduleItemVC : ScheduleItemViewController = segue.destinationViewController as! ScheduleItemViewController
             
             //set VC's date to selectedDate, and cast sender as SSTBCellData
-            tbEditVC.delegate = self
-            tbEditVC.scheduleItem = scheduleItem
-            tbEditVC.schedule = self.schedulesDict[self.selectedDate.keyFromDate] 
-            tbEditVC.selectedIndexPath = indexPath
+            scheduleItemVC.delegate = self
+            scheduleItemVC.scheduleItem = scheduleItem
+            scheduleItemVC.schedule = self.schedulesDict[self.selectedDate.keyFromDate]
+            scheduleItemVC.selectedIndexPath = indexPath
             
         case "scheduleEditVCsegue" :
             

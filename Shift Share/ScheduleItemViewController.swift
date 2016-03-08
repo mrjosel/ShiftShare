@@ -1,5 +1,5 @@
 //
-//  TBDataEditViewController.swift
+//  ScheduleItemViewController.swift
 //  Shift Share
 //
 //  Created by Brian Josel on 12/16/15.
@@ -11,7 +11,7 @@ import JTCalendar
 import CoreData
 
 //presents shift or note in detail
-class TBDataEditViewController: KeyboardPresentViewController, UITextViewDelegate, UITextFieldDelegate {
+class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDelegate, UITextFieldDelegate {
     
     //outlets
     @IBOutlet weak var dataImageView: UIImageView!
@@ -83,7 +83,7 @@ class TBDataEditViewController: KeyboardPresentViewController, UITextViewDelegat
         
         //get default shift, setup saveButton behavior
         if self.dataIsShift {
-            print(self.scheduleItem)
+
             if let type = (self.scheduleItem as! SSShift).type  where type != SSShiftType.NEWSHIFT {
                 //type is set implying its an existing schedule, don't allow saving until user taps image
                 self.scratchShiftType = type

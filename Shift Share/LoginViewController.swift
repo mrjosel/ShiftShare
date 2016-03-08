@@ -66,6 +66,10 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, S
     
     override func viewWillAppear(animated: Bool) {
         
+        //enable buttons
+        self.loginButton.enabled = true
+        self.signupButton.enabled = true
+        
         //hide navBar
         self.navigationController?.navigationBar.hidden = true
         
@@ -87,11 +91,21 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, S
         let email = self.emailTextField.text
         let password = self.passwordTextField.text
         
+        //disable buttons
+        self.loginButton.enabled = false
+        self.signupButton.enabled = false
+        
         //attempt to authenticate user
         FirebaseClient.sharedInstance().authenticateUser(email!, password: password!, completionHandler: {success, authData, error in
+            
             //failed to authenticate
             if !success {
                 self.makeAlert(self, title: "Authentication Failed", error: error)
+                
+                //enable buttons
+                self.loginButton.enabled = true
+                self.signupButton.enabled = true
+                
             } else {
                 //successful authentication and authData
                 //get user from fetch, or create user using data from server

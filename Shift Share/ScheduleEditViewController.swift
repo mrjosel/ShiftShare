@@ -153,7 +153,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         //pass indexPath onto next VC, use to locate which shift or note is selected
-        self.performSegueWithIdentifier("TBeditVCSegueFromNew", sender: indexPath)
+        self.performSegueWithIdentifier("ItemVCSegueFromNew", sender: indexPath)
         
     }
     
@@ -202,13 +202,13 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     //segue to scheduleEditVC
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
-        if segue.identifier == "TBeditVCSegueFromNew" {
+        if segue.identifier == "ItemVCSegueFromNew" {
 
             //create VC for show presentation
-            let tbDataEditVC : TBDataEditViewController = segue.destinationViewController as! TBDataEditViewController
-            tbDataEditVC.selectedIndexPath = sender as? NSIndexPath
-            tbDataEditVC.scheduleItem = self.getItemAtIndexPath(atIndexPath: sender as! NSIndexPath)
-            tbDataEditVC.schedule = self.schedule
+            let scheduleItemVC : ScheduleItemViewController = segue.destinationViewController as! ScheduleItemViewController
+            scheduleItemVC.selectedIndexPath = sender as? NSIndexPath
+            scheduleItemVC.scheduleItem = self.getItemAtIndexPath(atIndexPath: sender as! NSIndexPath)
+            scheduleItemVC.schedule = self.schedule
 
         }
     }
