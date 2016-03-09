@@ -22,9 +22,6 @@ class SignUpViewController: KeyboardPresentViewController, UITextFieldDelegate {
     //delegate
     var delegate : SignUpViewControllerDelegate?
     
-    //new user
-    var newUser : SSUser?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -61,8 +58,17 @@ class SignUpViewController: KeyboardPresentViewController, UITextFieldDelegate {
     //creates new user based off input params
     func createNewUser(sender: UIButton) {
         
+        guard let firstName = self.firstNameTextField.text where firstName != "",
+            let lastName = self.lastNameTextField.text where lastName != "",
+            let email = self.emailTextField.text where email != "",
+            let password = self.passwordTextField.text where email != "" else {
+                //fields not presented properly
+                self.makeAlert(self, title: "Incomplete User Information", error: nil)
+                return
+        }
+        
         //migrate this to other viewController
-        FirebaseClient.sharedInstance().createNewUser(self.emailTextField.text!, password: self.passwordTextField.text!, completionHandler: {success, result, error in
+        FirebaseClient.sharedInstance().createNewUser(email, password: password, completionHandler: {success, result, error in
             
             //check for success, if false, make alert, if true carry on new user routine
             if !success {
@@ -75,13 +81,14 @@ class SignUpViewController: KeyboardPresentViewController, UITextFieldDelegate {
                     let userID = result["uid"] as! String
                     
                     //create SSUser
-                    if let firstName = self.firstNameTextField.text where firstName != "", let lastName = self.lastNameTextField.text where lastName != "" {
-                        self.newUser = SSUser(firstName: firstName, lastName: lastName, userID: userID, schedules: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
-                        CoreDataStackManager.sharedInstance().saveContext()
-                        self.dismissViewControllerAnimated(true, completion: nil)
-                    } else {
-                        self.makeAlert(self, title: "Incomplete Name Fields", error: nil)
-                    }
+                    let newUser = SSUser(firstName: firstName, lastName: lastName, userID: userID, schedules: nil, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+                    
+                    //save context
+                    CoreDataStackManager.sharedInstance().saveContext()
+                    
+                    //inform delegate and dismiss
+                    self.delegate?.didCreateNewUser(newUser, email: email, password: password)
+                    self.dismissViewControllerAnimated(true, completion: nil)
                 }
             }
         })
@@ -103,10 +110,10 @@ class SignUpViewController: KeyboardPresentViewController, UITextFieldDelegate {
         //remove keyboard notifications
         self.unsubscribeToKeyboardNotifications()
         
-        //inform delegate
-        if let newUser = self.newUser {
-            self.delegate?.didCreateNewUser(newUser, email: self.emailTextField.text!, password: self.passwordTextField.text!)
-        }
+//        //inform delegate
+//        if let newUser = self.newUser {
+//            self.delegate?.didCreateNewUser(newUser, email: self.emailTextField.text!, password: self.passwordTextField.text!)
+//        }
     }
 
     override func didReceiveMemoryWarning() {
