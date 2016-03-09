@@ -422,7 +422,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         //perform segue to editVC
-        self.performSegueWithIdentifier("TBeditVCSegueFromCal", sender: indexPath)
+        self.performSegueWithIdentifier("ItemVCSegueFromCal", sender: indexPath)
     }
     
     //keep height at 30 for section 0, 0 for section 1 (do not want a header visible)
@@ -509,7 +509,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //create VC to edit schedule
             let scheduleItemVC : ScheduleItemViewController = segue.destinationViewController as! ScheduleItemViewController
             
-            //set VC's date to selectedDate, and cast sender as SSTBCellData
+            //set VC's date to selectedDate, and cast sender as scheduleItem
             scheduleItemVC.delegate = self
             scheduleItemVC.scheduleItem = scheduleItem
             scheduleItemVC.schedule = self.schedulesDict[self.selectedDate.keyFromDate]

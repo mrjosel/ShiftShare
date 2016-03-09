@@ -56,20 +56,6 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         return fetchResultsController
     }()
     
-    override func viewWillAppear(animated: Bool) {
-
-        //hide navBar
-        self.navigationController?.navigationBar.hidden = true
-        
-        //deselect all cells
-        self.newScheduleTable.deselectAllCells()
-        
-        //perform fetches
-        self.fetchAndRepopShift()
-        self.fetchNotes()
-        
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -91,6 +77,20 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //fetch controllers
         self.notesFetchResultsController.delegate = self
         self.shiftFetchResultsController.delegate = self
+        
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        
+        //hide navBar
+        self.navigationController?.navigationBar.hidden = true
+        
+        //deselect all cells
+        self.newScheduleTable.deselectAllCells()
+        
+        //perform fetches
+        self.fetchAndRepopShift()
+        self.fetchNotes()
         
     }
     
@@ -132,20 +132,22 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         }
         
         //item to pass on for cell configuration
-        var scheduleItem : SSScheduleItem
+        var scheduleItem : SSScheduleItem?
         
         //configure cells for each section
         if indexPath.section == 0 {
             scheduleItem = self.shiftFetchResultsController.fetchedObjects![indexPath.row] as! SSShift
+            self.configureCell(cell, withItem: scheduleItem, forSection: indexPath.section)
         } else if indexPath.section == 1 {
             scheduleItem = self.notesFetchResultsController.fetchedObjects![indexPath.row] as! SSNote
         } else {
             //configure newNote
-            scheduleItem = SSNote(title: "New Note", body: nil, context: CoreDataStackManager.sharedInstance().scratchContext)
+            //scheduleItem = SSNote(title: "New Note", body: nil, context: CoreDataStackManager.sharedInstance().scratchContext)
+            self.configureCell(cell, withItem: nil, forSection: indexPath.section)
         }
         
         //pass item and cell on for configuration and return
-        self.configureCell(cell, withItem: scheduleItem)
+        //self.configureCell(cell, withItem: scheduleItem)
         return cell
     }
     
@@ -269,22 +271,37 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     //configures cell in tableView with item (either shift or note)
-    func configureCell(cell: UITableViewCell, withItem item: SSScheduleItem) {
+    func configureCell(cell: UITableViewCell, withItem item: SSScheduleItem?, forSection section: Int?) {
 
         //cast cell
         let cell = cell as! SSTableViewCell
-                
-        //set cell properties
-        if let imageName = item.imageName {
-            cell.imageView?.image = UIImage(named: imageName)
-        } else {
-            cell.imageView?.image = nil
-        }
-        cell.textLabel?.text = item.title
-        cell.detailTextLabel?.text = item.body
         
-        //hide detail label if its newNote (end of tableData)
-        cell.detailTextLabel?.hidden = item.schedule == nil ? true : false
+        //check for scheduleItem
+        if let item = item {
+            //set cell properties
+            if let imageName = item.imageName {
+                cell.imageView?.image = UIImage(named: imageName)
+            } else {
+                cell.imageView?.image = nil
+            }
+            cell.textLabel?.text = item.title
+            cell.detailTextLabel?.text = item.body
+            
+            //hide detail label if its newNote (end of tableData)
+            cell.detailTextLabel?.hidden = item.schedule == nil ? true : false
+        } else {
+            //no item
+            if section == 0 {
+                //newShift
+            } else if section == 2 {
+                //newNote
+                cell.imageView?.image = UIImage(named: "Note")
+                cell.textLabel?.text = "New Note"
+                cell.detailTextLabel?.text = ""
+            } else {
+                //SHOULD NEVER HIT THIS POINT
+            }
+        }
     }
     
     //method to get item to be used in schedule editing
@@ -371,7 +388,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
                 scheduleItem = controller.fetchedObjects![oldIndexPath!.row] as! SSNote
             }
             let cell = self.newScheduleTable.cellForRowAtIndexPath(oldIndexPath!) as! SSTableViewCell
-            self.configureCell(cell, withItem: scheduleItem)
+            self.configureCell(cell, withItem: scheduleItem, forSection: nil)
         case .Move :
             self.newScheduleTable.deleteRowsAtIndexPaths([oldIndexPath!], withRowAnimation: .Fade)
             self.newScheduleTable.insertRowsAtIndexPaths([newerIndexPath!], withRowAnimation: .Fade)
