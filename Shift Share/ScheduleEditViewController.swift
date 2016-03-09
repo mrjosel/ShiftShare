@@ -317,8 +317,12 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         
         //check section
         if indexPath.section == 0 {
-            //item is a shift
-            scheduleItem = self.shiftFetchResultsController.fetchedObjects![indexPath.row] as! SSShift
+            //item is a shift, get it from fetch if it exists, else make a new shift object
+            if let shifts = self.shiftFetchResultsController.fetchedObjects as? [SSShift] where !shifts.isEmpty {
+                scheduleItem = shifts.first!
+            } else {
+                scheduleItem = SSShift(type: .NEWSHIFT, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+            }
         } else if indexPath.section == 1 {
             //item is a note that exists from store since indexPath.section is 1
             scheduleItem = self.notesFetchResultsController.fetchedObjects![indexPath.row] as! SSNote
