@@ -109,7 +109,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         
         //configure number of rows for each section
         if section == 0 {
-            return self.shiftFetchResultsController.sections![0].numberOfObjects
+            return 1//self.shiftFetchResultsController.sections![0].numberOfObjects
         } else if section == 1 {
             //section one is notes, if notes exist its count, else 0
             return self.notesFetchResultsController.sections![0].numberOfObjects
@@ -136,18 +136,18 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         
         //configure cells for each section
         if indexPath.section == 0 {
-            scheduleItem = self.shiftFetchResultsController.fetchedObjects![indexPath.row] as! SSShift
-            self.configureCell(cell, withItem: scheduleItem, forSection: indexPath.section)
+            if let shifts = self.shiftFetchResultsController.fetchedObjects as? [SSShift] where !shifts.isEmpty {
+                scheduleItem = shifts.first
+            }
         } else if indexPath.section == 1 {
             scheduleItem = self.notesFetchResultsController.fetchedObjects![indexPath.row] as! SSNote
         } else {
-            //configure newNote
-            //scheduleItem = SSNote(title: "New Note", body: nil, context: CoreDataStackManager.sharedInstance().scratchContext)
-            self.configureCell(cell, withItem: nil, forSection: indexPath.section)
+            //configure for newNote
+            scheduleItem = nil
         }
         
         //pass item and cell on for configuration and return
-        //self.configureCell(cell, withItem: scheduleItem)
+        self.configureCell(cell, withItem: scheduleItem, forSection: indexPath.section)
         return cell
     }
     
@@ -164,9 +164,8 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         
         //editing mode for shift
         if indexPath.section == 0 {
-            let shift = self.shiftFetchResultsController.fetchedObjects![indexPath.row] as! SSShift
-            if shift.type != SSShiftType.NEWSHIFT {
-                //shift is not newShift, can be edited
+            if let shifts = self.shiftFetchResultsController.fetchedObjects as? [SSShift] where !shifts.isEmpty {
+                //shift exists, can edit
                 return true
             }
         } else if indexPath.section == 1 {
@@ -274,7 +273,10 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     func configureCell(cell: UITableViewCell, withItem item: SSScheduleItem?, forSection section: Int?) {
 
         //cast cell
-        let cell = cell as! SSTableViewCell
+        guard let cell = cell as? SSTableViewCell else {
+            //cell not SSTableViewCell, return blank cell
+            return 
+        }
         
         //check for scheduleItem
         if let item = item {
@@ -293,6 +295,9 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
             //no item
             if section == 0 {
                 //newShift
+                cell.imageView?.image = nil
+                cell.textLabel?.text = "New Shift"
+                cell.detailTextLabel?.text = ""
             } else if section == 2 {
                 //newNote
                 cell.imageView?.image = UIImage(named: "Note")
@@ -332,15 +337,16 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //perform fetches
         self.fetchShifts()
         
-        //if no shift at fetch, create newShift
-        if self.shiftFetchResultsController.fetchedObjects?.count == 0 {
-            let shift = SSShift(type: SSShiftType.NEWSHIFT, context: CoreDataStackManager.sharedInstance().managedObjectContext)
-            shift.schedule = self.schedule
-        }
+//        //if no shift at fetch, create newShift
+//        if self.shiftFetchResultsController.fetchedObjects?.count == 0 {
+//            let shift = SSShift(type: SSShiftType.NEWSHIFT, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+//            shift.schedule = self.schedule
+//        }
     }
     
     //called when controller will change the content
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        
         self.newScheduleTable.beginUpdates()
     }
     
@@ -397,11 +403,13 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     
     //called when a section is changed
     func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+        
         //add appropriate methods
     }
     
     //called when controller finishes changing content
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        
         self.newScheduleTable.endUpdates()
     }
     
