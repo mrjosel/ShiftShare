@@ -261,6 +261,8 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
     //return to calendar without changes
     @IBAction func cancelButtonPressed(sender: UIButton) {
         //return back to calendar
+        let item = self.dataIsShift ? self.scheduleItem as! SSShift : self.scheduleItem as! SSNote
+        CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(item)
         self.navigationController?.popViewControllerAnimated(true)
     }
     
@@ -288,11 +290,11 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
             }
         }
 
-        //save context only VC presented from CalendarVC, CalVC presenter implied if delegate is set (should inform delegate as well)
-        if let delegate = self.delegate {
+//        //save context only VC presented from CalendarVC, CalVC presenter implied if delegate is set (should inform delegate as well)
+//        if let delegate = self.delegate {
             CoreDataStackManager.sharedInstance().saveContext()
-            delegate.scheduleDidChange(self.schedule)
-        }
+//            delegate.scheduleDidChange(self.schedule)
+//        }
 
         //return back to calendar
         self.navigationController?.popViewControllerAnimated(true)
