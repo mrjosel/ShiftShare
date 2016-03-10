@@ -45,54 +45,58 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var noScheduleLabel: UILabel!
     @IBOutlet weak var bottomToolBar: UIToolbar!
     
-    //fetched results controller
-    lazy var scheduleFetchResultsController : NSFetchedResultsController = {
-        
-        //create fetch request
-        let fetchRequest = NSFetchRequest(entityName: "SSSchedule")
-        
-        //create predicate
-        let predicate = NSPredicate(format: "user  == %@", self.user)
-        
-        //make sort descriptor
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
-        fetchRequest.predicate = predicate
-        
-        //create controller and return
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "schedule")
-        
-        return fetchedResultsController
-    }()
-    
-    lazy var shiftFetchResultsController : NSFetchedResultsController = {
-        
-        //create fetch request
-        let fetchRequest = NSFetchRequest(entityName: "SSShift")
-        
-        //make sort descriptor
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        
-        //create controller and return
-        //set cacheName to "shiftCalVC" to imply shifts cache fetched in the CalendarVC
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "shiftCalVC")
-        
-        return fetchedResultsController
-    }()
-    
-    lazy var notesFetchResultsController : NSFetchedResultsController = {
-        
-        //create fetch request
-        let fetchRequest = NSFetchRequest(entityName: "SSNote")
-        
-        //make sort descriptor
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "dateCreated", ascending: true)]
-        
-        //create controller and return
-        //set cacheName to "notesCalVC" to imply notes cache fetched in the CalendarVC
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "notesCalVC")
-        
-        return fetchedResultsController
-    }()
+//    //fetched results controller
+//    lazy var scheduleFetchResultsController : NSFetchedResultsController = {
+//        
+//        //create fetch request
+//        let fetchRequest = NSFetchRequest(entityName: "SSSchedule")
+//        
+//        //create predicate
+//        let predicate = NSPredicate(format: "user  == %@", self.user)
+//        
+//        //make sort descriptor
+//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+//        fetchRequest.predicate = predicate
+//        
+//        //create controller and return
+//        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "schedule")
+//        
+//        return fetchedResultsController
+//    }()
+//    
+//    lazy var shiftFetchResultsController : NSFetchedResultsController = {
+//        
+//        //create fetch request
+//        let fetchRequest = NSFetchRequest(entityName: "SSShift")
+//        
+//        //make sort descriptor
+//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+//        
+//        //create controller and return
+//        //set cacheName to "shiftCalVC" to imply shifts cache fetched in the CalendarVC
+//        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "shiftCalVC")
+//        
+//        return fetchedResultsController
+//    }()
+//    
+//    lazy var notesFetchResultsController : NSFetchedResultsController = {
+//        
+//        //create fetch request
+//        let fetchRequest = NSFetchRequest(entityName: "SSNote")
+//        
+//        //make sort descriptor
+//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "dateCreated", ascending: true)]
+//        
+//        //create controller and return
+//        //set cacheName to "notesCalVC" to imply notes cache fetched in the CalendarVC
+//        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "notesCalVC")
+//        
+//        return fetchedResultsController
+//    }()
+    let scheduleFetchResultsController : NSFetchedResultsController = CoreDataStackManager.sharedInstance().scheduleFetchResultsController
+    let notesFetchResultsController : NSFetchedResultsController = CoreDataStackManager.sharedInstance().notesFetchResultsController
+    let shiftFetchResultsController : NSFetchedResultsController = CoreDataStackManager.sharedInstance().shiftFetchResultsController
+    var predicate : NSPredicate!
     
     //do anytime view will show
     override func viewWillAppear(animated: Bool) {
@@ -133,6 +137,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.shiftFetchResultsController.delegate = self
         self.notesFetchResultsController.delegate = self
         self.scheduleFetchResultsController.delegate = self
+        
+        self.predicate = NSPredicate(format: "user  == %@", self.user)
+        self.scheduleFetchResultsController.fetchRequest.predicate = predicate
         
         //fetch schedules
         self.fetchSchedules()
@@ -522,6 +529,13 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             scheduleVC.delegate = self
             scheduleVC.schedule = sender as! SSSchedule
             
+            //clear FRC caches, and set delegate to nil
+            self.clearShiftAndNoteFetchControllerCaches()
+            self.shiftFetchResultsController.delegate = nil
+            self.shiftFetchResultsController.fetchRequest.predicate = nil
+            self.notesFetchResultsController.delegate = nil
+            self.notesFetchResultsController.fetchRequest.predicate = nil
+            
         case "menuSegue" :
 
             //TODO: FIX VC PRESENTATION
@@ -589,9 +603,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func fetchShiftAndNotes(forSchedule schedule : SSSchedule) {
 
         //clear out shift and notes cashe
-        NSFetchedResultsController.deleteCacheWithName("shiftCalVC")
-        NSFetchedResultsController.deleteCacheWithName("notesCalVC")
-        
+//        NSFetchedResultsController.deleteCacheWithName("shift")//CalVC")
+//        NSFetchedResultsController.deleteCacheWithName("notes")//CalVC")
+        self.clearShiftAndNoteFetchControllerCaches()
         //configure the predicate and set to the fetchResultControllers
         let predicate = NSPredicate(format: "schedule == %@", schedule)
         self.shiftFetchResultsController.fetchRequest.predicate = predicate
@@ -613,9 +627,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             self.makeAlert(self, title: "Failed to Load Notes", error: error as NSError)
         }
 
-        //clear out predicates (probably not required, but safe)
-        self.shiftFetchResultsController.fetchRequest.predicate = nil
-        self.notesFetchResultsController.fetchRequest.predicate = nil
+//        //clear out predicates (probably not required, but safe)
+//        self.shiftFetchResultsController.fetchRequest.predicate = nil
+//        self.notesFetchResultsController.fetchRequest.predicate = nil
         
     }
     
@@ -661,7 +675,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func fetchSchedules() {
         
         //clear out caches
-        NSFetchedResultsController.deleteCacheWithName(nil)
+//        NSFetchedResultsController.deleteCacheWithName(nil)
+        self.clearShiftAndNoteFetchControllerCaches()
         
         //fetch all schedules
         do {
@@ -782,6 +797,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //reload calendar
             self.calendarManager.reload()
         }
+    }
+    
+    //clear caches from controllers
+    func clearShiftAndNoteFetchControllerCaches() {
+        NSFetchedResultsController.deleteCacheWithName("shift")
+        NSFetchedResultsController.deleteCacheWithName("notes")
     }
 
     override func didReceiveMemoryWarning() {

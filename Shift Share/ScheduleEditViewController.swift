@@ -27,35 +27,38 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var newScheduleTable: UITableView!
     @IBOutlet weak var dateLabel: UILabel!
     
-    //notes fetch results controller
-    lazy var notesFetchResultsController : NSFetchedResultsController = {
-        
-        //create fetch
-        let fetchRequest = NSFetchRequest(entityName: "SSNote")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "dateCreated", ascending: true)]
-        fetchRequest.predicate = NSPredicate(format: "schedule == %@", self.schedule)
-        
-        //create and return controller
-        //call cacheName notesEditVC to imply notes fetched in the editVC
-        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "notesEditVC")
-        return fetchResultsController
-        
-    }()
+//    //notes fetch results controller
+//    lazy var notesFetchResultsController : NSFetchedResultsController = {
+//        
+//        //create fetch
+//        let fetchRequest = NSFetchRequest(entityName: "SSNote")
+//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "dateCreated", ascending: true)]
+//        fetchRequest.predicate = NSPredicate(format: "schedule == %@", self.schedule)
+//        
+//        //create and return controller
+//        //call cacheName notesEditVC to imply notes fetched in the editVC
+//        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "notesEditVC")
+//        return fetchResultsController
+//        
+//    }()
+//    
+//    //shift fetch results controller
+//    //call cacheName shiftEditVC to imply shift fetched in the editVC
+//    lazy var shiftFetchResultsController : NSFetchedResultsController = {
+//       
+//        //create fetch
+//        let fetchRequest = NSFetchRequest(entityName: "SSShift")
+//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+//        fetchRequest.predicate = NSPredicate(format: "schedule == %@", self.schedule)
+//        
+//        //create and return controller
+//        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "shiftEditVC")
+//        return fetchResultsController
+//    }()
     
-    //shift fetch results controller
-    //call cacheName shiftEditVC to imply shift fetched in the editVC
-    lazy var shiftFetchResultsController : NSFetchedResultsController = {
-       
-        //create fetch
-        let fetchRequest = NSFetchRequest(entityName: "SSShift")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        fetchRequest.predicate = NSPredicate(format: "schedule == %@", self.schedule)
-        
-        //create and return controller
-        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "shiftEditVC")
-        return fetchResultsController
-    }()
-    
+    let notesFetchResultsController : NSFetchedResultsController = CoreDataStackManager.sharedInstance().notesFetchResultsController
+    let shiftFetchResultsController : NSFetchedResultsController = CoreDataStackManager.sharedInstance().shiftFetchResultsController
+    var predicate : NSPredicate!
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -74,9 +77,18 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         self.menuBar.bringSubviewToFront(self.doneButton)
         self.dateLabel.text = self.schedule.date!.readableDate
         
+        print("shiftFRC delegate = \(self.shiftFetchResultsController.delegate)")
+        print("notesFRC delegate = \(self.notesFetchResultsController.delegate)")
         //fetch controllers
         self.notesFetchResultsController.delegate = self
         self.shiftFetchResultsController.delegate = self
+        predicate = NSPredicate(format: "schedule == %@", self.schedule)
+        self.notesFetchResultsController.fetchRequest.predicate = self.predicate
+        self.shiftFetchResultsController.fetchRequest.predicate = self.predicate
+        
+        print("shiftFRC delegate = \(self.shiftFetchResultsController.delegate)")
+        print("notesFRC delegate = \(self.notesFetchResultsController.delegate)")
+        
         
     }
     
@@ -138,7 +150,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //create cell
         guard let cell = tableView.dequeueReusableCellWithIdentifier("SSTableViewCell") as? SSTableViewCell else {
                 print("no cell made")
-                self.navigationController?.popViewControllerAnimated(true)
+            
                 return UITableViewCell()
         }
         
@@ -263,7 +275,8 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         self.schedule = nil
         
         //dismiss viewController
-        self.navigationController?.popViewControllerAnimated(true)
+//        self.navigationController?.popViewControllerAnimated(true)
+        self.popVCroutine()
     }
     
     //user presses done button, commit all changes to schedule
@@ -279,7 +292,8 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         self.delegate?.scheduleDidChange(self.schedule)
         
         //dismiss viewController
-        self.navigationController?.popViewControllerAnimated(true)
+        self.popVCroutine()
+//        self.navigationController?.popViewControllerAnimated(true)
     }
     
     //configures cell in tableView with item (either shift or note)
@@ -378,9 +392,9 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
             var path : NSIndexPath?
             if let indexPath = indexPath {
                 if controller == self.shiftFetchResultsController {
-                    path = NSIndexPath(forRow: indexPath.row, inSection: indexPath.section + 0)
-                } else {
                     path = NSIndexPath(forRow: indexPath.row, inSection: indexPath.section + 1)
+                } else {
+                    path = NSIndexPath(forRow: indexPath.row, inSection: indexPath.section + 2)
                 }
             }
             return path
@@ -390,9 +404,9 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
             var path : NSIndexPath?
             if let newIndexPath = newIndexPath {
                 if controller == self.shiftFetchResultsController {
-                    path = NSIndexPath(forRow: newIndexPath.row, inSection: newIndexPath.section + 0)
-                } else {
                     path = NSIndexPath(forRow: newIndexPath.row, inSection: newIndexPath.section + 1)
+                } else {
+                    path = NSIndexPath(forRow: newIndexPath.row, inSection: newIndexPath.section + 2)
                 }
             }
             return path
@@ -462,7 +476,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     func fetchShifts() {
         
         //clear out cache
-        NSFetchedResultsController.deleteCacheWithName("shiftEditVC")
+        NSFetchedResultsController.deleteCacheWithName("shift")//EditVC")
         
         //attempt fetch
         do {
@@ -480,7 +494,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     func fetchNotes() {
         
         //clear out cashe
-        NSFetchedResultsController.deleteCacheWithName("notesEditVC")
+        NSFetchedResultsController.deleteCacheWithName("notes")//EditVC")
         
         //attempt fetch
         do {
@@ -507,5 +521,16 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
             }
         }
         return didRemove
+    }
+    
+    //pop VC routine
+    func popVCroutine() {
+        NSFetchedResultsController.deleteCacheWithName("shift")
+        NSFetchedResultsController.deleteCacheWithName("notes")
+        self.notesFetchResultsController.delegate = nil
+        self.notesFetchResultsController.fetchRequest.predicate = nil
+        self.shiftFetchResultsController.fetchRequest.predicate = nil
+        self.shiftFetchResultsController.delegate = nil
+        self.navigationController?.popViewControllerAnimated(true)
     }
 }

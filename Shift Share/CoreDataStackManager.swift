@@ -108,4 +108,55 @@ class CoreDataStackManager {
         
         return Singleton.instance
     }
+    
+    
+    //FRCs
+    //fetched results controller
+    lazy var scheduleFetchResultsController : NSFetchedResultsController = {
+        
+        //create fetch request
+        let fetchRequest = NSFetchRequest(entityName: "SSSchedule")
+        
+//        //create predicate
+//        let predicate = NSPredicate(format: "user  == %@", self.user)
+        
+        //make sort descriptor
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+//        fetchRequest.predicate = predicate
+        
+        //create controller and return
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "schedule")
+        
+        return fetchedResultsController
+    }()
+    
+    lazy var shiftFetchResultsController : NSFetchedResultsController = {
+        
+        //create fetch request
+        let fetchRequest = NSFetchRequest(entityName: "SSShift")
+        
+        //make sort descriptor
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        //create controller and return
+        //set cacheName to "shiftCalVC" to imply shifts cache fetched in the CalendarVC
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "shift")//CalVC")
+        
+        return fetchedResultsController
+    }()
+    
+    lazy var notesFetchResultsController : NSFetchedResultsController = {
+        
+        //create fetch request
+        let fetchRequest = NSFetchRequest(entityName: "SSNote")
+        
+        //make sort descriptor
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "dateCreated", ascending: true)]
+        
+        //create controller and return
+        //set cacheName to "notesCalVC" to imply notes cache fetched in the CalendarVC
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "notes")//CalVC")
+        
+        return fetchedResultsController
+    }()
 }
