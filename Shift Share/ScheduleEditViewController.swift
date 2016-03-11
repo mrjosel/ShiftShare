@@ -63,7 +63,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        
+
         //delegate and datasource for tableView
         self.newScheduleTable.delegate = self
         self.newScheduleTable.dataSource = self
@@ -76,23 +76,19 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         self.menuBar.bringSubviewToFront(self.cancelButton)
         self.menuBar.bringSubviewToFront(self.doneButton)
         self.dateLabel.text = self.schedule.date!.readableDate
-        
-        print("shiftFRC delegate = \(self.shiftFetchResultsController.delegate)")
-        print("notesFRC delegate = \(self.notesFetchResultsController.delegate)")
+
         //fetch controllers
         self.notesFetchResultsController.delegate = self
         self.shiftFetchResultsController.delegate = self
-        predicate = NSPredicate(format: "schedule == %@", self.schedule)
+        self.predicate = NSPredicate(format: "schedule == %@", self.schedule)
         self.notesFetchResultsController.fetchRequest.predicate = self.predicate
         self.shiftFetchResultsController.fetchRequest.predicate = self.predicate
-        
-        print("shiftFRC delegate = \(self.shiftFetchResultsController.delegate)")
-        print("notesFRC delegate = \(self.notesFetchResultsController.delegate)")
-        
-        
     }
     
     override func viewWillAppear(animated: Bool) {
+        
+        print(self.shiftFetchResultsController.delegate)
+        print(self.notesFetchResultsController.delegate)
         
         //hide navBar
         self.navigationController?.navigationBar.hidden = true
@@ -101,7 +97,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         self.newScheduleTable.deselectAllCells()
         
         //perform fetches
-        self.fetchAndRepopShift()
+        self.fetchShifts()
         self.fetchNotes()
         
     }
@@ -187,18 +183,12 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     //disable editing of newShift and newNote
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         
-        //editing mode for shift
-        if indexPath.section == 1 {
-            if let shifts = self.shiftFetchResultsController.fetchedObjects as? [SSShift] where !shifts.isEmpty {
-                //shift exists, can edit
-                return true
-            }
-        } else if indexPath.section == 2 {
-            //section 1 only populated if notes exist, can be deletec
+        //editing mode for shift or notes
+        if indexPath.section == 1 || indexPath.section == 2 {
             return true
         }
         
-        //shift is NEWSHIFT or in section 2
+        //shift is NEWSHIFT or in section 3
         return false
 
     }
@@ -210,18 +200,19 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         if editingStyle == UITableViewCellEditingStyle.Delete {
             
             //handle shift or notes depending on section
-            if indexPath.section == 0 {
+            if indexPath.section == 1 {
                 //if row can be deleted, shift must exist, using implicitly unwrapped optionals
                 let shift = self.shiftFetchResultsController.fetchedObjects![indexPath.row] as! SSShift
                 CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(shift)
-            } else if indexPath.section == 1 {
+            } else if indexPath.section == 2 {
                 //if row can be deleted, note must exist, using implicitly unwrapped optionals
+                print(indexPath.row)
                 let note = self.notesFetchResultsController.fetchedObjects![indexPath.row] as! SSNote
+                print(note)
                 CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(note)
             }
             //save context
             CoreDataStackManager.sharedInstance().saveContext()
-            self.fetchAndRepopShift()
         }
     }
     
@@ -365,19 +356,6 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         return scheduleItem
     }
     
-    //fetches data from both stores, creates newShift if shift does not exist
-    func fetchAndRepopShift() {
-        
-        //perform fetches
-        self.fetchShifts()
-        
-//        //if no shift at fetch, create newShift
-//        if self.shiftFetchResultsController.fetchedObjects?.count == 0 {
-//            let shift = SSShift(type: SSShiftType.NEWSHIFT, context: CoreDataStackManager.sharedInstance().managedObjectContext)
-//            shift.schedule = self.schedule
-//        }
-    }
-    
     //called when controller will change the content
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
         
@@ -426,18 +404,11 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
                 return
             }
             
-            //get scheduleItem depending on which controller is calling delegate method
-//            let scheduleItem : SSScheduleItem = {
-//                if controller == self.shiftFetchResultsController {
-//                    return controller.fetchedObjects![adjustedIndexPath!.row] as! SSShift
-//                } else {
-//                    return controller.fetchedObjects![adjustedIndexPath!.row] as! SSNote
-//                }
-//            }()
+            //get schedule item
             let scheduleItem = self.getItemAtIndexPath(atIndexPath: adjustedIndexPath!)
+            
             //configure cell with item
             self.configureCell(cell, withItem: scheduleItem, forSection: adjustedIndexPath!.section)
-            
         case .Move :
             //delete cell at adjustedIndexPath, and insert row at adjustedNewIndexPath
             self.newScheduleTable.deleteRowsAtIndexPaths([adjustedIndexPath!], withRowAnimation: .Fade)
@@ -486,8 +457,6 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
             //alert user that app failed to load date
             self.makeAlert(self, title: "Failed to Load Shift", error: error as NSError)
         }
-        
-        print("shifts = \(self.shiftFetchResultsController.fetchedObjects)")
     }
     
     //convencience method for fetching notes
@@ -504,8 +473,6 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
             //alert user that app failed to load date
             self.makeAlert(self, title: "Failed to Load Notes", error: error as NSError)
         }
-        
-        print("notes = \(self.notesFetchResultsController.fetchedObjects)")
     }
     
     //removes newShift, if it exists, if it doesn't exist, function call does nothing

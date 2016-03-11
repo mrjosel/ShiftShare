@@ -290,11 +290,8 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
             }
         }
 
-//        //save context only VC presented from CalendarVC, CalVC presenter implied if delegate is set (should inform delegate as well)
-//        if let delegate = self.delegate {
-            CoreDataStackManager.sharedInstance().saveContext()
-//            delegate.scheduleDidChange(self.schedule)
-//        }
+        //save context
+        CoreDataStackManager.sharedInstance().saveContext()
 
         //return back to calendar
         self.navigationController?.popViewControllerAnimated(true)

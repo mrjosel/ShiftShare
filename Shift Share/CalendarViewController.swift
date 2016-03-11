@@ -138,6 +138,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.notesFetchResultsController.delegate = self
         self.scheduleFetchResultsController.delegate = self
         
+        //set predicate for scheduleFRC
         self.predicate = NSPredicate(format: "user  == %@", self.user)
         self.scheduleFetchResultsController.fetchRequest.predicate = predicate
         
@@ -263,7 +264,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         
         //config UI views
         self.configUIViews(self.selectedDate)
-
+        print(self.shiftFetchResultsController.fetchedObjects)
+        print(self.notesFetchResultsController.fetchedObjects)
         //reload table
         self.dayViewTableView.reloadData()
 
@@ -271,8 +273,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     
     //config UI views depending on date
     func configUIViews(date: NSDate) {
+        
+        print(self.schedulesDict)
         if let schedule = self.schedulesDict[date.keyFromDate] {
             //scheudle for this date, config UI accordingly
+            print(schedule)
+            print(schedule.date?.readableDate)
             self.fetchShiftAndNotes(forSchedule: schedule)
             self.leftSSButton.ssButtonType = .EDIT
             self.dayViewTableView.reloadData()
@@ -354,9 +360,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             
             //Edit Button
         case .NEW :
-            
+            print(self.selectedDate.readableDate)
             let newSchedule = SSSchedule(forDate: (self.selectedDate), forUser: self.user, context: CoreDataStackManager.sharedInstance().managedObjectContext)
-            
+            print(newSchedule)
             //segue to scheduleEditVC only
             self.performSegueWithIdentifier("scheduleEditVCsegue", sender: newSchedule)
             
@@ -603,9 +609,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func fetchShiftAndNotes(forSchedule schedule : SSSchedule) {
 
         //clear out shift and notes cashe
-//        NSFetchedResultsController.deleteCacheWithName("shift")//CalVC")
-//        NSFetchedResultsController.deleteCacheWithName("notes")//CalVC")
         self.clearShiftAndNoteFetchControllerCaches()
+        
         //configure the predicate and set to the fetchResultControllers
         let predicate = NSPredicate(format: "schedule == %@", schedule)
         self.shiftFetchResultsController.fetchRequest.predicate = predicate
@@ -626,10 +631,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //alert user that app failed to load date
             self.makeAlert(self, title: "Failed to Load Notes", error: error as NSError)
         }
-
-//        //clear out predicates (probably not required, but safe)
-//        self.shiftFetchResultsController.fetchRequest.predicate = nil
-//        self.notesFetchResultsController.fetchRequest.predicate = nil
         
     }
     
@@ -675,7 +676,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func fetchSchedules() {
         
         //clear out caches
-//        NSFetchedResultsController.deleteCacheWithName(nil)
+        NSFetchedResultsController.deleteCacheWithName(nil)
         self.clearShiftAndNoteFetchControllerCaches()
         
         //fetch all schedules
