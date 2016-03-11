@@ -27,41 +27,13 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var newScheduleTable: UITableView!
     @IBOutlet weak var dateLabel: UILabel!
     
-//    //notes fetch results controller
-//    lazy var notesFetchResultsController : NSFetchedResultsController = {
-//        
-//        //create fetch
-//        let fetchRequest = NSFetchRequest(entityName: "SSNote")
-//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "dateCreated", ascending: true)]
-//        fetchRequest.predicate = NSPredicate(format: "schedule == %@", self.schedule)
-//        
-//        //create and return controller
-//        //call cacheName notesEditVC to imply notes fetched in the editVC
-//        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "notesEditVC")
-//        return fetchResultsController
-//        
-//    }()
-//    
-//    //shift fetch results controller
-//    //call cacheName shiftEditVC to imply shift fetched in the editVC
-//    lazy var shiftFetchResultsController : NSFetchedResultsController = {
-//       
-//        //create fetch
-//        let fetchRequest = NSFetchRequest(entityName: "SSShift")
-//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//        fetchRequest.predicate = NSPredicate(format: "schedule == %@", self.schedule)
-//        
-//        //create and return controller
-//        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStackManager.sharedInstance().managedObjectContext, sectionNameKeyPath: nil, cacheName: "shiftEditVC")
-//        return fetchResultsController
-//    }()
-    
+    //local references to FRCs in CoreDataStack
     let notesFetchResultsController : NSFetchedResultsController = CoreDataStackManager.sharedInstance().notesFetchResultsController
     let shiftFetchResultsController : NSFetchedResultsController = CoreDataStackManager.sharedInstance().shiftFetchResultsController
-    var predicate : NSPredicate!
     
     //local coreData reference
     let coreDataRef = CoreDataStackManager.sharedInstance()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -83,13 +55,8 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //fetch controllers
         self.notesFetchResultsController.delegate = self
         self.shiftFetchResultsController.delegate = self
-        self.predicate = NSPredicate(format: "schedule == %@", self.schedule)
-        self.notesFetchResultsController.fetchRequest.predicate = self.predicate
-        self.shiftFetchResultsController.fetchRequest.predicate = self.predicate
         
         //perform fetches
-//        self.fetchShifts()
-//        self.fetchNotes()
         self.coreDataRef.fetchShiftAndNotes(forSchedule: self.schedule, withHandler: {success, error in
             //if failed, alert user
             if !success {
@@ -115,7 +82,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //return 3, one for shifts,, one for notes (if they exist) and a third for newNote, which is always present
         //NOTE: THE SECTION ONLY CORRESPONDS TO THE TABLE SECTION, NOT THE FETCH SECTION
         //      THE FETCH SECTION IS ALWAYS ZERO AND MUST BE HANDLED ACCORDINGLY
-        let count  = (self.shiftFetchResultsController.sections?.count)! + (self.notesFetchResultsController.sections?.count)! + 2//1
+        let count  = (self.shiftFetchResultsController.sections?.count)! + (self.notesFetchResultsController.sections?.count)! + 2
         print(count)
         return count
         
@@ -290,7 +257,6 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         
         //dismiss viewController
         self.popVCroutine()
-//        self.navigationController?.popViewControllerAnimated(true)
     }
     
     //configures cell in tableView with item (either shift or note)
@@ -447,38 +413,6 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         
         self.newScheduleTable.endUpdates()
-    }
-    
-    //convencience method for fetching shifts
-    func fetchShifts() {
-        
-        //clear out cache
-        NSFetchedResultsController.deleteCacheWithName("shift")//EditVC")
-        
-        //attempt fetch
-        do {
-            try self.shiftFetchResultsController.performFetch()
-        } catch {
-            
-            //alert user that app failed to load date
-            self.makeAlert(self, title: "Failed to Load Shift", error: error as NSError)
-        }
-    }
-    
-    //convencience method for fetching notes
-    func fetchNotes() {
-        
-        //clear out cashe
-        NSFetchedResultsController.deleteCacheWithName("notes")//EditVC")
-        
-        //attempt fetch
-        do {
-            try self.notesFetchResultsController.performFetch()
-        } catch {
-
-            //alert user that app failed to load date
-            self.makeAlert(self, title: "Failed to Load Notes", error: error as NSError)
-        }
     }
     
     //removes newShift, if it exists, if it doesn't exist, function call does nothing
