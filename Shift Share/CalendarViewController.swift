@@ -298,7 +298,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
 //            self.fetchShiftAndNotes(forSchedule: schedule)
             self.coreDataRef.fetchShiftAndNotes(forSchedule: schedule, withHandler: {success, error in
                 if !success {
-                    self.makeAlert(self, title: "Failed to Load Notes", error: error! as NSError)
+                    self.makeAlert(self, title: "Failed to Load Data", error: error! as NSError)
                 }
             })
             self.leftSSButton.ssButtonType = .EDIT
@@ -331,7 +331,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
 //        self.fetchShiftAndNotes(forSchedule: schedule)
         self.coreDataRef.fetchShiftAndNotes(forSchedule: schedule, withHandler: {success, error in
             if !success {
-                self.makeAlert(self, title: "Failed to Load Notes", error: error! as NSError)
+                self.makeAlert(self, title: "Failed to Load Data", error: error! as NSError)
             }
         })
         
@@ -667,7 +667,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
 //        self.fetchShiftAndNotes(forSchedule: schedule)
         self.coreDataRef.fetchShiftAndNotes(forSchedule: schedule, withHandler: {success, error in
             if !success {
-                self.makeAlert(self, title: "Failed to Load Notes", error: error! as NSError)
+                self.makeAlert(self, title: "Failed to Load Data", error: error! as NSError)
             }
         })
 

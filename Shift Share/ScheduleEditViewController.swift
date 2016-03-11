@@ -59,6 +59,9 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     let notesFetchResultsController : NSFetchedResultsController = CoreDataStackManager.sharedInstance().notesFetchResultsController
     let shiftFetchResultsController : NSFetchedResultsController = CoreDataStackManager.sharedInstance().shiftFetchResultsController
     var predicate : NSPredicate!
+    
+    //local coreData reference
+    let coreDataRef = CoreDataStackManager.sharedInstance()
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -85,8 +88,14 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         self.shiftFetchResultsController.fetchRequest.predicate = self.predicate
         
         //perform fetches
-        self.fetchShifts()
-        self.fetchNotes()
+//        self.fetchShifts()
+//        self.fetchNotes()
+        self.coreDataRef.fetchShiftAndNotes(forSchedule: self.schedule, withHandler: {success, error in
+            //if failed, alert user
+            if !success {
+                self.makeAlert(self, title: "Failed to Load Data", error: error! as NSError)
+            }
+        })
     }
     
     override func viewWillAppear(animated: Bool) {
