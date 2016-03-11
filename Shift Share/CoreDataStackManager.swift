@@ -100,6 +100,78 @@ class CoreDataStackManager {
         }
     }
     
+    //clear caches from controllers
+    func clearShiftAndNoteFetchControllerCaches() {
+        NSFetchedResultsController.deleteCacheWithName("shift")
+        NSFetchedResultsController.deleteCacheWithName("notes")
+    }
+    
+    //fetch shift and notes from store
+    func fetchShiftAndNotes(forSchedule schedule : SSSchedule, withHandler completionHandler : (success: Bool, error: NSError?) -> Void) {
+        
+        //clear out shift and notes cashe
+        self.clearShiftAndNoteFetchControllerCaches()
+        
+        //configure the predicate and set to the fetchResultControllers
+        let predicate = NSPredicate(format: "schedule == %@", schedule)
+        self.shiftFetchResultsController.fetchRequest.predicate = predicate
+        self.notesFetchResultsController.fetchRequest.predicate = predicate
+        
+        //success (default is true)
+        var success : Bool = true
+        var returnedError : NSError?
+        
+        //perform fetches
+        do {
+            try self.shiftFetchResultsController.performFetch()
+        } catch {
+            //set success false
+            success = false
+            returnedError = error as NSError
+        }
+        do {
+            try self.notesFetchResultsController.performFetch()
+        } catch {
+            //set success false
+            success = false
+            returnedError = error as NSError
+        }
+        
+        //complete
+        completionHandler(success: success, error: returnedError)
+        
+    }
+    
+    //convenience method for fetching schedules
+    func fetchSchedules(forUser user: SSUser, withHandler completionHandler: (success: Bool, error: NSError?) -> Void) {
+        
+        //clear out caches
+        NSFetchedResultsController.deleteCacheWithName(nil)
+        self.clearShiftAndNoteFetchControllerCaches()
+        
+        //configure predicate and set
+        let predicate = NSPredicate(format: "user  == %@", user)
+        self.scheduleFetchResultsController.fetchRequest.predicate = predicate
+        
+        //success (default is true)
+        var success : Bool = true
+        var returnedError : NSError?
+        
+        //fetch all schedules
+        do {
+            try self.scheduleFetchResultsController.performFetch()
+        } catch {
+            
+            //set success and error
+            success = false
+            returnedError = error as NSError
+        }
+        
+        //complete
+        completionHandler(success: success, error: returnedError)
+    }
+
+    
     //singleton
     class func sharedInstance() -> CoreDataStackManager {
         

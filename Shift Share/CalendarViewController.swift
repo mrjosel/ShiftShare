@@ -98,6 +98,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     let shiftFetchResultsController : NSFetchedResultsController = CoreDataStackManager.sharedInstance().shiftFetchResultsController
     var predicate : NSPredicate!
     
+    //coreData reference
+    let coreDataRef = CoreDataStackManager.sharedInstance()
+    
     //do anytime view will show
     override func viewWillAppear(animated: Bool) {
         
@@ -143,7 +146,20 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.scheduleFetchResultsController.fetchRequest.predicate = predicate
         
         //fetch schedules
-        self.fetchSchedules()
+//        self.fetchSchedules()
+        self.coreDataRef.fetchSchedules(forUser: self.user, withHandler: {success, error in
+            //successful fetch, cache schedules
+            if success {
+                self.schedulesDict = [String : SSSchedule]()
+                let schedules = self.scheduleFetchResultsController.fetchedObjects as! [SSSchedule]
+                for schedule in schedules {
+                    self.schedulesDict[schedule.date!.keyFromDate] = schedule
+                }
+            } else {
+                //alert user that app failed to load data
+                self.makeAlert(self, title: "Failed to Load Schedules", error: error!)
+            }
+        })
         
         //create buttons for bottomToobar
         let menuButton = UIBarButtonItem(title: "Menu", style: .Plain, target: self, action: "showMenu")
@@ -279,7 +295,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             //scheudle for this date, config UI accordingly
             print(schedule)
             print(schedule.date?.readableDate)
-            self.fetchShiftAndNotes(forSchedule: schedule)
+//            self.fetchShiftAndNotes(forSchedule: schedule)
+            self.coreDataRef.fetchShiftAndNotes(forSchedule: schedule, withHandler: {success, error in
+                if !success {
+                    self.makeAlert(self, title: "Failed to Load Notes", error: error! as NSError)
+                }
+            })
             self.leftSSButton.ssButtonType = .EDIT
             self.dayViewTableView.reloadData()
             self.dayViewTableView.hidden = false
@@ -307,7 +328,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         //get shifts and notes
-        self.fetchShiftAndNotes(forSchedule: schedule)
+//        self.fetchShiftAndNotes(forSchedule: schedule)
+        self.coreDataRef.fetchShiftAndNotes(forSchedule: schedule, withHandler: {success, error in
+            if !success {
+                self.makeAlert(self, title: "Failed to Load Notes", error: error! as NSError)
+            }
+        })
         
         //set image
         if let shift = self.shiftFetchResultsController.fetchedObjects?.first as? SSShift, let imageName = shift.imageName {
@@ -536,7 +562,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             scheduleVC.schedule = sender as! SSSchedule
             
             //clear FRC caches, and set delegate to nil
-            self.clearShiftAndNoteFetchControllerCaches()
+            self.coreDataRef.clearShiftAndNoteFetchControllerCaches()
             self.shiftFetchResultsController.delegate = nil
             self.shiftFetchResultsController.fetchRequest.predicate = nil
             self.notesFetchResultsController.delegate = nil
@@ -605,40 +631,45 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         return nil
     }
     
-    //fetch shift and notes from store
-    func fetchShiftAndNotes(forSchedule schedule : SSSchedule) {
-
-        //clear out shift and notes cashe
-        self.clearShiftAndNoteFetchControllerCaches()
-        
-        //configure the predicate and set to the fetchResultControllers
-        let predicate = NSPredicate(format: "schedule == %@", schedule)
-        self.shiftFetchResultsController.fetchRequest.predicate = predicate
-        self.notesFetchResultsController.fetchRequest.predicate = predicate
-        
-        //perform fetches
-        do {
-            try self.shiftFetchResultsController.performFetch()
-        } catch {
-            
-            //alert user that app failed to load date
-            self.makeAlert(self, title: "Failed to Load Shifts", error: error as NSError)
-        }
-        do {
-            try self.notesFetchResultsController.performFetch()
-        } catch {
-            
-            //alert user that app failed to load date
-            self.makeAlert(self, title: "Failed to Load Notes", error: error as NSError)
-        }
-        
-    }
+//    //fetch shift and notes from store
+//    func fetchShiftAndNotes(forSchedule schedule : SSSchedule) {
+//
+//        //clear out shift and notes cashe
+//        self.clearShiftAndNoteFetchControllerCaches()
+//        
+//        //configure the predicate and set to the fetchResultControllers
+//        let predicate = NSPredicate(format: "schedule == %@", schedule)
+//        self.shiftFetchResultsController.fetchRequest.predicate = predicate
+//        self.notesFetchResultsController.fetchRequest.predicate = predicate
+//        
+//        //perform fetches
+//        do {
+//            try self.shiftFetchResultsController.performFetch()
+//        } catch {
+//            
+//            //alert user that app failed to load date
+//            self.makeAlert(self, title: "Failed to Load Shifts", error: error as NSError)
+//        }
+//        do {
+//            try self.notesFetchResultsController.performFetch()
+//        } catch {
+//            
+//            //alert user that app failed to load date
+//            self.makeAlert(self, title: "Failed to Load Notes", error: error as NSError)
+//        }
+//        
+//    }
     
     //checks if shifts and notes exist for schedule, if they don't, schedule removed from context and cache, returns bool for inidication
     func checkScheduleForRemoval(schedule: SSSchedule) {
         
         //fetch shift and notes
-        self.fetchShiftAndNotes(forSchedule: schedule)
+//        self.fetchShiftAndNotes(forSchedule: schedule)
+        self.coreDataRef.fetchShiftAndNotes(forSchedule: schedule, withHandler: {success, error in
+            if !success {
+                self.makeAlert(self, title: "Failed to Load Notes", error: error! as NSError)
+            }
+        })
 
         //bool to tell if shift exists or not
         let hasShift : Bool = {
@@ -672,29 +703,29 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
-    //convenience method for fetching schedules
-    func fetchSchedules() {
-        
-        //clear out caches
-        NSFetchedResultsController.deleteCacheWithName(nil)
-        self.clearShiftAndNoteFetchControllerCaches()
-        
-        //fetch all schedules
-        do {
-            try self.scheduleFetchResultsController.performFetch()
-        } catch {
-
-            //alert user that app failed to load date
-            self.makeAlert(self, title: "Failed to Load Schedules", error: error as NSError)
-        }
-        
-        //successful fetch, make temp array of schedules, and map to [String: SSSchedule], set to schedulesDict
-        self.schedulesDict = [String : SSSchedule]()
-        let schedules = self.scheduleFetchResultsController.fetchedObjects as! [SSSchedule]
-        for schedule in schedules {
-            self.schedulesDict[schedule.date!.keyFromDate] = schedule
-        }
-    }
+//    //convenience method for fetching schedules
+//    func fetchSchedules() {
+//        
+//        //clear out caches
+//        NSFetchedResultsController.deleteCacheWithName(nil)
+//        self.clearShiftAndNoteFetchControllerCaches()
+//        
+//        //fetch all schedules
+//        do {
+//            try self.scheduleFetchResultsController.performFetch()
+//        } catch {
+//
+//            //alert user that app failed to load date
+//            self.makeAlert(self, title: "Failed to Load Schedules", error: error as NSError)
+//        }
+//        
+//        //successful fetch, make temp array of schedules, and map to [String: SSSchedule], set to schedulesDict
+//        self.schedulesDict = [String : SSSchedule]()
+//        let schedules = self.scheduleFetchResultsController.fetchedObjects as! [SSSchedule]
+//        for schedule in schedules {
+//            self.schedulesDict[schedule.date!.keyFromDate] = schedule
+//        }
+//    }
     
     //modally show menuViewController
     func showMenu() {
@@ -800,11 +831,11 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
-    //clear caches from controllers
-    func clearShiftAndNoteFetchControllerCaches() {
-        NSFetchedResultsController.deleteCacheWithName("shift")
-        NSFetchedResultsController.deleteCacheWithName("notes")
-    }
+//    //clear caches from controllers
+//    func clearShiftAndNoteFetchControllerCaches() {
+//        NSFetchedResultsController.deleteCacheWithName("shift")
+//        NSFetchedResultsController.deleteCacheWithName("notes")
+//    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

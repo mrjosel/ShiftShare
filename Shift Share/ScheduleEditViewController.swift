@@ -83,22 +83,19 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         self.predicate = NSPredicate(format: "schedule == %@", self.schedule)
         self.notesFetchResultsController.fetchRequest.predicate = self.predicate
         self.shiftFetchResultsController.fetchRequest.predicate = self.predicate
+        
+        //perform fetches
+        self.fetchShifts()
+        self.fetchNotes()
     }
     
     override func viewWillAppear(animated: Bool) {
-        
-        print(self.shiftFetchResultsController.delegate)
-        print(self.notesFetchResultsController.delegate)
         
         //hide navBar
         self.navigationController?.navigationBar.hidden = true
         
         //deselect all cells
         self.newScheduleTable.deselectAllCells()
-        
-        //perform fetches
-        self.fetchShifts()
-        self.fetchNotes()
         
     }
     
@@ -366,7 +363,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         
         //create different indexPaths so handling tableView is easier considering that the fetchResultsControllers have one section each
-        let adjustedIndexPath : NSIndexPath? = {
+        let tableIndexPath : NSIndexPath? = {
             var path : NSIndexPath?
             if let indexPath = indexPath {
                 if controller == self.shiftFetchResultsController {
@@ -378,7 +375,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
             return path
         }()
         
-        let adjustedNewIndexPath : NSIndexPath? = {
+        let tableNewIndexPath : NSIndexPath? = {
             var path : NSIndexPath?
             if let newIndexPath = newIndexPath {
                 if controller == self.shiftFetchResultsController {
@@ -393,26 +390,26 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //attempt changes
         switch type {
         case .Insert :
-            self.newScheduleTable.insertRowsAtIndexPaths([adjustedNewIndexPath!], withRowAnimation: .Fade)
+            self.newScheduleTable.insertRowsAtIndexPaths([tableNewIndexPath!], withRowAnimation: .Fade)
         case .Delete :
-            self.newScheduleTable.deleteRowsAtIndexPaths([adjustedIndexPath!], withRowAnimation: .Fade)
+            self.newScheduleTable.deleteRowsAtIndexPaths([tableIndexPath!], withRowAnimation: .Fade)
         case .Update :
             //get cell from table
-            guard let cell = self.newScheduleTable.cellForRowAtIndexPath(adjustedIndexPath!) as? SSTableViewCell else {
+            guard let cell = self.newScheduleTable.cellForRowAtIndexPath(tableIndexPath!) as? SSTableViewCell else {
                 //failed to cast cell, alert user
                 self.makeAlert(self, title: "Critical UI Error", error: nil)
                 return
             }
             
             //get schedule item
-            let scheduleItem = self.getItemAtIndexPath(atIndexPath: adjustedIndexPath!)
+            let scheduleItem = self.getItemAtIndexPath(atIndexPath: tableIndexPath!)
             
             //configure cell with item
-            self.configureCell(cell, withItem: scheduleItem, forSection: adjustedIndexPath!.section)
+            self.configureCell(cell, withItem: scheduleItem, forSection: tableIndexPath!.section)
         case .Move :
             //delete cell at adjustedIndexPath, and insert row at adjustedNewIndexPath
-            self.newScheduleTable.deleteRowsAtIndexPaths([adjustedIndexPath!], withRowAnimation: .Fade)
-            self.newScheduleTable.insertRowsAtIndexPaths([adjustedNewIndexPath!], withRowAnimation: .Fade)
+            self.newScheduleTable.deleteRowsAtIndexPaths([tableIndexPath!], withRowAnimation: .Fade)
+            self.newScheduleTable.insertRowsAtIndexPaths([tableNewIndexPath!], withRowAnimation: .Fade)
         }
     }
     
