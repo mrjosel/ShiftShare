@@ -79,7 +79,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     //two sections if notes and shift exist, one if only one exists
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
-        //return 3, one for shifts,, one for notes (if they exist) and a third for newNote, which is always present
+        //return up to 4, one for newShifts, one for shift if it exists, one for notes (if they exist) and a fourth for newNote, which is always present
         //NOTE: THE SECTION ONLY CORRESPONDS TO THE TABLE SECTION, NOT THE FETCH SECTION
         //      THE FETCH SECTION IS ALWAYS ZERO AND MUST BE HANDLED ACCORDINGLY
         let count  = (self.shiftFetchResultsController.sections?.count)! + (self.notesFetchResultsController.sections?.count)! + 2
@@ -127,7 +127,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         var scheduleItem : SSScheduleItem?
         
         //convenience indexPath for fetchig objects
-        let fetchIndexPath = NSIndexPath(forItem: indexPath.row, inSection: 0)
+        let fetchIndexPath = NSIndexPath(forRow: indexPath.row, inSection: 0)
         
         //configure cells for each section
         switch indexPath.section {
@@ -161,7 +161,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
             return true
         }
         
-        //shift is NEWSHIFT or in section 3
+        //shift is in section 0 or in section 3
         return false
 
     }
@@ -173,10 +173,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         if editingStyle == UITableViewCellEditingStyle.Delete {
             
             //adjust indexPath
-            let controllerIndexPath : NSIndexPath = {
-                let path = NSIndexPath(forRow: indexPath.row, inSection: 0)
-                return path
-            }()
+            let controllerIndexPath = NSIndexPath(forRow: indexPath.row, inSection: 0)
             
             //handle shift or notes depending on section
             if indexPath.section == 1 {
