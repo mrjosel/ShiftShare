@@ -29,7 +29,7 @@ class FriendsListViewController: KeyboardPresentViewController, UITableViewDeleg
         
         //setup views
         self.menuButton.setTitle("Menu", forState: .Normal)
-        self.menuButton.addTarget(self, action: "menuButtonPressed", forControlEvents: .TouchUpInside)
+        self.menuButton.addTarget(self, action: #selector(self.menuButtonPressed), forControlEvents: .TouchUpInside)
         self.menuBar.bringSubviewToFront(self.menuButton)
         self.titleLabel.text = "Friends"
         self.rightButton.hidden = true

@@ -59,7 +59,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         //setup UIViews
         self.menuTable.scrollEnabled = false
         self.calButton.setTitle("Calendar", forState: .Normal)
-        self.calButton.addTarget(self, action: "calButtonPressed", forControlEvents: .TouchUpInside)
+        self.calButton.addTarget(self, action: #selector(self.calButtonPressed), forControlEvents: .TouchUpInside)
         self.menuBar.bringSubviewToFront(self.calButton)
         self.rightButton.hidden = true
         

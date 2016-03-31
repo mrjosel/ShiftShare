@@ -39,7 +39,9 @@ class SSButton: UIButton {
         
         //add function when VC is set
         didSet {
-            self.addTarget(self.hostViewController, action: "editCancelTodayButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
+            if hostViewController is CalendarViewController {
+                self.addTarget(self.hostViewController, action: #selector(CalendarViewController.editCancelTodayButtonPressed(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+            }
         }
     }
 

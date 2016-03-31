@@ -69,7 +69,7 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
         self.dateLabel.text = self.schedule.date!.readableDate
         self.dataTitle.borderStyle = .None
         self.dataTitle.textAlignment = NSTextAlignment.Center
-        self.touchGesture = UITapGestureRecognizer(target: self, action: "imageViewTapped:")
+        self.touchGesture = UITapGestureRecognizer(target: self, action: #selector(self.imageViewTapped(_:)))
         self.dataImageView.addGestureRecognizer(self.touchGesture!)
         self.dataBody.font = UIFont(name: "Helvetica", size: 14.0)
         self.dataBody.delegate = self

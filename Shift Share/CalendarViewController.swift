@@ -110,7 +110,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         })
         
         //create buttons for bottomToobar
-        let menuButton = UIBarButtonItem(title: "Menu", style: .Plain, target: self, action: "showMenu")
+        let menuButton = UIBarButtonItem(title: "Menu", style: .Plain, target: self, action: #selector(self.showMenu))
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: self, action: nil)
         let buttons : [UIBarButtonItem] = [menuButton, flexibleSpace]
         

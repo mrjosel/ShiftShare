@@ -38,9 +38,9 @@ class SignUpViewController: KeyboardPresentViewController, UITextFieldDelegate {
         self.passwordTextField.clearButtonMode = .WhileEditing
         self.passwordTextField.secureTextEntry = true
         self.createNewUserButton.setTitle("Join ShiftShare", forState: .Normal)
-        self.createNewUserButton.addTarget(self, action: "createNewUser:", forControlEvents: .TouchUpInside)
+        self.createNewUserButton.addTarget(self, action: #selector(self.createNewUser(_:)), forControlEvents: .TouchUpInside)
         self.cancelButton.setTitle("Cancel", forState: .Normal)
-        self.cancelButton.addTarget(self, action: "cancelButtonPressed:", forControlEvents: .TouchUpInside)
+        self.cancelButton.addTarget(self, action: #selector(self.cancelButtonPressed(_:)), forControlEvents: .TouchUpInside)
         
         //delegates
         self.firstNameTextField.delegate = self

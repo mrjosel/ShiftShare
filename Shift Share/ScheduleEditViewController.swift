@@ -46,8 +46,8 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //setup views
         self.cancelButton.setTitle("Cancel", forState: UIControlState.Normal)
         self.doneButton.setTitle("Done", forState: UIControlState.Normal)
-        self.cancelButton.addTarget(self, action: "cancelButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.doneButton.addTarget(self, action: "doneButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.cancelButton.addTarget(self, action: #selector(self.cancelButtonPressed(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        self.doneButton.addTarget(self, action: #selector(self.doneButtonPressed(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.menuBar.bringSubviewToFront(self.cancelButton)
         self.menuBar.bringSubviewToFront(self.doneButton)
         self.dateLabel.text = self.schedule.date!.readableDate
@@ -172,15 +172,21 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //perform the following if deleting
         if editingStyle == UITableViewCellEditingStyle.Delete {
             
+            //adjust indexPath
+            let controllerIndexPath : NSIndexPath = {
+                let path = NSIndexPath(forRow: indexPath.row, inSection: 0)
+                return path
+            }()
+            
             //handle shift or notes depending on section
             if indexPath.section == 1 {
                 //if row can be deleted, shift must exist, using implicitly unwrapped optionals
-                let shift = self.shiftFetchResultsController.fetchedObjects![indexPath.row] as! SSShift
+                let shift = self.shiftFetchResultsController.objectAtIndexPath(controllerIndexPath) as! SSShift
                 CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(shift)
             } else if indexPath.section == 2 {
                 //if row can be deleted, note must exist, using implicitly unwrapped optionals
                 print(indexPath.row)
-                let note = self.notesFetchResultsController.fetchedObjects![indexPath.row] as! SSNote
+                let note = self.notesFetchResultsController.objectAtIndexPath(controllerIndexPath) as! SSNote
                 print(note)
                 CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(note)
             }
@@ -389,7 +395,10 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     //called when a section is changed
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, var atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+        
+        //create reference to allow mutation
+        var sectionIndex : Int = sectionIndex
         
         //create new sectionIndex depending on which controller calls the delegate
         if controller == self.shiftFetchResultsController {

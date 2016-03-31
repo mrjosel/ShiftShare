@@ -57,9 +57,9 @@ class LoginViewController: KeyboardPresentViewController, UITextFieldDelegate, S
         self.passwordTextField.clearButtonMode = .WhileEditing
         self.passwordTextField.secureTextEntry = true
         self.loginButton.setTitle("Login", forState: .Normal)
-        self.loginButton.addTarget(self, action: "loginButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.loginButton.addTarget(self, action: #selector(self.loginButtonPressed(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.signupButton.setTitle("Sign-Up", forState: .Normal)
-        self.signupButton.addTarget(self, action: "signupButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.signupButton.addTarget(self, action: #selector(self.signupButtonPressed(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.loginButtonToTextFieldSpacing = self.textFieldSpacing
         self.signupButtonToTextFieldSpacing = self.textFieldSpacing
     }
