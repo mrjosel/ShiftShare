@@ -26,6 +26,10 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var newScheduleTable: UITableView!
     @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var addShiftButton: UIButton!
+    @IBOutlet weak var addNoteButton: UIButton!
+    @IBOutlet weak var addShiftButtonSpaceConstraint: NSLayoutConstraint!
+    @IBOutlet weak var addNoteButtonSpaceConstraint: NSLayoutConstraint!
     
     //local references to FRCs in CoreDataStack
     let notesFetchResultsController : NSFetchedResultsController = CoreDataStackManager.sharedInstance().notesFetchResultsController
@@ -43,15 +47,6 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         self.newScheduleTable.delegate = self
         self.newScheduleTable.dataSource = self
         
-        //setup views
-        self.cancelButton.setTitle("Cancel", forState: UIControlState.Normal)
-        self.doneButton.setTitle("Done", forState: UIControlState.Normal)
-        self.cancelButton.addTarget(self, action: #selector(self.cancelButtonPressed(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        self.doneButton.addTarget(self, action: #selector(self.doneButtonPressed(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        self.menuBar.bringSubviewToFront(self.cancelButton)
-        self.menuBar.bringSubviewToFront(self.doneButton)
-        self.dateLabel.text = self.schedule.date!.readableDate
-
         //fetch controllers
         self.notesFetchResultsController.delegate = self
         self.shiftFetchResultsController.delegate = self
@@ -63,6 +58,22 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
                 self.makeAlert(self, title: "Failed to Load Data", error: error! as NSError)
             }
         })
+        
+        //setup views
+        self.cancelButton.setTitle("Cancel", forState: UIControlState.Normal)
+        self.doneButton.setTitle("Done", forState: UIControlState.Normal)
+        self.cancelButton.addTarget(self, action: #selector(self.cancelButtonPressed(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        self.doneButton.addTarget(self, action: #selector(self.doneButtonPressed(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        self.addShiftButton.setTitle("Add Shift", forState: UIControlState.Normal)
+        self.addNoteButton.setTitle("Add Note", forState: UIControlState.Normal)
+        self.addShiftButton.addTarget(self, action: #selector(self.addShift(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        self.addNoteButton.addTarget(self, action: #selector(self.addNote(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        self.addShiftButton.hidden = !(self.shiftFetchResultsController.fetchedObjects?.isEmpty)!
+        self.addNoteButtonSpaceConstraint.constant = self.addShiftButton.hidden ? self.addShiftButtonSpaceConstraint.constant : 2.5 * self.addShiftButtonSpaceConstraint.constant
+        
+        self.menuBar.bringSubviewToFront(self.cancelButton)
+        self.menuBar.bringSubviewToFront(self.doneButton)
+        self.dateLabel.text = self.schedule.date!.readableDate
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -73,6 +84,17 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //deselect all cells
         self.newScheduleTable.deselectAllCells()
         
+    }
+    
+    //launches next VC to add a new shift
+    func addShift(sender: UIButton) {
+        print("adding shift")
+        
+    }
+    
+    //launches next VC to add a new note
+    func addNote(sender: UIButton) {
+        print("adding note")
     }
     
     
