@@ -90,11 +90,17 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
     func addShift(sender: UIButton) {
         print("adding shift")
         
+        //perform segue to create new shift
+        self.performSegueWithIdentifier("ItemVCSegueFromNew", sender: sender)
+        
     }
     
     //launches next VC to add a new note
     func addNote(sender: UIButton) {
         print("adding note")
+        
+        //perform segue to create new note
+        self.performSegueWithIdentifier("ItemVCSegueFromNew", sender: sender)
     }
     
     
@@ -184,7 +190,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
 //        }
         
         //shift is in section 0 or in section 3
-        return false
+        return true//false
 
     }
     
@@ -221,8 +227,26 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
 
             //create VC for show presentation
             let scheduleItemVC : ScheduleItemViewController = segue.destinationViewController as! ScheduleItemViewController
-            scheduleItemVC.selectedIndexPath = sender as? NSIndexPath
-            scheduleItemVC.scheduleItem = self.getItemAtIndexPath(atIndexPath: sender as! NSIndexPath)
+            
+            //if sender is NSIndexPath, then row from table was selected, send indexPath to next VC
+            if sender is NSIndexPath {
+                scheduleItemVC.selectedIndexPath = sender as? NSIndexPath
+                scheduleItemVC.scheduleItem = self.getItemAtIndexPath(atIndexPath: sender as! NSIndexPath)
+            } else {
+                //sender is UIButton, figure out which button, make new shift/note decision
+                if let sender = sender as? UIButton where sender == self.addShiftButton {
+                    print("making new shift")
+                    //new shift selected
+                    scheduleItemVC.scheduleItem = self.makeNewScheduleItem("shift")
+                } else {
+                    print("making new note")
+                    //new note selected
+                    scheduleItemVC.scheduleItem = self.makeNewScheduleItem("note")
+                }
+                
+            }
+            
+            //set schedule
             scheduleItemVC.schedule = self.schedule
 
         }
@@ -322,6 +346,26 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
                 }
             }
         }
+    }
+    
+    //method to create new shift or note object
+    func makeNewScheduleItem(shiftOrButton: String)-> SSScheduleItem {
+        
+        //returned item
+        var scheduleItem : SSScheduleItem
+        
+        //make item depending if shift or note
+        switch shiftOrButton {
+        case "shift" :
+            scheduleItem = SSShift(type: .NEWSHIFT, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+        case "note" :
+            scheduleItem = SSNote(title: "New Note", body: "Note Body", context: CoreDataStackManager.sharedInstance().managedObjectContext)
+        default :
+            //return empty note, should never get to this point
+            return SSNote()
+            
+        }
+        return scheduleItem
     }
     
     //method to get item to be used in schedule editing

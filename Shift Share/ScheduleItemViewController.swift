@@ -28,7 +28,7 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
     //delegate
     var delegate : ScheduleEditViewControllerDelegate?    //since VC can edit schedules
     
-    //data from cell selected in CalendarVC
+    //data from cell
     var scheduleItem : SSScheduleItem!
     var schedule : SSSchedule!
     var dataIsShift : Bool = false          //default value
@@ -37,7 +37,7 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
     var numLines : Int?
     var maxLines : Int!
     var touchGesture : UITapGestureRecognizer?
-    var selectedIndexPath : NSIndexPath!
+    var selectedIndexPath : NSIndexPath?
     
     //default shiftType
     var scratchShiftType : SSShiftType?
@@ -251,7 +251,7 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
                 }
             } else {
                 //data is a note, enable if indexPath indicates newNote or note from store
-                return self.selectedIndexPath.section == 1
+                return self.selectedIndexPath?.section == 1
             }
             //shift is NEWSHIFT, or note is newNote
             return false
