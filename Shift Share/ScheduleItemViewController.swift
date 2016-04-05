@@ -248,32 +248,50 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
     //return to calendar without changes
     @IBAction func cancelButtonPressed(sender: UIButton) {
         //return back to calendar
-        let item = self.configForShift ? self.scheduleItem as! SSShift : self.scheduleItem as! SSNote
-        CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(item)
+//        let item = self.configForShift ? self.scheduleItem as! SSShift : self.scheduleItem as! SSNote
+//        CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(item)
         self.navigationController?.popViewControllerAnimated(true)
     }
     
     //return to calendar without changes
     @IBAction func saveButtonPressed(sender: UIButton) {
         
-        //if schedule not set, set it
-        if self.scheduleItem?.schedule == nil {
-            self.scheduleItem?.schedule = self.schedule
-        }
-
-        //make changes to shift/note
-        if self.configForShift {
-            let data = self.scheduleItem as! SSShift
-            data.type = self.scratchShiftType
+        //if no schedule item set, create it
+        if self.scheduleItem == nil {
+            //newItem
+            var newItem : SSScheduleItem
+            
+            //create new item depending on shift or not
+            if self.configForShift {
+                //create a shift from scratch type
+                newItem = SSShift(type: self.scratchShiftType, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+            } else {
+                //create new note from texts
+                newItem = SSNote(title: self.dataTitle.text, body: self.dataBody.text, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+            }
+            
+            //set schedule
+            newItem.schedule = self.schedule
+            
         } else {
-            var data = self.scheduleItem as? SSNote
-            data!.body = self.dataBody.text
-            data!.title = self.dataTitle.text
+            //item was sent and edited, commit changes
+            if self.configForShift {
+                //set scratch shift to item's shift
+                let item = self.scheduleItem as! SSShift
+                item.type = self.scratchShiftType
+            } else {
+                //set note fields from texts, unless empty, then remove note
+                let item = self.scheduleItem as! SSNote
                 
-            //if body and title are "", delete
-            if self.dataBody.text == "" && self.dataTitle.text == "" {
-                //delete note
-                data = nil
+                //if noth fields are empty, remove
+                if self.dataBody.text == "" && self.dataTitle.text == "" {
+                    //delete note
+                    CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(item)
+                }
+
+                //set texts
+                item.body = self.dataBody.text
+                item.title = self.dataTitle.text
             }
         }
 
