@@ -83,7 +83,13 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         
         //deselect all cells
         self.newScheduleTable.deselectAllCells()
+        self.newScheduleTable.reloadData()
         
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        print(self.shiftFetchResultsController.fetchedObjects)
+        print(self.notesFetchResultsController.fetchedObjects)
     }
     
     //launches next VC to add a new shift
@@ -230,20 +236,19 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
             
             //if sender is NSIndexPath, then row from table was selected, send indexPath to next VC
             if sender is NSIndexPath {
-                scheduleItemVC.selectedIndexPath = sender as? NSIndexPath
                 scheduleItemVC.scheduleItem = self.getItemAtIndexPath(atIndexPath: sender as! NSIndexPath)
+                scheduleItemVC.configForShift = (sender as! NSIndexPath).section == 0
             } else {
-                //sender is UIButton, figure out which button, make new shift/note decision
-                if let sender = sender as? UIButton where sender == self.addShiftButton {
-                    print("making new shift")
-                    //new shift selected
-                    scheduleItemVC.scheduleItem = self.makeNewScheduleItem("shift")
-                } else {
-                    print("making new note")
-                    //new note selected
-                    scheduleItemVC.scheduleItem = self.makeNewScheduleItem("note")
+                //sender is UIButton, implying that addShift or addNote was hit
+                if let sender = sender as? UIButton {
+                    if sender == self.addShiftButton {
+                        //config for shift
+                        scheduleItemVC.configForShift = true
+                    } else {
+                        //config for note
+                        scheduleItemVC.configForShift = false
+                    }
                 }
-                
             }
             
             //set schedule
@@ -348,25 +353,25 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         }
     }
     
-    //method to create new shift or note object
-    func makeNewScheduleItem(shiftOrButton: String)-> SSScheduleItem {
-        
-        //returned item
-        var scheduleItem : SSScheduleItem
-        
-        //make item depending if shift or note
-        switch shiftOrButton {
-        case "shift" :
-            scheduleItem = SSShift(type: .NEWSHIFT, context: CoreDataStackManager.sharedInstance().managedObjectContext)
-        case "note" :
-            scheduleItem = SSNote(title: "New Note", body: "Note Body", context: CoreDataStackManager.sharedInstance().managedObjectContext)
-        default :
-            //return empty note, should never get to this point
-            return SSNote()
-            
-        }
-        return scheduleItem
-    }
+//    //method to create new shift or note object
+//    func makeNewScheduleItem(shiftOrButton: String)-> SSScheduleItem {
+//        
+//        //returned item
+//        var scheduleItem : SSScheduleItem
+//        
+//        //make item depending if shift or note
+//        switch shiftOrButton {
+//        case "shift" :
+//            scheduleItem = SSShift(type: .NEWSHIFT, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+//        case "note" :
+//            scheduleItem = SSNote(title: "New Note", body: "Note Body", context: CoreDataStackManager.sharedInstance().managedObjectContext)
+//        default :
+//            //return empty note, should never get to this point
+//            return SSNote()
+//            
+//        }
+//        return scheduleItem
+//    }
     
     //method to get item to be used in schedule editing
     func getItemAtIndexPath(atIndexPath indexPath: NSIndexPath) -> SSScheduleItem {
@@ -440,6 +445,8 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
             self.newScheduleTable.deleteRowsAtIndexPaths([tableIndexPath!], withRowAnimation: .Fade)
         case .Update :
             //get cell from table
+            print(tableIndexPath?.section)
+            print(tableIndexPath?.row)
             guard let cell = self.newScheduleTable.cellForRowAtIndexPath(tableIndexPath!) as? SSTableViewCell else {
                 //failed to cast cell, alert user
                 self.makeAlert(self, title: "Critical UI Error", error: nil)

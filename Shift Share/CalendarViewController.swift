@@ -500,7 +500,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             scheduleItemVC.delegate = self
             scheduleItemVC.scheduleItem = scheduleItem
             scheduleItemVC.schedule = self.schedulesDict[self.selectedDate.keyFromDate]
-            scheduleItemVC.selectedIndexPath = indexPath
+            scheduleItemVC.configForShift = indexPath.section == 0
             
         case "scheduleEditVCsegue" :
             

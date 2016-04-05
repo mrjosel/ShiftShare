@@ -28,16 +28,18 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
     //delegate
     var delegate : ScheduleEditViewControllerDelegate?    //since VC can edit schedules
     
-    //data from cell
-    var scheduleItem : SSScheduleItem!
+    //data from cell, sent from prior VC
+    var scheduleItem : SSScheduleItem?
     var schedule : SSSchedule!
-    var dataIsShift : Bool = false          //default value
+    var configForShift : Bool = false //default value
+    
+    //remaining vars
     var previousRect = CGRectZero
     var newLineCount = 0
     var numLines : Int?
     var maxLines : Int!
     var touchGesture : UITapGestureRecognizer?
-    var selectedIndexPath : NSIndexPath?
+    
     
     //default shiftType
     var scratchShiftType : SSShiftType?
@@ -55,10 +57,6 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-
-        
-        //convenience var for when data is shift or note
-        self.dataIsShift = self.scheduleItem is SSShift
         
         //setup views for all common/static behaviors
         let trailingConstraint = self.view.frame.width / 16.0
@@ -82,14 +80,15 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
 
         
         //get default shift, setup saveButton behavior
-        if self.dataIsShift {
-
-            if let type = (self.scheduleItem as! SSShift).type  where type != SSShiftType.NEWSHIFT {
-                //type is set implying its an existing schedule, don't allow saving until user taps image
-                self.scratchShiftType = type
+        if self.configForShift {
+            
+            //check if shift was sent
+            if let scheduleItem = self.scheduleItem as? SSShift {
+                //item sent was shift, don't allow saving until user taps image
+                self.scratchShiftType = scheduleItem.type
                 self.saveButton.enabled = false
             } else {
-                //type is not set so its a new schedule, allow saving
+                //no item sent, configure for new shift
                 self.scratchShiftType = SSShiftType.DAY
                 self.saveButton.enabled = true
             }
@@ -115,9 +114,7 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
         self.saveButton.enabled = true
         
         //check if data is shift or not
-        if !self.dataIsShift {
-            //do nothing
-        } else {
+        if self.configForShift {
             
             //cycle shift
             self.scratchShiftType!.cycleShift()
@@ -137,7 +134,7 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
         let newText = content.stringByReplacingCharactersInRange(range, withString: text)
         
         //check if data is shift
-        if !self.dataIsShift {
+        if !self.configForShift {
             
             //allow text input until last line is reached
             if self.numLines > self.maxLines {
@@ -177,9 +174,9 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
     func textViewDidBeginEditing(textView: UITextView) {
         
         //make sure its a note
-        if !self.dataIsShift {
+        if !self.configForShift {
             self.saveButton.enabled = true
-            textView.text = self.scheduleItem.body
+            textView.text = self.scheduleItem?.body
         }
     }
     
@@ -187,15 +184,15 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
     func textFieldDidBeginEditing(textField: UITextField) {
         
         //make sure its a note
-        if !self.dataIsShift {
+        if !self.configForShift {
             self.saveButton.enabled = true
-            textField.text = self.scheduleItem.title
+            textField.text = self.scheduleItem?.title
         }
     }
     
     //manages text editing for dataTitle
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-        if !self.dataIsShift {
+        if !self.configForShift {
             //TODO: HANDLE EDITING OF NOTE LABEL
             
             //enable save button
@@ -212,18 +209,18 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
     func configUIForData() {
         
         //UI Outlet setup depending on whether shift or data
-        if !self.dataIsShift {
-            if let imageName = self.scheduleItem.imageName {
+        if !self.configForShift {
+            if let imageName = self.scheduleItem?.imageName {
                 self.dataImageView.image = UIImage(named: imageName)
             } else {
                 self.dataImageView.image = nil
             }
-            if let title = self.scheduleItem.title {
+            if let title = self.scheduleItem?.title {
                 self.dataTitle.text = title
             } else {
                 self.dataTitle.text = "Your Note Title"
             }
-            if let body = self.scheduleItem.body {
+            if let body = self.scheduleItem?.body {
                 self.dataBody.text = body
             } else {
                 self.dataBody.text = "Your Note Body"
@@ -236,32 +233,22 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
         }
         
         //Outlet configuration depending if data is a shift or a note
-        self.dataBody.textAlignment = self.dataIsShift ? NSTextAlignment.Center : NSTextAlignment.Left
-        self.dataBody.userInteractionEnabled = !self.dataIsShift
-        self.dataTitle.userInteractionEnabled = !self.dataIsShift
-        self.dataTitle.selected = !self.dataIsShift
-        self.dataImageView.userInteractionEnabled = self.dataIsShift
+        self.dataBody.textAlignment = self.configForShift ? NSTextAlignment.Center : NSTextAlignment.Left
+        self.dataBody.userInteractionEnabled = !self.configForShift
+        self.dataTitle.userInteractionEnabled = !self.configForShift
+        self.dataTitle.selected = !self.configForShift
+        self.dataImageView.userInteractionEnabled = self.configForShift
         
-        //delete button only on if schedule is set (implying item is from a store and not a new item)
+        //delete button only on if scheduleItem is set (implying item is from a store and not a new item)
         self.deleteButton.enabled = {
-            if self.dataIsShift {
-                //data is a shift, delete button enabled if type not NEWSHIFT
-                if (self.scheduleItem as! SSShift).type != .NEWSHIFT {
-                    return true
-                }
-            } else {
-                //data is a note, enable if indexPath indicates newNote or note from store
-                return self.selectedIndexPath?.section == 1
-            }
-            //shift is NEWSHIFT, or note is newNote
-            return false
+            return self.scheduleItem != nil
         }()
     }
     
     //return to calendar without changes
     @IBAction func cancelButtonPressed(sender: UIButton) {
         //return back to calendar
-        let item = self.dataIsShift ? self.scheduleItem as! SSShift : self.scheduleItem as! SSNote
+        let item = self.configForShift ? self.scheduleItem as! SSShift : self.scheduleItem as! SSNote
         CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(item)
         self.navigationController?.popViewControllerAnimated(true)
     }
@@ -270,12 +257,12 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
     @IBAction func saveButtonPressed(sender: UIButton) {
         
         //if schedule not set, set it
-        if self.scheduleItem.schedule == nil {
-            self.scheduleItem.schedule = self.schedule
+        if self.scheduleItem?.schedule == nil {
+            self.scheduleItem?.schedule = self.schedule
         }
 
         //make changes to shift/note
-        if self.dataIsShift {
+        if self.configForShift {
             let data = self.scheduleItem as! SSShift
             data.type = self.scratchShiftType
         } else {
@@ -301,7 +288,7 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
     @IBAction func deleteButtonPressed(sender: UIBarButtonItem) {
         
     //determine shit or not
-        if self.dataIsShift {
+        if self.configForShift {
             let shift = self.scheduleItem as! SSShift
             CoreDataStackManager.sharedInstance().managedObjectContext.deleteObject(shift)
         } else {
