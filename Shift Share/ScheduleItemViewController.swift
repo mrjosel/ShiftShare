@@ -210,11 +210,10 @@ class ScheduleItemViewController: KeyboardPresentViewController, UITextViewDeleg
         
         //UI Outlet setup depending on whether shift or data
         if !self.configForShift {
-            if let imageName = self.scheduleItem?.imageName {
-                self.dataImageView.image = UIImage(named: imageName)
-            } else {
-                self.dataImageView.image = nil
-            }
+            
+            //image is always Note for note
+            self.dataImageView.image = UIImage(named: "Note")
+
             if let title = self.scheduleItem?.title {
                 self.dataTitle.text = title
             } else {
