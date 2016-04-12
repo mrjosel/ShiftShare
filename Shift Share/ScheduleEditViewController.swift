@@ -67,10 +67,7 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         self.addShiftButton.setTitle("Add Shift", forState: UIControlState.Normal)
         self.addNoteButton.setTitle("Add Note", forState: UIControlState.Normal)
         self.addShiftButton.addTarget(self, action: #selector(self.addShift(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        self.addNoteButton.addTarget(self, action: #selector(self.addNote(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        self.addShiftButton.hidden = !(self.shiftFetchResultsController.fetchedObjects?.isEmpty)!
-        self.addNoteButtonSpaceConstraint.constant = self.addShiftButton.hidden ? self.addShiftButtonSpaceConstraint.constant : 2.5 * self.addShiftButtonSpaceConstraint.constant
-        
+        self.addNoteButton.addTarget(self, action: #selector(self.addNote(_:)), forControlEvents: UIControlEvents.TouchUpInside)        
         self.menuBar.bringSubviewToFront(self.cancelButton)
         self.menuBar.bringSubviewToFront(self.doneButton)
         self.dateLabel.text = self.schedule.date!.readableDate
@@ -84,6 +81,10 @@ class ScheduleEditViewController: UIViewController, UITableViewDelegate, UITable
         //deselect all cells
         self.newScheduleTable.deselectAllCells()
         self.newScheduleTable.reloadData()
+        
+        //setup addShift and addNote buttons
+        self.addShiftButton.hidden = !self.shiftFetchResultsController.fetchedObjects!.isEmpty
+        self.addNoteButtonSpaceConstraint.constant = self.addShiftButton.hidden ? self.addShiftButtonSpaceConstraint.constant : 2.5 * self.addShiftButtonSpaceConstraint.constant
         
     }
     
