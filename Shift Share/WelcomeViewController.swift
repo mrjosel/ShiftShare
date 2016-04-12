@@ -63,7 +63,9 @@ class WelcomeViewController: UIViewController {
     
     override func viewDidAppear(animated: Bool) {
         //check for logged in users, will progress to loginVC or calVC depending on whether user is logged in or not
-        self.checkForLoggedInUser()
+        //self.checkForLoggedInUser()   //COMMENTED OUT FOR UDACITY REVIEW - BRJ - 4/12/2016
+        self.performSegueWithIdentifier("loginVCSegue", sender: nil)    //REMOVE AFTER UDACITY REVIEW - BRJ - 4/12/2016
+        
     }
     
     //checks if user is logged in

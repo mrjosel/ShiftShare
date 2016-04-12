@@ -437,7 +437,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     
     //allow editing, 
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
+        //MAKE TRUE AFTER UDACITY REVIEW - BRJ - 4/12/2016
+        return false//true
     }
     
     //remove shift or note
